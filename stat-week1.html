@@ -1,0 +1,1990 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>入門統計學 Week 1</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<style>
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'Segoe UI','Microsoft JhengHei',sans-serif;background:#f1f5f9;color:#1e293b;display:flex;min-height:100vh;}
+
+/* ── Side nav ── */
+#sidenav{
+  width:200px;min-width:200px;background:#1e293b;
+  position:fixed;top:0;left:0;height:100vh;overflow-y:auto;z-index:200;
+  padding:1rem 0;
+}
+#sidenav h2{color:#94a3b8;font-size:.72rem;letter-spacing:.08em;text-transform:uppercase;padding:.5rem 1rem .3rem;margin-top:.5rem;}
+#sidenav a{
+  display:block;color:#cbd5e1;font-size:.8rem;padding:.42rem 1rem;
+  text-decoration:none;border-left:3px solid transparent;transition:all .15s;
+  line-height:1.4;
+}
+#sidenav a:hover{color:white;background:rgba(255,255,255,.06);}
+#sidenav a.active{color:#38bdf8;border-left-color:#38bdf8;background:rgba(56,189,248,.08);}
+#sidenav .pg{color:#475569;font-size:.7rem;margin-left:.3rem;}
+
+/* ── Main ── */
+#main{margin-left:200px;width:100%;padding:2rem 2.4rem 4rem;}
+
+/* Part headers */
+.part-header{
+  background:linear-gradient(135deg,#1e40af,#7c3aed);
+  color:white;border-radius:14px;padding:1.1rem 1.6rem;margin:2.5rem 0 1.4rem;
+}
+.part-header h2{font-size:1.15rem;margin:0;}
+.part-header p{font-size:.82rem;opacity:.8;margin-top:.25rem;}
+
+/* Section */
+.sec{margin-bottom:2.2rem;}
+.sec-title{
+  display:flex;align-items:center;gap:.7rem;
+  font-size:1.05rem;font-weight:700;color:#1e40af;
+  margin-bottom:.9rem;padding-bottom:.35rem;
+  border-bottom:2px solid #bfdbfe;
+}
+.page-badge{
+  background:#e0f2fe;color:#0369a1;font-size:.7rem;
+  font-weight:600;padding:.2rem .55rem;border-radius:99px;white-space:nowrap;
+}
+
+/* Cards */
+.cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:.85rem;}
+.card{background:white;border-radius:10px;padding:1.1rem;box-shadow:0 1px 6px rgba(0,0,0,.08);border-top:4px solid;}
+.card.c-blue{border-color:#3b82f6;} .card.c-purple{border-color:#8b5cf6;}
+.card.c-green{border-color:#10b981;} .card.c-orange{border-color:#f59e0b;}
+.card.c-red{border-color:#ef4444;}   .card.c-teal{border-color:#0891b2;}
+.card.c-sky{border-color:#38bdf8;}
+.card h3{font-size:.92rem;margin-bottom:.38rem;}
+.card p{font-size:.82rem;color:#475569;line-height:1.65;}
+
+/* Box */
+.box{background:white;border-radius:10px;padding:1.3rem;box-shadow:0 1px 6px rgba(0,0,0,.08);margin-bottom:.9rem;}
+.box h3{font-size:.9rem;color:#334155;margin-bottom:.75rem;}
+
+/* Tag */
+.tag{display:inline-block;font-size:.7rem;font-weight:700;padding:.12rem .5rem;border-radius:6px;margin-bottom:.4rem;}
+.t-blue{background:#dbeafe;color:#1d4ed8;} .t-green{background:#d1fae5;color:#065f46;}
+.t-orange{background:#fef3c7;color:#92400e;} .t-purple{background:#ede9fe;color:#6d28d9;}
+.t-red{background:#fee2e2;color:#991b1b;} .t-teal{background:#cffafe;color:#155e75;}
+
+/* Table */
+table{width:100%;border-collapse:collapse;font-size:.84rem;}
+th{background:#1e40af;color:white;padding:.5rem .8rem;text-align:left;}
+td{padding:.45rem .8rem;border-bottom:1px solid #e2e8f0;}
+tr:nth-child(even) td{background:#f8fafc;}
+
+/* Formula */
+.fml{background:#0f172a;color:#e2e8f0;border-radius:8px;padding:.7rem 1.1rem;
+  font-family:monospace;font-size:.9rem;margin:.45rem 0;line-height:1.9;}
+.hl{color:#fbbf24;font-weight:700;}
+
+/* Tip */
+.tip{background:#f0fdf4;border:1px solid #86efac;border-radius:8px;
+  padding:.7rem .9rem;font-size:.82rem;color:#166534;margin-top:.7rem;line-height:1.7;}
+.warn{background:#fff7ed;border:1px solid #fed7aa;border-radius:8px;
+  padding:.7rem .9rem;font-size:.82rem;color:#9a3412;margin-top:.7rem;line-height:1.7;}
+
+/* Two col */
+.two{display:grid;grid-template-columns:1fr 1fr;gap:.85rem;}
+@media(max-width:680px){.two{grid-template-columns:1fr;} #sidenav{display:none;} #main{margin-left:0;}}
+
+/* Flow row */
+.flow{display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:0;margin:.9rem 0;}
+.fb{background:white;border:2px solid #c7d2fe;border-radius:8px;padding:.55rem .9rem;
+  font-size:.84rem;text-align:center;min-width:95px;box-shadow:0 1px 5px rgba(0,0,0,.06);}
+.fa{font-size:1.2rem;color:#6366f1;padding:0 .3rem;}
+
+/* Skew */
+.skews{display:grid;grid-template-columns:1fr 1fr 1fr;gap:.8rem;margin-top:.8rem;}
+@media(max-width:560px){.skews{grid-template-columns:1fr;}}
+.skb{background:white;border-radius:10px;padding:.9rem;text-align:center;box-shadow:0 1px 5px rgba(0,0,0,.07);}
+
+/* Highlight row */
+.hl-row{background:#fffbeb;border:1px solid #fde68a;border-radius:8px;padding:.7rem .9rem;font-size:.85rem;margin:.5rem 0;}
+
+/* ── NEW: Formula Card ── */
+.fc{background:white;border-radius:12px;overflow:hidden;box-shadow:0 2px 10px rgba(0,0,0,.08);margin-bottom:1.2rem;border:1.5px solid #e2e8f0;}
+.fc-head{background:linear-gradient(135deg,#1e3a8a,#4338ca);color:white;padding:.7rem 1.1rem;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:.4rem;}
+.fc-head h3{font-size:.95rem;margin:0;}
+.fc-body{padding:1.1rem 1.2rem;}
+
+/* Green formula box — like the lecture */
+.lf{background:#d1fae5;border:1px solid #6ee7b7;border-radius:8px;padding:.85rem 1.2rem;display:inline-flex;align-items:center;gap:.35rem;font-family:'Times New Roman','Palatino Linotype',serif;font-size:1.1rem;flex-wrap:wrap;margin-bottom:1rem;}
+.lf-eq{color:#374151;}
+
+/* Fraction in formula */
+.lf-frac{display:inline-flex;flex-direction:column;align-items:center;vertical-align:middle;margin:0 .1rem;}
+.lf-num{border-bottom:1.8px solid #1e293b;padding:1px 4px 2px;text-align:center;white-space:nowrap;}
+.lf-den{padding:2px 4px 0;text-align:center;white-space:nowrap;}
+
+/* Sigma in formula */
+.lf-sigma{display:inline-flex;flex-direction:column;align-items:center;vertical-align:middle;line-height:1;margin:0 .05rem;}
+.lf-sigma .ss{font-size:.6rem;line-height:1.1;}
+.lf-sigma .sy{font-size:1.55rem;line-height:.85;}
+
+/* Sqrt */
+.lf-sqrt{display:inline-flex;align-items:center;}
+.lf-sqrt .rsym{font-size:1.5rem;line-height:1;margin-right:-1px;}
+.lf-sqrt .rbody{border-top:2px solid #1e293b;padding:0 4px;}
+
+/* Param badge — clickable symbol in formula */
+.pb{
+  display:inline-block;cursor:pointer;
+  background:#1e40af;color:white;
+  font-family:'Times New Roman',serif;font-size:1rem;font-weight:700;
+  padding:.05rem .45rem;border-radius:4px;vertical-align:middle;
+  transition:background .15s, transform .1s;
+  position:relative;
+}
+.pb:hover{background:#2563eb;transform:scale(1.08);}
+.pb.active{background:#f59e0b;color:#1e293b;}
+.pb[data-tip]:hover::after{
+  content:attr(data-tip);
+  position:absolute;bottom:110%;left:50%;transform:translateX(-50%);
+  background:#0f172a;color:white;padding:3px 8px;border-radius:5px;
+  font-size:.68rem;font-family:'Segoe UI',sans-serif;font-weight:400;
+  white-space:nowrap;pointer-events:none;z-index:99;
+}
+
+/* Live substitution bar */
+.lf-live{
+  background:#f0fdf4;border:1.5px solid #86efac;border-radius:8px;
+  padding:.65rem 1rem;font-family:'Times New Roman',serif;font-size:1.05rem;
+  min-height:2.8rem;display:flex;align-items:center;gap:.3rem;flex-wrap:wrap;
+  margin-bottom:.9rem;
+}
+.lf-live .lv{color:#1d4ed8;font-weight:700;}
+.lf-live .la{color:#065f46;font-weight:700;font-size:1.2rem;background:#bbf7d0;padding:.05rem .4rem;border-radius:4px;}
+.lf-live .lhint{color:#94a3b8;font-family:'Segoe UI',sans-serif;font-size:.8rem;font-style:italic;}
+
+/* Param input grid */
+.pi-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(185px,1fr));gap:.75rem;margin:.5rem 0 .9rem;}
+.pi-item{display:flex;flex-direction:column;gap:.22rem;}
+.pi-label{display:flex;align-items:center;gap:.4rem;font-size:.78rem;font-weight:600;color:#334155;}
+.pi-sym{
+  background:#1e40af;color:white;font-family:'Times New Roman',serif;
+  font-size:.88rem;font-weight:700;padding:.1rem .45rem;border-radius:4px;
+  cursor:pointer;user-select:none;transition:background .12s;
+}
+.pi-sym:hover{background:#2563eb;}
+.pi-meaning{font-size:.7rem;color:#64748b;padding-left:.1rem;}
+.pi-inp{
+  border:1.5px solid #cbd5e1;border-radius:7px;padding:.4rem .7rem;
+  font-size:.87rem;outline:none;width:100%;box-sizing:border-box;
+  transition:border .15s,box-shadow .15s;background:white;
+}
+.pi-inp:focus{border-color:#3b82f6;box-shadow:0 0 0 2px rgba(59,130,246,.15);}
+.pi-inp.lit{border-color:#f59e0b;box-shadow:0 0 0 2px rgba(245,158,11,.18);}
+textarea.pi-inp{resize:vertical;font-family:'Courier New',monospace;font-size:.85rem;line-height:1.6;min-height:6rem;}
+
+/* Calc button & result */
+.fc-btn{background:#1e40af;color:white;border:none;border-radius:7px;padding:.42rem 1.2rem;font-size:.85rem;font-weight:600;cursor:pointer;transition:background .15s;}
+.fc-btn:hover{background:#2563eb;}
+.fc-note{background:#fff7ed;border:1px solid #fed7aa;border-radius:7px;padding:.55rem .85rem;font-size:.8rem;color:#9a3412;margin-top:.6rem;}
+.fc-err{background:#fff1f2;border:1px solid #fca5a5;border-radius:7px;padding:.55rem .85rem;font-size:.82rem;color:#991b1b;display:none;margin-top:.5rem;}
+.fc-err.show{display:block;}
+.fc-steps{background:#f8fafc;border-radius:8px;padding:.8rem 1rem;font-size:.82rem;font-family:monospace;line-height:1.9;color:#374151;margin-top:.6rem;display:none;white-space:pre-wrap;}
+.fc-steps.show{display:block;}
+
+/* ── Formula display (lecture style) ── */
+.math{display:inline-flex;align-items:center;gap:.25rem;font-family:'Times New Roman','Palatino Linotype',serif;font-size:1rem;line-height:1;}
+.frac{display:inline-flex;flex-direction:column;align-items:center;vertical-align:middle;margin:0 .15rem;}
+.frac .num{border-bottom:1.8px solid currentColor;padding:1px 4px 2px;text-align:center;}
+.frac .den{padding:2px 4px 0;text-align:center;}
+.math-sum{font-size:1.3rem;vertical-align:middle;}
+.math-sqrt{display:inline-flex;align-items:center;gap:0;}
+.math-sqrt .rad-sym{font-size:1.6rem;line-height:1;margin-right:-1px;}
+.math-sqrt .rad-body{border-top:2px solid currentColor;padding:1px 4px;}
+.math-eq{background:white;border:1.5px solid #e2e8f0;border-radius:10px;padding:.9rem 1.2rem;margin:.5rem 0;display:flex;align-items:center;gap:.5rem;flex-wrap:wrap;font-family:'Times New Roman','Palatino Linotype',serif;}
+.math-label{font-family:'Segoe UI','Microsoft JhengHei',sans-serif;font-size:.75rem;color:#64748b;font-style:italic;}
+
+/* ── Calculator UI ── */
+.calc-box{background:white;border-radius:12px;box-shadow:0 1px 8px rgba(0,0,0,.1);overflow:hidden;margin-bottom:1.1rem;border:1.5px solid #e2e8f0;}
+.calc-header{background:linear-gradient(135deg,#1e40af,#6d28d9);color:white;padding:.8rem 1.1rem;display:flex;align-items:center;gap:.6rem;}
+.calc-header h3{font-size:.95rem;margin:0;}
+.calc-header .pg-sm{font-size:.7rem;background:rgba(255,255,255,.2);padding:.1rem .4rem;border-radius:99px;}
+.calc-body{padding:1rem 1.1rem;}
+.formula-display{background:#f8fafc;border:1px solid #e2e8f0;border-radius:8px;padding:.7rem 1rem;margin-bottom:.9rem;display:flex;flex-direction:column;gap:.4rem;}
+.formula-display .fd-row{display:flex;align-items:center;gap:.5rem;flex-wrap:wrap;}
+.formula-display .fd-label{font-size:.75rem;color:#64748b;font-family:'Segoe UI',sans-serif;}
+.input-row{display:flex;flex-wrap:wrap;gap:.6rem;margin-bottom:.7rem;align-items:flex-end;}
+.input-group{display:flex;flex-direction:column;gap:.2rem;}
+.input-group label{font-size:.75rem;color:#475569;font-weight:600;}
+.input-group input,.input-group select{
+  border:1.5px solid #cbd5e1;border-radius:6px;padding:.38rem .6rem;
+  font-size:.85rem;width:auto;min-width:90px;outline:none;
+  transition:border .15s;
+}
+.input-group input:focus,.input-group select:focus{border-color:#3b82f6;}
+.input-group input.wide{min-width:220px;}
+.calc-btn{
+  background:#1e40af;color:white;border:none;border-radius:7px;
+  padding:.42rem 1.1rem;font-size:.84rem;cursor:pointer;font-weight:600;
+  transition:background .15s;
+}
+.calc-btn:hover{background:#1d4ed8;}
+.calc-result{
+  background:#f0fdf4;border:1px solid #86efac;border-radius:8px;
+  padding:.8rem 1rem;margin-top:.7rem;display:none;font-size:.84rem;line-height:1.9;
+}
+.calc-result.show{display:block;}
+.calc-result .res-main{font-size:1.15rem;font-weight:700;color:#065f46;margin-bottom:.3rem;}
+.calc-result .steps{color:#374151;font-family:monospace;font-size:.82rem;white-space:pre-wrap;}
+.calc-err{background:#fff1f2;border:1px solid #fca5a5;border-radius:8px;padding:.6rem .9rem;margin-top:.6rem;color:#991b1b;font-size:.82rem;display:none;}
+.calc-err.show{display:block;}
+</style>
+</head>
+<body>
+
+<!-- ── Side Navigation ── -->
+<nav id="sidenav">
+  <div style="padding:.5rem 1rem .8rem;border-bottom:1px solid #334155;">
+    <div style="color:white;font-weight:700;font-size:.9rem;">📊 統計學 Week 1</div>
+  </div>
+
+  <h2>PART 1 · 導論</h2>
+  <a href="#s1">什麼是統計學 <span class="pg">1-1</span></a>
+  <a href="#s2">管理者為何需要 <span class="pg">1-2</span></a>
+  <a href="#s3">演繹與歸納 <span class="pg">1-3~4</span></a>
+
+  <h2>PART 2 · 資料基礎</h2>
+  <a href="#s4">重要特徵 <span class="pg">1-5</span></a>
+  <a href="#s5">資料類型 <span class="pg">1-5~7</span></a>
+  <a href="#s6">資料來源 <span class="pg">1-7~8</span></a>
+  <a href="#s7">描述統計 vs 推論 <span class="pg">1-9</span></a>
+
+  <h2>PART 3 · 圖表方法</h2>
+  <a href="#s8">定性資料整理 <span class="pg">1-10~12</span></a>
+  <a href="#s9">定量資料整理 <span class="pg">1-13~15</span></a>
+  <a href="#s10">枝葉圖 <span class="pg">1-16</span></a>
+  <a href="#s11">交叉分析&散佈圖 <span class="pg">1-17~18</span></a>
+  <a href="#s12">方法總覽 <span class="pg">1-18</span></a>
+
+  <h2>PART 4 · 數值量數</h2>
+  <a href="#s13">集中趨勢 <span class="pg">1-19~20</span></a>
+  <a href="#s14">離散程度 <span class="pg">1-21~22</span></a>
+  <a href="#s15">形狀與z分數 <span class="pg">1-23</span></a>
+  <a href="#s16">箱型圖 <span class="pg">1-24~25</span></a>
+  <a href="#s17">總覽 <span class="pg">1-25</span></a>
+
+  <h2>🧮 公式計算機</h2>
+  <a href="#c1">次數與頻率</a>
+  <a href="#c2">類別寬度</a>
+  <a href="#c3">平均值</a>
+  <a href="#c4">中位數</a>
+  <a href="#c5">百分位數</a>
+  <a href="#c6">全距</a>
+  <a href="#c7">變異數&amp;標準差</a>
+  <a href="#c8">變異係數 CV</a>
+  <a href="#c9">z 分數</a>
+</nav>
+
+<!-- ── Main Content ── -->
+<main id="main">
+
+<!-- ══════════════════════════════════════
+     PART 1  導論
+═══════════════════════════════════════ -->
+<div class="part-header">
+  <h2>PART 1 &nbsp;·&nbsp; 統計學導論</h2>
+  <p>什麼是統計學？管理者為什麼需要它？基本推論邏輯。</p>
+</div>
+
+<!-- S1 什麼是統計學 -->
+<div class="sec" id="s1">
+  <div class="sec-title">什麼是統計學？<span class="page-badge">Week 1-1</span></div>
+
+  <div class="cards">
+    <div class="card c-blue">
+      <span class="tag t-blue">核心定義</span>
+      <h3>Statistics 統計學</h3>
+      <p>收集、整理、分析、解讀資訊的<strong>科學</strong>。</p>
+    </div>
+    <div class="card c-teal">
+      <span class="tag t-teal">注意區分</span>
+      <h3>Statistic 統計量</h3>
+      <p>從一組資料中<strong>計算出的數值</strong>。<br>例：50% 下雨機率、市場佔有率。</p>
+    </div>
+    <div class="card c-orange">
+      <span class="tag t-orange">起源 18世紀</span>
+      <h3>兩大源頭</h3>
+      <p>① 機率論（賭局與誤差）<br>② 政治科學（人口、糧食、武器）</p>
+    </div>
+  </div>
+
+  <div class="box" style="margin-top:.85rem;">
+    <h3>統計學的三大角色</h3>
+    <div class="flow">
+      <div class="fb" style="background:#eff6ff;">📋 收集資料<br><small style="color:#64748b;">Survey</small></div>
+      <div class="fa">→</div>
+      <div class="fb" style="background:#f5f3ff;">📊 呈現資料<br><small style="color:#64748b;">Charts & Tables</small></div>
+      <div class="fa">→</div>
+      <div class="fb" style="background:#ecfdf5;">🔢 描述資料<br><small style="color:#64748b;">Average</small></div>
+      <div class="fa">→</div>
+      <div class="fb" style="background:#fffbeb;font-weight:700;border-color:#f59e0b;">✅ 決策</div>
+    </div>
+  </div>
+
+  <div class="box">
+    <h3 style="font-size:1.2rem;margin-bottom:.8rem;">學統計的目的 — <mark style="background:#fef08a;padding:.1rem .4rem;border-radius:4px;font-size:1.3rem;">描述</mark>、<mark style="background:#bbf7d0;padding:.1rem .4rem;border-radius:4px;font-size:1.3rem;">預測</mark>、<mark style="background:#fecaca;padding:.1rem .4rem;border-radius:4px;font-size:1.3rem;">控制</mark> <span style="display:inline-flex;align-items:center;gap:.3rem;background:#fff7ed;border:2px dashed #f97316;border-radius:8px;padding:.15rem .6rem;font-size:.78rem;font-weight:700;color:#ea580c;vertical-align:middle;">🔑 重要！老師的通關密語</span></h3>
+    <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:.6rem;font-size:.82rem;">
+      <div style="background:#eff6ff;border-radius:8px;padding:.7rem;"><strong>會計</strong><br>統計抽樣稽核</div>
+      <div style="background:#f5f3ff;border-radius:8px;padding:.7rem;"><strong>財務</strong><br>本益比、股息率</div>
+      <div style="background:#ecfdf5;border-radius:8px;padding:.7rem;"><strong>行銷</strong><br>POS 消費行為</div>
+      <div style="background:#fffbeb;border-radius:8px;padding:.7rem;"><strong>生產</strong><br>品質管制圖</div>
+      <div style="background:#fff1f2;border-radius:8px;padding:.7rem;"><strong>經濟</strong><br>景氣預測</div>
+    </div>
+  </div>
+</div>
+
+<!-- S2 管理者為何需要統計 -->
+<div class="sec" id="s2">
+  <div class="sec-title">管理者為何需要統計？<span class="page-badge">Week 1-2</span></div>
+
+  <div class="cards">
+    <div class="card c-blue"><h3>① 呈現與描述資訊</h3><p>把龐雜數字整理成有意義的摘要。</p></div>
+    <div class="card c-purple"><h3>② 由樣本推論母體</h3><p>用少數樣本下出對全體的結論。</p></div>
+    <div class="card c-green"><h3>③ 可靠預測</h3><p>對感興趣的變數做出有根據的預測。</p></div>
+    <div class="card c-orange"><h3>④ 改善流程</h3><p>找出問題根源，持續改善。</p></div>
+  </div>
+
+  <div class="box" style="margin-top:.85rem;">
+    <h3>核心概念：母體 vs 樣本</h3>
+    <svg viewBox="0 0 520 145" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-width:520px;display:block;margin:.5rem auto;">
+      <defs>
+        <marker id="ar" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto">
+          <polygon points="0 0,8 3,0 6" fill="#6366f1"/>
+        </marker>
+      </defs>
+      <!-- Population -->
+      <rect x="5" y="10" width="200" height="125" rx="10" fill="#eff6ff" stroke="#3b82f6" stroke-width="2"/>
+      <text x="105" y="35" text-anchor="middle" fill="#1d4ed8" font-size="13" font-weight="700">母體 Population</text>
+      <text x="105" y="53" text-anchor="middle" fill="#475569" font-size="10">研究對象的全部</text>
+      <text x="105" y="70" text-anchor="middle" fill="#64748b" font-size="10">參數 Parameter</text>
+      <text x="105" y="84" text-anchor="middle" fill="#1d4ed8" font-size="12" font-weight="700">μ, σ (母體)</text>
+      <!-- dots -->
+      <circle cx="60" cy="108" r="4" fill="#93c5fd"/> <circle cx="80" cy="100" r="4" fill="#93c5fd"/>
+      <circle cx="105" cy="112" r="4" fill="#93c5fd"/> <circle cx="130" cy="103" r="4" fill="#93c5fd"/>
+      <circle cx="150" cy="108" r="4" fill="#93c5fd"/>
+      <!-- Sample -->
+      <rect x="315" y="10" width="200" height="125" rx="10" fill="#f5f3ff" stroke="#8b5cf6" stroke-width="2"/>
+      <text x="415" y="35" text-anchor="middle" fill="#6d28d9" font-size="13" font-weight="700">樣本 Sample</text>
+      <text x="415" y="53" text-anchor="middle" fill="#475569" font-size="10">從母體選取一部分</text>
+      <text x="415" y="70" text-anchor="middle" fill="#64748b" font-size="10">統計量 Statistic</text>
+      <text x="415" y="84" text-anchor="middle" fill="#6d28d9" font-size="12" font-weight="700">x̄, s (樣本)</text>
+      <circle cx="380" cy="108" r="4" fill="#c4b5fd"/> <circle cx="400" cy="100" r="4" fill="#c4b5fd"/>
+      <circle cx="420" cy="112" r="4" fill="#c4b5fd"/>
+      <!-- arrows -->
+      <path d="M210 55 Q262 30 310 55" stroke="#f59e0b" stroke-width="2" fill="none" marker-end="url(#ar)"/>
+      <text x="260" y="28" text-anchor="middle" fill="#92400e" font-size="10" font-weight="600">抽樣 Sampling</text>
+      <path d="M310 90 Q262 115 210 90" stroke="#10b981" stroke-width="2" fill="none" marker-end="url(#ar)"/>
+      <text x="260" y="125" text-anchor="middle" fill="#065f46" font-size="10" font-weight="600">推論 Inference</text>
+    </svg>
+
+    <div class="box" style="margin-top:.7rem;">
+      <h3>為什麼要抽樣而不普查？</h3>
+      <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:.55rem;font-size:.82rem;">
+        <div style="background:#f8fafc;border-radius:7px;padding:.6rem;text-align:center;">👥 母體太大</div>
+        <div style="background:#f8fafc;border-radius:7px;padding:.6rem;text-align:center;">💰 費用太大</div>
+        <div style="background:#f8fafc;border-radius:7px;padding:.6rem;text-align:center;">⏱️ 資源有限</div>
+        <div style="background:#f8fafc;border-radius:7px;padding:.6rem;text-align:center;">📂 資料不足</div>
+        <div style="background:#f8fafc;border-radius:7px;padding:.6rem;text-align:center;">💥 破壞性實驗</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- S3 演繹與歸納 -->
+<div class="sec" id="s3">
+  <div class="sec-title">演繹法 vs 歸納法<span class="page-badge">Week 1-3 ~ 1-4</span></div>
+
+  <div class="two">
+    <div class="box">
+      <span class="tag t-blue">Deduction 演繹法</span>
+      <h3 style="margin-top:.3rem;">從假設推出結論</h3>
+      <div style="background:#eff6ff;border-radius:8px;padding:.8rem;font-size:.84rem;line-height:1.8;margin:.6rem 0;">
+        母體為 X 分配<br>
+        <span style="color:#3b82f6;">↓ 機率論</span><br>
+        樣本統計量應為 Y 分配
+      </div>
+      <p style="font-size:.82rem;color:#475569;">前提錯誤 → 結論無效。</p>
+    </div>
+    <div class="box">
+      <span class="tag t-purple">Induction 歸納法</span>
+      <h3 style="margin-top:.3rem;">從事實推出假設</h3>
+      <div style="background:#f5f3ff;border-radius:8px;padding:.8rem;font-size:.84rem;line-height:1.8;margin:.6rem 0;">
+        樣本統計量呈 Y 分配<br>
+        <span style="color:#8b5cf6;">↑ 統計推論</span><br>
+        推斷母體可能為 X 分配
+      </div>
+      <p style="font-size:.82rem;color:#475569;">根據證據，假設可能成立。</p>
+    </div>
+  </div>
+
+  <div class="box">
+    <h3>🔄 John Dewey 雙軌反射思考</h3>
+    <div style="background:#f8fafc;border-radius:8px;padding:1rem;font-size:.85rem;line-height:2;text-align:center;">
+      「若母體為 X 分配 <span style="color:#3b82f6;">→（演繹）→</span> 樣本應呈 Y 分配」<br>
+      收集樣本後觀察到 Y 分配<br>
+      <span style="color:#8b5cf6;">→（歸納）→</span> 有足夠證據推斷母體為 X 分配
+    </div>
+    <div class="tip">💡 統計學就是利用這個雙軌邏輯，讓我們能用樣本對母體做出有根據的推論。</div>
+  </div>
+
+  <div class="box">
+    <h3>💡 Statistical Thinking 統計思維</h3>
+    <p style="font-size:.84rem;color:#475569;line-height:1.8;">
+      聚焦於<strong>理解、管理、降低變異（風險）</strong>的思考方式。<br>
+      例子：「50% 低於平均」聽起來很奇怪？但這是正常的——平均值就是中間點！<br>
+      例子：零件壽命、品質良率，都是變異的問題。
+    </p>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════
+     PART 2  資料基礎
+═══════════════════════════════════════ -->
+<div class="part-header">
+  <h2>PART 2 &nbsp;·&nbsp; 資料基礎</h2>
+  <p>為什麼收集資料？資料的種類？從哪裡來？</p>
+</div>
+
+<!-- S4 三大重要特徵 -->
+<div class="sec" id="s4">
+  <div class="sec-title">資料的三大重要特徵<span class="page-badge">Week 1-5 / 1-15 / 1-19</span></div>
+  <div class="warn">📌 這三個特徵貫穿整份講義，老師在第 5、15、19 頁反覆強調。</div>
+
+  <div class="cards" style="margin-top:.8rem;">
+    <div class="card c-orange">
+      <span class="tag t-orange">① Location</span>
+      <h3>📍 中心點<br>Central Tendency</h3>
+      <p>資料集中在哪？代表「典型值」。<br><br>→ <strong>平均值、中位數、眾數</strong></p>
+    </div>
+    <div class="card c-blue">
+      <span class="tag t-blue">② Spread</span>
+      <h3>↔️ 散佈狀況<br>Variation</h3>
+      <p>資料有多分散？差異有多大？<br><br>→ <strong>標準差、全距、變異數</strong></p>
+    </div>
+    <div class="card c-purple">
+      <span class="tag t-purple">③ Shape</span>
+      <h3>📐 形狀<br>Shape</h3>
+      <p>分佈左偏、對稱還是右偏？<br><br>→ <strong>偏態 Skewness</strong></p>
+    </div>
+  </div>
+
+  <!-- Interactive chart -->
+  <div class="box" style="margin-top:.85rem;">
+    <h3>🎛️ 互動示範：調整三大特徵，即時看分佈變化</h3>
+    <div style="display:flex;flex-wrap:wrap;gap:1.2rem;margin-bottom:.9rem;align-items:flex-end;">
+      <div>
+        <label style="font-size:.78rem;color:#64748b;display:block;margin-bottom:.25rem;">📍 中心點（平均值）</label>
+        <input type="range" id="ctrl-mean" min="20" max="80" value="50" style="width:140px;">
+        <span id="lbl-mean" style="font-size:.85rem;color:#f59e0b;font-weight:700;margin-left:.35rem;">50</span>
+      </div>
+      <div>
+        <label style="font-size:.78rem;color:#64748b;display:block;margin-bottom:.25rem;">↔️ 散佈（標準差）</label>
+        <input type="range" id="ctrl-sd" min="3" max="20" value="8" style="width:140px;">
+        <span id="lbl-sd" style="font-size:.85rem;color:#3b82f6;font-weight:700;margin-left:.35rem;">8</span>
+      </div>
+      <div>
+        <label style="font-size:.78rem;color:#64748b;display:block;margin-bottom:.25rem;">📐 形狀（偏態）</label>
+        <select id="ctrl-skew" style="padding:.28rem .55rem;border-radius:6px;border:1px solid #cbd5e1;font-size:.82rem;">
+          <option value="sym">對稱</option>
+          <option value="right">右偏</option>
+          <option value="left">左偏</option>
+        </select>
+      </div>
+    </div>
+    <canvas id="threeFeatureChart" style="max-height:240px;"></canvas>
+    <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:.7rem;margin-top:.8rem;">
+      <div style="background:#fffbeb;border:1px solid #fde68a;border-radius:7px;padding:.55rem;text-align:center;">
+        <div style="font-size:.7rem;color:#92400e;">📍 中心點</div>
+        <div id="info-mean" style="font-weight:700;font-size:1rem;color:#b45309;">50</div>
+      </div>
+      <div style="background:#eff6ff;border:1px solid #bfdbfe;border-radius:7px;padding:.55rem;text-align:center;">
+        <div style="font-size:.7rem;color:#1d4ed8;">↔️ 標準差</div>
+        <div id="info-sd" style="font-weight:700;font-size:1rem;color:#1d4ed8;">8</div>
+      </div>
+      <div style="background:#f5f3ff;border:1px solid #ddd6fe;border-radius:7px;padding:.55rem;text-align:center;">
+        <div style="font-size:.7rem;color:#6d28d9;">📐 形狀</div>
+        <div id="info-skew" style="font-weight:700;font-size:1rem;color:#6d28d9;">對稱</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="box">
+    <h3>為什麼要收集資料？</h3>
+    <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(155px,1fr));gap:.6rem;font-size:.82rem;">
+      <div style="background:#f8fafc;border-radius:7px;padding:.65rem;">📝 提供研究輸入</div>
+      <div style="background:#f8fafc;border-radius:7px;padding:.65rem;">📈 衡量績效</div>
+      <div style="background:#f8fafc;border-radius:7px;padding:.65rem;">✔️ 評估是否符合標準</div>
+      <div style="background:#f8fafc;border-radius:7px;padding:.65rem;">🧭 協助制定決策</div>
+      <div style="background:#f8fafc;border-radius:7px;padding:.65rem;">🔍 滿足好奇心</div>
+    </div>
+  </div>
+</div>
+
+<!-- S5 資料類型 -->
+<div class="sec" id="s5">
+  <div class="sec-title">資料的種類<span class="page-badge">Week 1-5 ~ 1-7</span></div>
+
+  <div class="box">
+    <h3>基本元素</h3>
+    <table>
+      <thead><tr><th>名詞</th><th>意義</th><th>例</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Element 元素</strong></td><td>收集資料的對象</td><td>每一位受訪客戶</td></tr>
+        <tr><td><strong>Variable 變數</strong></td><td>元素的某個特徵</td><td>年齡、消費金額、評分</td></tr>
+        <tr><td><strong>Observation 觀察值</strong></td><td>一個元素的一組測量</td><td>某客戶的整列資料</td></tr>
+        <tr><td><strong>Data Set 資料集</strong></td><td>元素數 × 變數數 = 總筆數</td><td>5人 × 3變數 = 15筆</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="two">
+    <div class="card c-blue">
+      <span class="tag t-blue">Qualitative 定性</span>
+      <h3>質性資料</h3>
+      <p>用標籤或名稱描述屬性。<br>
+      ❌ <strong>不能做四則運算</strong>。<br><br>
+      例：評分（優/良/差）、性別、顏色。</p>
+    </div>
+    <div class="card c-green">
+      <span class="tag t-green">Quantitative 定量</span>
+      <h3>量性資料</h3>
+      <p>表示「多少」或「幾個」。<br>
+      ✅ <strong>一定是數字，可做運算</strong>。<br><br>
+      例：身高、費用、溫度。</p>
+    </div>
+    <div class="card c-orange">
+      <span class="tag t-orange">Cross-Sectional</span>
+      <h3>橫斷面資料</h3>
+      <p><strong>同一時間點</strong>收集多個對象。<br><br>
+      例：2024年6月各縣市建照數。</p>
+    </div>
+    <div class="card c-purple">
+      <span class="tag t-purple">Time Series</span>
+      <h3>時間序列資料</h3>
+      <p>同一對象在<strong>不同時間點</strong>的資料。<br><br>
+      例：某縣市過去36個月建照數。</p>
+    </div>
+  </div>
+</div>
+
+<!-- S6 資料來源 -->
+<div class="sec" id="s6">
+  <div class="sec-title">資料來源 Data Sources<span class="page-badge">Week 1-7 ~ 1-8</span></div>
+
+  <div class="box">
+    <svg viewBox="0 0 620 290" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-width:620px;display:block;margin:0 auto;font-family:'Segoe UI','Microsoft JhengHei',sans-serif;">
+      <!-- connectors -->
+      <line x1="310" y1="52" x2="175" y2="100" stroke="#94a3b8" stroke-width="1.8"/>
+      <line x1="310" y1="52" x2="490" y2="100" stroke="#94a3b8" stroke-width="1.8"/>
+      <line x1="110" y1="148" x2="60"  y2="196" stroke="#94a3b8" stroke-width="1.5"/>
+      <line x1="175" y1="148" x2="175" y2="196" stroke="#94a3b8" stroke-width="1.5"/>
+      <line x1="240" y1="148" x2="310" y2="196" stroke="#94a3b8" stroke-width="1.5"/>
+      <line x1="490" y1="148" x2="490" y2="196" stroke="#94a3b8" stroke-width="1.5"/>
+      <!-- ROOT -->
+      <rect x="210" y="10" width="200" height="42" rx="7" fill="#0891b2"/>
+      <text x="310" y="28" text-anchor="middle" fill="white" font-size="13" font-weight="bold">Data Sources 資料來源</text>
+      <text x="310" y="44" text-anchor="middle" fill="#cffafe" font-size="10">統計資料從哪裡來？</text>
+      <!-- PRIMARY -->
+      <rect x="75" y="100" width="200" height="48" rx="7" fill="#0891b2"/>
+      <text x="175" y="120" text-anchor="middle" fill="white" font-size="12" font-weight="bold">Primary 初級資料</text>
+      <text x="175" y="136" text-anchor="middle" fill="#cffafe" font-size="10">Data Collectors — 自己蒐集</text>
+      <!-- SECONDARY -->
+      <rect x="390" y="100" width="200" height="48" rx="7" fill="#f59e0b"/>
+      <text x="490" y="120" text-anchor="middle" fill="white" font-size="12" font-weight="bold">Secondary 次級資料</text>
+      <text x="490" y="136" text-anchor="middle" fill="#fef3c7" font-size="10">Data Compilers — 使用現有資料</text>
+      <!-- Experiment -->
+      <rect x="5"   y="196" width="110" height="56" rx="7" fill="#10b981"/>
+      <text x="60"  y="217" text-anchor="middle" fill="white" font-size="11" font-weight="bold">Experiment</text>
+      <text x="60"  y="230" text-anchor="middle" fill="#d1fae5" font-size="9.5">實驗</text>
+      <text x="60"  y="244" text-anchor="middle" fill="#d1fae5" font-size="9">(under control)</text>
+      <!-- Survey -->
+      <rect x="128" y="196" width="95"  height="56" rx="7" fill="#10b981"/>
+      <text x="175" y="217" text-anchor="middle" fill="white" font-size="11" font-weight="bold">Survey</text>
+      <text x="175" y="230" text-anchor="middle" fill="#d1fae5" font-size="9.5">問卷調查</text>
+      <text x="175" y="244" text-anchor="middle" fill="#d1fae5" font-size="9">(no control)</text>
+      <!-- Observation -->
+      <rect x="238" y="196" width="140" height="56" rx="7" fill="#10b981"/>
+      <text x="308" y="217" text-anchor="middle" fill="white" font-size="11" font-weight="bold">Observation</text>
+      <text x="308" y="230" text-anchor="middle" fill="#d1fae5" font-size="9.5">觀察法</text>
+      <text x="308" y="244" text-anchor="middle" fill="#d1fae5" font-size="9">Focus group / Brainstorming / Delphi</text>
+      <!-- Published -->
+      <rect x="390" y="196" width="200" height="56" rx="7" fill="#8b5cf6"/>
+      <text x="490" y="217" text-anchor="middle" fill="white" font-size="11" font-weight="bold">Published &amp; On-Line</text>
+      <text x="490" y="230" text-anchor="middle" fill="#ede9fe" font-size="9.5">出版品 / 線上資料</text>
+      <text x="490" y="244" text-anchor="middle" fill="#ede9fe" font-size="9">政府報告、學術期刊、報紙、網路/AI</text>
+      <!-- labels -->
+      <text x="175" y="93" text-anchor="middle" fill="#475569" font-size="9" font-style="italic">自己動手蒐集，耗時但新鮮</text>
+      <text x="490" y="93" text-anchor="middle" fill="#475569" font-size="9" font-style="italic">用他人整理好的，省時但需確認時效</text>
+    </svg>
+  </div>
+
+  <div class="box">
+    <h3>⚠️ 資料取得三大注意事項</h3>
+    <table>
+      <thead><tr><th>問題</th><th>說明</th></tr></thead>
+      <tbody>
+        <tr><td>⏱️ <strong>時間 Time</strong></td><td>蒐集耗時；等到手可能已過期失效。</td></tr>
+        <tr><td>💰 <strong>成本 Cost</strong></td><td>許多機構對資料收費，即使非其主業。</td></tr>
+        <tr><td>❌ <strong>錯誤 Data Errors</strong></td><td>隨手取得或蒐集不嚴謹 → 錯誤結論。垃圾進，垃圾出。</td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- S7 描述統計 vs 推論統計 -->
+<div class="sec" id="s7">
+  <div class="sec-title">描述統計 vs 統計推論<span class="page-badge">Week 1-9</span></div>
+
+  <div class="two">
+    <div class="card c-teal">
+      <span class="tag t-teal">Descriptive Statistics</span>
+      <h3>描述統計</h3>
+      <p>用<strong>表格、圖形、數值</strong>方法來摘要與呈現資料特徵。<br><br>
+      → 讓龐大資料一目瞭然。</p>
+    </div>
+    <div class="card c-purple">
+      <span class="tag t-purple">Statistical Inference</span>
+      <h3>統計推論</h3>
+      <p>用<strong>樣本資料</strong>對<strong>母體特性</strong>做估計與假設檢定。<br><br>
+      → 是描述統計之後的進階工具。</p>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════
+     PART 3  圖表方法
+═══════════════════════════════════════ -->
+<div class="part-header">
+  <h2>PART 3 &nbsp;·&nbsp; 表格與圖形方法</h2>
+  <p>如何把定性資料、定量資料整理成表格與圖形。</p>
+</div>
+
+<!-- S8 定性資料 -->
+<div class="sec" id="s8">
+  <div class="sec-title">定性資料的整理方法<span class="page-badge">Week 1-10 ~ 1-12</span></div>
+
+  <div class="box">
+    <h3>公式</h3>
+    <div class="fml">相對次數 = <span class="hl">某類次數 ÷ 總次數</span><br>百分比次數 = <span class="hl">相對次數 × 100</span></div>
+  </div>
+
+  <div class="box">
+    <h3>📋 範例：旅館品質評分（n = 20）</h3>
+    <table>
+      <thead><tr><th>評分</th><th>次數</th><th>相對次數</th><th>百分比 %</th></tr></thead>
+      <tbody>
+        <tr><td>Poor 差</td><td>2</td><td>0.10</td><td>10%</td></tr>
+        <tr><td>Below Average 低於平均</td><td>3</td><td>0.15</td><td>15%</td></tr>
+        <tr><td>Average 平均</td><td>5</td><td>0.25</td><td>25%</td></tr>
+        <tr><td>Above Average 高於平均</td><td>9</td><td>0.45</td><td>45%</td></tr>
+        <tr><td>Excellent 優</td><td>1</td><td>0.05</td><td>5%</td></tr>
+        <tr style="font-weight:700;"><td>合計</td><td>20</td><td>1.00</td><td>100%</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="two">
+    <div class="box">
+      <h3>📊 長條圖 Bar Chart</h3>
+      <svg viewBox="0 0 280 160" xmlns="http://www.w3.org/2000/svg" style="width:100%;">
+        <line x1="30" y1="10" x2="30" y2="130" stroke="#cbd5e1" stroke-width="1.5"/>
+        <line x1="30" y1="130" x2="270" y2="130" stroke="#cbd5e1" stroke-width="1.5"/>
+        <!-- bars: heights proportional to freq (max=9 → 100px) -->
+        <!-- Poor=2→22, BelowAvg=3→33, Avg=5→55, AboveAvg=9→100, Excellent=1→11 -->
+        <rect x="38"  y="108" width="30" height="22"  fill="#ef4444" rx="3"/>
+        <rect x="83"  y="97"  width="30" height="33"  fill="#f59e0b" rx="3"/>
+        <rect x="128" y="75"  width="30" height="55"  fill="#3b82f6" rx="3"/>
+        <rect x="173" y="30"  width="30" height="100" fill="#10b981" rx="3"/>
+        <rect x="218" y="119" width="30" height="11"  fill="#8b5cf6" rx="3"/>
+        <!-- labels -->
+        <g font-size="8.5" fill="#64748b" text-anchor="middle">
+          <text x="53"  y="143">差</text>
+          <text x="98"  y="143">低於平均</text>
+          <text x="143" y="143">平均</text>
+          <text x="188" y="143">高於平均</text>
+          <text x="233" y="143">優</text>
+          <text x="53"  y="105">2</text>
+          <text x="98"  y="94">3</text>
+          <text x="143" y="72">5</text>
+          <text x="188" y="27">9</text>
+          <text x="233" y="116">1</text>
+        </g>
+        <!-- y-axis ticks -->
+        <g font-size="8" fill="#94a3b8">
+          <text x="24" y="132" text-anchor="end">0</text>
+          <text x="24" y="91"  text-anchor="end">4</text>
+          <text x="24" y="52"  text-anchor="end">8</text>
+        </g>
+      </svg>
+      <div class="tip" style="font-size:.78rem;">各類別之間<strong>留有空隙</strong>，強調每類是獨立的。</div>
+    </div>
+    <div class="box">
+      <h3>🥧 圓餅圖 Pie Chart</h3>
+      <svg viewBox="0 0 240 210" xmlns="http://www.w3.org/2000/svg" style="width:100%;">
+        <!--
+          圓心(120,90) 半徑70 從正上方(120,20)順時鐘
+          公式: x=120+70*sin(θ), y=90-70*cos(θ)
+          Poor    10% →  36°: end=(161.1, 33.4)
+          BelowAvg15% →  90°: end=(190,   90  )
+          Avg     25% → 180°: end=(120,  160  )
+          AboveAvg45% → 342°: end=(98.4,  23.4)  162°<180° → large-arc=0
+          Excellent5% → 360°: end=(120,   20  )
+        -->
+        <path d="M120,90 L120,20    A70,70 0 0,1 161.1,33.4  Z" fill="#ef4444"/>
+        <path d="M120,90 L161.1,33.4 A70,70 0 0,1 190,90     Z" fill="#f59e0b"/>
+        <path d="M120,90 L190,90    A70,70 0 0,1 120,160     Z" fill="#3b82f6"/>
+        <path d="M120,90 L120,160   A70,70 0 0,1 98.4,23.4   Z" fill="#10b981"/>
+        <path d="M120,90 L98.4,23.4  A70,70 0 0,1 120,20      Z" fill="#8b5cf6"/>
+        <!-- legend -->
+        <g font-size="9.5" fill="#475569">
+          <rect x="10"  y="168" width="10" height="10" fill="#ef4444"/>
+          <text x="24"  y="177">差 10%</text>
+          <rect x="70"  y="168" width="10" height="10" fill="#f59e0b"/>
+          <text x="84"  y="177">低於平均 15%</text>
+          <rect x="10"  y="186" width="10" height="10" fill="#3b82f6"/>
+          <text x="24"  y="195">平均 25%</text>
+          <rect x="80"  y="186" width="10" height="10" fill="#10b981"/>
+          <text x="94"  y="195">高於平均 45%</text>
+          <rect x="175" y="168" width="10" height="10" fill="#8b5cf6"/>
+          <text x="189" y="177">優 5%</text>
+        </g>
+      </svg>
+      <div class="tip" style="font-size:.78rem;">某類 25% → 佔 0.25 × 360° = <strong>90°</strong>。</div>
+    </div>
+  </div>
+</div>
+
+<!-- S9 定量資料 -->
+<div class="sec" id="s9">
+  <div class="sec-title">定量資料的整理方法<span class="page-badge">Week 1-13 ~ 1-15</span></div>
+
+  <div class="box">
+    <h3>建立次數分配表的原則</h3>
+    <div style="font-size:.84rem;color:#475569;line-height:2;">
+      ① 使用 <strong>5～20 個類別</strong>（或 √n）<br>
+      ② 各類別<strong>寬度相等</strong><br>
+      ③ 近似類別寬度 = <code style="background:#f1f5f9;padding:.1rem .3rem;border-radius:4px;">(最大值 − 最小值) ÷ 類別數</code><br>
+      ④ 每筆資料只能屬於<strong>一個</strong>類別
+    </div>
+  </div>
+
+  <div class="box">
+    <h3>📋 範例：引擎保養費用 n=50（美元）</h3>
+    <p style="font-size:.81rem;color:#64748b;margin-bottom:.7rem;">類別寬度 = (109−52)/6 ≈ 9.5 → 取 10</p>
+    <table>
+      <thead><tr><th>費用區間</th><th>次數</th><th>相對次數</th><th>百分比</th><th>累積百分比</th></tr></thead>
+      <tbody>
+        <tr><td>$50–59</td><td>2</td><td>0.04</td><td>4%</td><td>4%</td></tr>
+        <tr><td>$60–69</td><td>13</td><td>0.26</td><td>26%</td><td>30%</td></tr>
+        <tr><td>$70–79</td><td>16</td><td>0.32</td><td>32%</td><td>62%</td></tr>
+        <tr><td>$80–89</td><td>7</td><td>0.14</td><td>14%</td><td>76%</td></tr>
+        <tr><td>$90–99</td><td>7</td><td>0.14</td><td>14%</td><td>90%</td></tr>
+        <tr><td>$100–109</td><td>5</td><td>0.10</td><td>10%</td><td>100%</td></tr>
+        <tr style="font-weight:700;"><td>合計</td><td>50</td><td>1.00</td><td>100%</td><td>—</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="two">
+    <div class="box">
+      <h3>📊 直方圖 Histogram</h3>
+      <svg viewBox="0 0 260 150" xmlns="http://www.w3.org/2000/svg" style="width:100%;">
+        <line x1="28" y1="10" x2="28" y2="120" stroke="#cbd5e1" stroke-width="1.5"/>
+        <line x1="28" y1="120" x2="252" y2="120" stroke="#cbd5e1" stroke-width="1.5"/>
+        <!-- bars (max freq=16→100px), width=36px each, no gap -->
+        <!-- 2→12.5, 13→81.25, 16→100, 7→43.75, 7→43.75, 5→31.25 -->
+        <rect x="28"  y="107.5" width="37" height="12.5"  fill="#3b82f6"/>
+        <rect x="65"  y="38.75" width="37" height="81.25" fill="#3b82f6"/>
+        <rect x="102" y="20"    width="37" height="100"   fill="#1d4ed8"/>
+        <rect x="139" y="76.25" width="37" height="43.75" fill="#3b82f6"/>
+        <rect x="176" y="76.25" width="37" height="43.75" fill="#3b82f6"/>
+        <rect x="213" y="88.75" width="37" height="31.25" fill="#3b82f6"/>
+        <!-- x labels -->
+        <g font-size="8" fill="#64748b" text-anchor="middle">
+          <text x="28"  y="132">50</text><text x="65"  y="132">60</text>
+          <text x="102" y="132">70</text><text x="139" y="132">80</text>
+          <text x="176" y="132">90</text><text x="213" y="132">100</text>
+          <text x="250" y="132">110</text>
+        </g>
+        <!-- freq labels on bars -->
+        <g font-size="8" fill="white" text-anchor="middle" font-weight="bold">
+          <text x="46.5"  y="118">2</text>
+          <text x="83.5"  y="50">13</text>
+          <text x="120.5" y="32">16</text>
+          <text x="157.5" y="88">7</text>
+          <text x="194.5" y="88">7</text>
+          <text x="231.5" y="100">5</text>
+        </g>
+      </svg>
+      <div class="tip" style="font-size:.78rem;">與長條圖的差別：各矩形<strong>緊鄰無空隙</strong>（強調連續性）。</div>
+    </div>
+    <div class="box">
+      <h3>📈 累積次數曲線 Ogive</h3>
+      <svg viewBox="0 0 260 150" xmlns="http://www.w3.org/2000/svg" style="width:100%;">
+        <line x1="28" y1="10" x2="28" y2="120" stroke="#cbd5e1" stroke-width="1.5"/>
+        <line x1="28" y1="120" x2="252" y2="120" stroke="#cbd5e1" stroke-width="1.5"/>
+        <!-- y-axis: 0%→120, 100%→10, so scale: y = 120 - pct*1.1 -->
+        <!-- points: 50→0%, 60→4%, 70→30%, 80→62%, 90→76%, 100→90%, 110→100% -->
+        <polyline points="28,120 65,115.6 102,87 139,51.8 176,36.4 213,21 250,10"
+          fill="none" stroke="#8b5cf6" stroke-width="2.2"/>
+        <!-- dots -->
+        <g fill="#8b5cf6">
+          <circle cx="28"  cy="120"  r="3.5"/>
+          <circle cx="65"  cy="115.6" r="3.5"/>
+          <circle cx="102" cy="87"   r="3.5"/>
+          <circle cx="139" cy="51.8" r="3.5"/>
+          <circle cx="176" cy="36.4" r="3.5"/>
+          <circle cx="213" cy="21"   r="3.5"/>
+          <circle cx="250" cy="10"   r="3.5"/>
+        </g>
+        <!-- labels -->
+        <g font-size="8" fill="#64748b" text-anchor="middle">
+          <text x="28"  y="132">50</text><text x="65"  y="132">60</text>
+          <text x="102" y="132">70</text><text x="139" y="132">80</text>
+          <text x="176" y="132">90</text><text x="213" y="132">100</text>
+          <text x="250" y="132">110</text>
+        </g>
+        <g font-size="8" fill="#94a3b8" text-anchor="end">
+          <text x="25" y="122">0%</text>
+          <text x="25" y="67">50%</text>
+          <text x="25" y="13">100%</text>
+        </g>
+      </svg>
+      <div class="tip" style="font-size:.78rem;">顯示「≤ 某值」的累積比例，可快速查詢百分位數。</div>
+    </div>
+  </div>
+</div>
+
+<!-- S10 枝葉圖 -->
+<div class="sec" id="s10">
+  <div class="sec-title">枝葉圖 Stem-and-Leaf<span class="page-badge">Week 1-16</span></div>
+
+  <div class="box">
+    <p style="font-size:.85rem;color:#475569;line-height:1.8;margin-bottom:.9rem;">
+      同時保留<strong>排序</strong>與<strong>原始數值</strong>，像橫置的直方圖但能看到每個確切數值。<br>
+      • <strong>枝 Stem</strong>：數值的前幾位（左側）<br>
+      • <strong>葉 Leaf</strong>：數值最後一位（右側，由小排到大）
+    </p>
+    <div style="background:#0f172a;border-radius:8px;padding:1.1rem 1.4rem;font-family:monospace;font-size:.93rem;color:#e2e8f0;line-height:2.2;">
+      <span style="color:#64748b;font-size:.75rem;display:block;margin-bottom:.3rem;">枝 │ 葉（引擎保養費用 n=50）</span>
+      <span style="color:#fbbf24;font-weight:700;"> 5</span> │ 2 7<br>
+      <span style="color:#fbbf24;font-weight:700;"> 6</span> │ 2 2 2 2 5 6 7 8 8 8 9 9 9<br>
+      <span style="color:#fbbf24;font-weight:700;"> 7</span> │ 1 1 2 2 3 4 4 5 5 5 6 7 8 9 9 9<br>
+      <span style="color:#fbbf24;font-weight:700;"> 8</span> │ 0 0 2 3 5 8 9<br>
+      <span style="color:#fbbf24;font-weight:700;"> 9</span> │ 1 3 7 7 7 8 9<br>
+      <span style="color:#fbbf24;font-weight:700;">10</span> │ 1 4 5 5 9
+    </div>
+    <div class="tip">💡 可同時看出集中在 70 元區間（葉最多），且整體稍微右偏（高費用仍有幾個值）。</div>
+  </div>
+</div>
+
+<!-- S11 交叉分析 & 散佈圖 -->
+<div class="sec" id="s11">
+  <div class="sec-title">交叉分析 &amp; 散佈圖<span class="page-badge">Week 1-17 ~ 1-18</span></div>
+
+  <div class="box">
+    <h3>🔀 交叉分析表 Crosstabulation</h3>
+    <p style="font-size:.83rem;color:#475569;margin-bottom:.8rem;line-height:1.7;">同時整理<strong>兩個變數</strong>的關聯（定性 vs 定性 或 定性 vs 定量）。</p>
+    <p style="font-size:.8rem;color:#64748b;margin-bottom:.5rem;">範例：300 家餐廳的品質評分 × 餐點價格</p>
+    <table>
+      <thead>
+        <tr><th>品質 ╲ 價格</th><th>$10–19</th><th>$20–29</th><th>$30–39</th><th>$40–49</th><th>合計</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>Good</td><td>42</td><td>40</td><td>2</td><td>0</td><td>84</td></tr>
+        <tr><td>Very Good</td><td>34</td><td>64</td><td>46</td><td>6</td><td>150</td></tr>
+        <tr><td>Excellent</td><td>2</td><td>14</td><td>28</td><td>22</td><td>66</td></tr>
+        <tr style="font-weight:700;"><td>合計</td><td>78</td><td>118</td><td>76</td><td>28</td><td>300</td></tr>
+      </tbody>
+    </table>
+    <div class="tip">💡 評分越高，價格傾向越高 → 正向關聯。</div>
+  </div>
+
+  <div class="box">
+    <h3>🔗 散佈圖 Scatter Diagram — 截球數 vs 得分</h3>
+    <div class="two" style="align-items:start;">
+      <div>
+        <table style="margin-bottom:.7rem;">
+          <thead><tr><th>截球數 x</th><th>得分 y</th></tr></thead>
+          <tbody>
+            <tr><td>1</td><td>14</td></tr>
+            <tr><td>3</td><td>24</td></tr>
+            <tr><td>2</td><td>18</td></tr>
+            <tr><td>1</td><td>17</td></tr>
+            <tr><td>3</td><td>27</td></tr>
+          </tbody>
+        </table>
+        <div class="tip" style="font-size:.79rem;">正相關：截球越多得分越高。</div>
+      </div>
+      <div>
+        <svg viewBox="0 0 220 165" xmlns="http://www.w3.org/2000/svg" style="width:100%;">
+          <line x1="30" y1="10" x2="30" y2="140" stroke="#cbd5e1" stroke-width="1.5"/>
+          <line x1="30" y1="140" x2="210" y2="140" stroke="#cbd5e1" stroke-width="1.5"/>
+          <!-- x: 0→30, 1→90, 2→150, 3→210 | y: 0→140, 30→10 scale: 140-(y/30*130) -->
+          <!-- (1,14)→(90,79.3) (1,17)→(90,66.3) (2,18)→(150,62) (3,24)→(210,36) (3,27)→(210,23) -->
+          <circle cx="90"  cy="79"  r="6" fill="#f59e0b"/>
+          <circle cx="90"  cy="66"  r="6" fill="#f59e0b"/>
+          <circle cx="150" cy="62"  r="6" fill="#f59e0b"/>
+          <circle cx="210" cy="36"  r="6" fill="#f59e0b"/>
+          <circle cx="210" cy="23"  r="6" fill="#f59e0b"/>
+          <!-- trend -->
+          <line x1="60" y1="96" x2="210" y2="25" stroke="#3b82f6" stroke-width="1.5" stroke-dasharray="5,3"/>
+          <!-- axis labels -->
+          <g font-size="9" fill="#64748b" text-anchor="middle">
+            <text x="90"  y="153">1</text>
+            <text x="150" y="153">2</text>
+            <text x="210" y="153">3</text>
+            <text x="140" y="163">截球數</text>
+          </g>
+          <g font-size="9" fill="#64748b" text-anchor="end">
+            <text x="27" y="143">0</text>
+            <text x="27" y="93">15</text>
+            <text x="27" y="43">28</text>
+          </g>
+          <text x="-70" y="9" fill="#64748b" font-size="9" transform="rotate(-90)" text-anchor="middle">得分</text>
+          <!-- 正相關 label -->
+          <text x="155" y="95" fill="#10b981" font-size="9" font-weight="700">正相關 ↗</text>
+        </svg>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- S12 方法總覽 -->
+<div class="sec" id="s12">
+  <div class="sec-title">圖表方法總覽<span class="page-badge">Week 1-18</span></div>
+  <div class="box">
+    <table>
+      <thead>
+        <tr>
+          <th></th>
+          <th colspan="2" style="text-align:center;background:#0891b2;">定性資料 Qualitative</th>
+          <th colspan="2" style="text-align:center;background:#7c3aed;">定量資料 Quantitative</th>
+        </tr>
+        <tr>
+          <th></th>
+          <th style="background:#0e7490;">表格法</th>
+          <th style="background:#0e7490;">圖形法</th>
+          <th style="background:#6d28d9;">表格法</th>
+          <th style="background:#6d28d9;">圖形法</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>方法</strong></td>
+          <td>次數分配表<br>相對次數表<br>百分比表<br>交叉分析表</td>
+          <td>長條圖<br>圓餅圖</td>
+          <td>次數分配表<br>相對次數表<br>累積次數表<br>交叉分析表</td>
+          <td>點圖 Dot Plot<br>直方圖 Histogram<br>累積曲線 Ogive<br>散佈圖 Scatter<br>枝葉圖</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════
+     PART 4  數值量數
+═══════════════════════════════════════ -->
+<div class="part-header">
+  <h2>PART 4 &nbsp;·&nbsp; 數值量數</h2>
+  <p>集中趨勢、離散程度、形狀——用數字精確描述資料。</p>
+</div>
+
+<!-- S13 集中趨勢 -->
+<div class="sec" id="s13">
+  <div class="sec-title">集中趨勢的量數<span class="page-badge">Week 1-19 ~ 1-20</span></div>
+
+  <div class="hl-row">📌 範例資料 — 母體 N=18：31 33 34 35 38 40 40 40 41 42 42 44 44 44 47 49 50 53<br>
+  樣本 n=10：33 35 40 41 <strong>42 44</strong> 44 44 47 50</div>
+
+  <div class="cards">
+    <div class="card c-orange">
+      <span class="tag t-orange">Mean 平均值</span>
+      <h3>μ（母體）/ x̄（樣本）</h3>
+      <div class="fml">μ = <span class="hl">Σxᵢ / N</span> = 747/18 = <span class="hl">41.5</span><br>x̄ = <span class="hl">Σxᵢ / n</span> = 420/10 = <span class="hl">42</span></div>
+      <p style="font-size:.8rem;color:#9a3412;margin-top:.4rem;">⚠️ 受<strong>極端值</strong>影響最大。</p>
+    </div>
+    <div class="card c-blue">
+      <span class="tag t-blue">Median 中位數</span>
+      <h3>排序後中間的值</h3>
+      <div class="fml">奇數 → 第 <span class="hl">(N+1)/2</span> 個<br>偶數 → 第 <span class="hl">n/2</span> 和 <span class="hl">n/2+1</span> 個平均<br><br>n=10: (42+44)/2 = <span class="hl">43</span></div>
+      <p style="font-size:.8rem;color:#065f46;margin-top:.4rem;">✅ <strong>不受極端值影響</strong>。</p>
+    </div>
+    <div class="card c-purple">
+      <span class="tag t-purple">Percentile 百分位數</span>
+      <h3>P-th Percentile</h3>
+      <p style="font-size:.82rem;line-height:1.7;">至少 p% 的值 ≤ 此數。<br>
+      位置 <code>i = (p/100) × n</code><br>
+      非整數 → 進位取該位<br>
+      整數 → 第 i 與 i+1 取平均</p>
+    </div>
+    <div class="card c-green">
+      <span class="tag t-green">Quartile 四分位數</span>
+      <h3>Q1 / Q2 / Q3</h3>
+      <p style="font-size:.82rem;line-height:1.8;">Q1 = 第 25 百分位<br>
+      Q2 = 中位數（第 50）<br>
+      Q3 = 第 75 百分位</p>
+      <div style="display:flex;margin-top:.5rem;gap:1px;height:12px;">
+        <div style="flex:1;background:#93c5fd;border-radius:2px 0 0 2px;"></div>
+        <div style="flex:1;background:#60a5fa;"></div>
+        <div style="flex:1;background:#3b82f6;"></div>
+        <div style="flex:1;background:#1d4ed8;border-radius:0 2px 2px 0;"></div>
+      </div>
+      <div style="display:flex;justify-content:space-between;font-size:.7rem;color:#64748b;margin-top:.2rem;">
+        <span>Q1</span><span>Q2</span><span>Q3</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- S14 離散程度 -->
+<div class="sec" id="s14">
+  <div class="sec-title">離散程度的量數<span class="page-badge">Week 1-21 ~ 1-22</span></div>
+
+  <div class="box">
+    <h3>💡 為什麼需要離散程度？</h3>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:.8rem;font-size:.84rem;">
+      <div style="background:#f0fdf4;border-radius:8px;padding:.8rem;text-align:center;">
+        <div style="font-size:.75rem;color:#64748b;margin-bottom:.3rem;">A 班 — 平均 70</div>
+        <div style="letter-spacing:.3rem;font-weight:700;color:#059669;">68 69 70 71 72</div>
+        <div style="font-size:.75rem;color:#059669;margin-top:.3rem;">s ≈ 1.6（很集中）</div>
+      </div>
+      <div style="background:#fff1f2;border-radius:8px;padding:.8rem;text-align:center;">
+        <div style="font-size:.75rem;color:#64748b;margin-bottom:.3rem;">B 班 — 平均 70</div>
+        <div style="letter-spacing:.1rem;font-weight:700;color:#dc2626;">20 50 70 90 100</div>
+        <div style="font-size:.75rem;color:#dc2626;margin-top:.3rem;">s ≈ 31（非常分散）</div>
+      </div>
+    </div>
+    <div class="tip">💡 平均值相同，但標準差反映出兩班完全不同的狀況！</div>
+  </div>
+
+  <div class="cards">
+    <div class="card c-red">
+      <span class="tag t-red">Range 全距</span>
+      <h3>最大值 − 最小值</h3>
+      <div class="fml">母體: 53−31 = <span class="hl">22</span><br>樣本: 50−33 = <span class="hl">17</span></div>
+      <p style="font-size:.8rem;color:#9a3412;margin-top:.4rem;">⚠️ 受極端值影響，忽略中間分佈。</p>
+    </div>
+    <div class="card c-orange">
+      <span class="tag t-orange">偏差分數 Deviation</span>
+      <h3>xᵢ − μ（或 xᵢ − x̄）</h3>
+      <p style="font-size:.82rem;line-height:1.7;">每個值與平均值的距離。<br>
+      所有偏差分數加總<strong>永遠等於 0</strong>！<br>
+      ∴ 改用平方來消除負號。</p>
+    </div>
+    <div class="card c-blue">
+      <span class="tag t-blue">Variance 變異數</span>
+      <h3>σ²（母體）/ s²（樣本）</h3>
+      <div class="fml">σ² = SS/N = 610.5/18 ≈ <span class="hl">33.9</span><br>s² = SS/(n−1) = 236/9 ≈ <span class="hl">26.22</span></div>
+      <p style="font-size:.8rem;color:#475569;margin-top:.4rem;">樣本用 n−1：損失 1 個自由度，估計更準。</p>
+    </div>
+    <div class="card c-green">
+      <span class="tag t-green">Std Dev 標準差</span>
+      <h3>σ（母體）/ s（樣本）</h3>
+      <div class="fml">σ = √33.9 ≈ <span class="hl">5.82</span><br>s = √26.22 ≈ <span class="hl">5.12</span></div>
+      <p style="font-size:.8rem;color:#065f46;margin-top:.4rem;">與原資料同單位，比變異數更直覺。</p>
+    </div>
+    <div class="card c-purple">
+      <span class="tag t-purple">CV 變異係數</span>
+      <h3>相對離散程度</h3>
+      <div class="fml">CV = <span class="hl">(s / x̄) × 100%</span><br>= (5.12/42)×100% ≈ <span class="hl">12.2%</span></div>
+      <p style="font-size:.8rem;color:#475569;margin-top:.4rem;">無單位，可比較不同量尺的兩組資料。</p>
+    </div>
+  </div>
+
+  <div class="box" style="margin-top:.85rem;">
+    <h3>🔢 計算流程（n=10 樣本：33 35 40 41 42 44 44 44 47 50，x̄=42）</h3>
+    <table>
+      <thead><tr><th>步驟</th><th>計算</th><th>結果</th></tr></thead>
+      <tbody>
+        <tr><td>① 計算 SS</td><td>Σ(xᵢ−42)² = (33−42)²+(35−42)²+…</td><td>SS = <strong>236</strong></td></tr>
+        <tr><td>② 變異數 s²</td><td>236 / (10−1) = 236/9</td><td>s² ≈ <strong>26.22</strong></td></tr>
+        <tr><td>③ 標準差 s</td><td>√26.22</td><td>s ≈ <strong>5.12</strong></td></tr>
+        <tr><td>④ CV</td><td>(5.12/42)×100%</td><td>CV ≈ <strong>12.2%</strong></td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- S15 形狀與z分數 -->
+<div class="sec" id="s15">
+  <div class="sec-title">分佈形狀 &amp; z 分數<span class="page-badge">Week 1-23</span></div>
+
+  <div class="skews">
+    <div class="skb" style="border-top:4px solid #ef4444;">
+      <svg viewBox="0 0 120 65" width="110" style="margin:0 auto;display:block;">
+        <path d="M10,55 Q20,10 55,22 Q85,32 115,53" fill="#fee2e2" stroke="#ef4444" stroke-width="2.5"/>
+        <line x1="48" y1="20" x2="48" y2="58" stroke="#ef4444" stroke-width="1.5" stroke-dasharray="3,2"/>
+        <text x="48" y="64" text-anchor="middle" fill="#ef4444" font-size="8">均 &lt; 中 &lt; 眾</text>
+      </svg>
+      <h4 style="color:#ef4444;margin-top:.4rem;font-size:.88rem;">左偏 Left-Skewed</h4>
+      <p style="font-size:.78rem;color:#64748b;">尾巴向左<br>平均 &lt; 中位 &lt; 眾數</p>
+    </div>
+    <div class="skb" style="border-top:4px solid #10b981;">
+      <svg viewBox="0 0 120 65" width="110" style="margin:0 auto;display:block;">
+        <path d="M10,55 Q60,−5 110,55" fill="#d1fae5" stroke="#10b981" stroke-width="2.5"/>
+        <line x1="60" y1="5" x2="60" y2="58" stroke="#10b981" stroke-width="1.5" stroke-dasharray="3,2"/>
+        <text x="60" y="64" text-anchor="middle" fill="#10b981" font-size="8">均 = 中 = 眾</text>
+      </svg>
+      <h4 style="color:#10b981;margin-top:.4rem;font-size:.88rem;">對稱 Symmetric</h4>
+      <p style="font-size:.78rem;color:#64748b;">左右對稱<br>平均 = 中位 = 眾數</p>
+    </div>
+    <div class="skb" style="border-top:4px solid #3b82f6;">
+      <svg viewBox="0 0 120 65" width="110" style="margin:0 auto;display:block;">
+        <path d="M10,53 Q35,10 65,22 Q95,32 115,55" fill="#dbeafe" stroke="#3b82f6" stroke-width="2.5"/>
+        <line x1="70" y1="20" x2="70" y2="58" stroke="#3b82f6" stroke-width="1.5" stroke-dasharray="3,2"/>
+        <text x="70" y="64" text-anchor="middle" fill="#3b82f6" font-size="8">眾 &lt; 中 &lt; 均</text>
+      </svg>
+      <h4 style="color:#3b82f6;margin-top:.4rem;font-size:.88rem;">右偏 Right-Skewed</h4>
+      <p style="font-size:.78rem;color:#64748b;">尾巴向右<br>眾數 &lt; 中位 &lt; 平均</p>
+    </div>
+  </div>
+
+  <div class="box" style="margin-top:.85rem;">
+    <h3>📐 z 分數 — 標準化位置</h3>
+    <div class="fml">z = <span class="hl">(xᵢ − x̄) / s</span></div>
+    <table style="margin-top:.75rem;">
+      <thead><tr><th>z 值</th><th>意義</th><th>範例（x̄=42, s=5.12）</th></tr></thead>
+      <tbody>
+        <tr><td>z &lt; 0</td><td>低於平均值</td><td>x=33 → z=(33−42)/5.12 = <strong>−1.76</strong></td></tr>
+        <tr><td>z = 0</td><td>等於平均值</td><td>x=42 → z = 0</td></tr>
+        <tr><td>z &gt; 0</td><td>高於平均值</td><td>x=50 → z=(50−42)/5.12 = <strong>+1.56</strong></td></tr>
+      </tbody>
+    </table>
+    <div class="tip">💡 z 分數讓不同單位的資料可以互相比較相對位置。</div>
+  </div>
+</div>
+
+<!-- S16 箱型圖 -->
+<div class="sec" id="s16">
+  <div class="sec-title">箱型圖 Box Plot &amp; 五數摘要<span class="page-badge">Week 1-24 ~ 1-25</span></div>
+
+  <div class="box">
+    <h3>五數摘要：最小值 · Q1 · 中位數 · Q3 · 最大值</h3>
+    <svg viewBox="0 0 560 170" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-width:560px;display:block;margin:.5rem auto;">
+      <line x1="30" y1="120" x2="540" y2="120" stroke="#94a3b8" stroke-width="1.8"/>
+      <g font-size="11" fill="#64748b" text-anchor="middle">
+        <line x1="55"  y1="115" x2="55"  y2="125" stroke="#94a3b8"/>
+        <text x="55"  y="138">33 (Min)</text>
+        <line x1="160" y1="115" x2="160" y2="125" stroke="#94a3b8"/>
+        <text x="160" y="138">40.25 (Q1)</text>
+        <line x1="260" y1="115" x2="260" y2="125" stroke="#94a3b8"/>
+        <text x="260" y="138">43 (Md)</text>
+        <line x1="345" y1="115" x2="345" y2="125" stroke="#94a3b8"/>
+        <text x="345" y="138">44 (Q3)</text>
+        <line x1="460" y1="115" x2="460" y2="125" stroke="#94a3b8"/>
+        <text x="460" y="138">50 (Max)</text>
+      </g>
+      <!-- left whisker -->
+      <line x1="55"  y1="80" x2="160" y2="80" stroke="#6366f1" stroke-width="2" stroke-dasharray="5,3"/>
+      <!-- box -->
+      <rect x="160" y="55" width="185" height="50" fill="#dbeafe" stroke="#3b82f6" stroke-width="2.5" rx="4"/>
+      <!-- median -->
+      <line x1="260" y1="55" x2="260" y2="105" stroke="#1e40af" stroke-width="3"/>
+      <!-- right whisker -->
+      <line x1="345" y1="80" x2="460" y2="80" stroke="#6366f1" stroke-width="2" stroke-dasharray="5,3"/>
+      <!-- caps -->
+      <line x1="55"  y1="68" x2="55"  y2="92" stroke="#6366f1" stroke-width="2.5"/>
+      <line x1="460" y1="68" x2="460" y2="92" stroke="#6366f1" stroke-width="2.5"/>
+      <!-- labels above -->
+      <g font-size="10" fill="#1e40af">
+        <text x="160" y="47" text-anchor="middle">Q1</text>
+        <text x="260" y="47" text-anchor="middle" font-weight="bold">中位數</text>
+        <text x="345" y="47" text-anchor="middle">Q3</text>
+      </g>
+      <text x="55"  y="47" font-size="9" fill="#6366f1" text-anchor="middle">Min</text>
+      <text x="460" y="47" font-size="9" fill="#6366f1" text-anchor="middle">Max</text>
+      <!-- IQR label -->
+      <text x="252" y="158" font-size="10.5" fill="#7c3aed" text-anchor="middle">← IQR = Q3 − Q1 = 44 − 40.25 = 3.75 →</text>
+    </svg>
+    <div class="tip">
+      💡 <strong>離群值判斷：</strong><br>
+      內圍欄 = Q1 − 1.5×IQR 到 Q3 + 1.5×IQR → 範圍外標 <strong>*</strong>（mild）<br>
+      外圍欄 = Q1 − 3×IQR 到 Q3 + 3×IQR → 範圍外標 <strong>○</strong>（extreme）
+    </div>
+  </div>
+
+  <div class="box">
+    <h3>箱型圖形狀 vs 偏態</h3>
+    <div class="skews">
+      <div class="skb">
+        <svg viewBox="0 0 120 80" width="120">
+          <line x1="5" y1="50" x2="115" y2="50" stroke="#cbd5e1" stroke-width="1.5"/>
+          <line x1="10" y1="45" x2="30" y2="45" stroke="#ef4444" stroke-width="2" stroke-dasharray="3,2"/>
+          <rect x="30" y="33" width="50" height="25" fill="#fee2e2" stroke="#ef4444" stroke-width="2" rx="3"/>
+          <line x1="50" y1="33" x2="50" y2="58" stroke="#ef4444" stroke-width="2.5"/>
+          <line x1="80" y1="45" x2="110" y2="45" stroke="#ef4444" stroke-width="2" stroke-dasharray="3,2"/>
+          <line x1="10" y1="38" x2="10" y2="53" stroke="#ef4444" stroke-width="2"/>
+          <line x1="110" y1="38" x2="110" y2="53" stroke="#ef4444" stroke-width="2"/>
+          <text x="60" y="73" text-anchor="middle" font-size="8.5" fill="#ef4444">左偏 — 中位數偏右</text>
+        </svg>
+      </div>
+      <div class="skb">
+        <svg viewBox="0 0 120 80" width="120">
+          <line x1="5" y1="50" x2="115" y2="50" stroke="#cbd5e1" stroke-width="1.5"/>
+          <line x1="10" y1="45" x2="35" y2="45" stroke="#10b981" stroke-width="2" stroke-dasharray="3,2"/>
+          <rect x="35" y="33" width="50" height="25" fill="#d1fae5" stroke="#10b981" stroke-width="2" rx="3"/>
+          <line x1="60" y1="33" x2="60" y2="58" stroke="#10b981" stroke-width="2.5"/>
+          <line x1="85" y1="45" x2="110" y2="45" stroke="#10b981" stroke-width="2" stroke-dasharray="3,2"/>
+          <line x1="10" y1="38" x2="10" y2="53" stroke="#10b981" stroke-width="2"/>
+          <line x1="110" y1="38" x2="110" y2="53" stroke="#10b981" stroke-width="2"/>
+          <text x="60" y="73" text-anchor="middle" font-size="8.5" fill="#10b981">對稱 — 中位數居中</text>
+        </svg>
+      </div>
+      <div class="skb">
+        <svg viewBox="0 0 120 80" width="120">
+          <line x1="5" y1="50" x2="115" y2="50" stroke="#cbd5e1" stroke-width="1.5"/>
+          <line x1="10" y1="45" x2="35" y2="45" stroke="#3b82f6" stroke-width="2" stroke-dasharray="3,2"/>
+          <rect x="35" y="33" width="50" height="25" fill="#dbeafe" stroke="#3b82f6" stroke-width="2" rx="3"/>
+          <line x1="52" y1="33" x2="52" y2="58" stroke="#3b82f6" stroke-width="2.5"/>
+          <line x1="85" y1="45" x2="110" y2="45" stroke="#3b82f6" stroke-width="2" stroke-dasharray="3,2"/>
+          <line x1="10" y1="38" x2="10" y2="53" stroke="#3b82f6" stroke-width="2"/>
+          <line x1="110" y1="38" x2="110" y2="53" stroke="#3b82f6" stroke-width="2"/>
+          <text x="60" y="73" text-anchor="middle" font-size="8.5" fill="#3b82f6">右偏 — 中位數偏左</text>
+        </svg>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- S17 總覽 -->
+<div class="sec" id="s17">
+  <div class="sec-title">描述統計完整總覽<span class="page-badge">Week 1-25</span></div>
+  <div class="box">
+    <table>
+      <thead>
+        <tr>
+          <th style="background:#334155;">特徵</th>
+          <th style="background:#334155;">量數</th>
+          <th style="background:#334155;">說明</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr style="background:#fff7ed;"><td rowspan="2"><strong>📍 集中趨勢</strong></td><td>平均值 Mean</td><td>受極端值影響</td></tr>
+        <tr style="background:#fff7ed;"><td>中位數 Median</td><td>不受極端值影響</td></tr>
+        <tr style="background:#eff6ff;"><td rowspan="2"><strong>🎯 相對位置</strong></td><td>百分位數 Percentile</td><td>p% 的值 ≤ 此數</td></tr>
+        <tr style="background:#eff6ff;"><td>四分位數 Q1/Q2/Q3</td><td>25/50/75 百分位</td></tr>
+        <tr style="background:#f0fdf4;"><td rowspan="4"><strong>↔️ 離散程度</strong></td><td>全距 Range</td><td>最粗糙，受極端值影響</td></tr>
+        <tr style="background:#f0fdf4;"><td>變異數 Variance</td><td>偏差平方和平均</td></tr>
+        <tr style="background:#f0fdf4;"><td>標準差 Std Dev</td><td>與資料同單位</td></tr>
+        <tr style="background:#f0fdf4;"><td>變異係數 CV</td><td>無單位 %，可跨組比較</td></tr>
+        <tr style="background:#f5f3ff;"><td><strong>📐 形狀</strong></td><td>偏態 Skewness / z 分數</td><td>左偏/對稱/右偏</td></tr>
+        <tr style="background:#fff1f2;"><td><strong>📦 探索分析</strong></td><td>箱型圖 Box Plot</td><td>五數摘要 + 離群值</td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════
+     公式計算機
+═══════════════════════════════════════ -->
+<div class="part-header" style="background:linear-gradient(135deg,#0f172a,#1e40af);">
+  <h2>🧮 公式計算機</h2>
+  <p>點擊公式中的藍色符號可跳至對應欄位 → 填入數字後即時顯示代入結果。</p>
+</div>
+
+<!-- Σ 說明卡 -->
+<div class="sec" style="padding-bottom:.8rem;">
+  <div style="background:#fefce8;border:1.5px solid #fde68a;border-radius:12px;padding:1rem 1.2rem;">
+    <div style="font-size:.95rem;font-weight:700;color:#92400e;margin-bottom:.6rem;">📖 先看這裡：Σ（Sigma）是什麼？</div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;font-size:.85rem;color:#374151;line-height:1.8;">
+      <div>
+        <div style="font-weight:600;color:#1e293b;margin-bottom:.3rem;">Σ 就是「全部加起來」</div>
+        <div style="font-family:'Times New Roman',serif;font-size:1.1rem;background:white;border:1px solid #fde68a;border-radius:8px;padding:.5rem .8rem;display:inline-flex;align-items:center;gap:.3rem;">
+          <span style="display:inline-flex;flex-direction:column;align-items:center;line-height:1;vertical-align:middle;">
+            <span style="font-size:.6rem;">n</span>
+            <span style="font-size:1.5rem;line-height:.85;">Σ</span>
+            <span style="font-size:.6rem;">i=1</span>
+          </span>
+          x<sub>i</sub>
+          &nbsp;=&nbsp; x<sub>1</sub> + x<sub>2</sub> + x<sub>3</sub> + … + x<sub>n</sub>
+        </div>
+        <div style="margin-top:.5rem;color:#475569;font-size:.82rem;">
+          「i=1 到 n」代表從第 1 筆數到第 n 筆，<strong>每一筆都要加</strong>。
+        </div>
+      </div>
+      <div>
+        <div style="font-weight:600;color:#1e293b;margin-bottom:.3rem;">實際例子</div>
+        <div style="background:white;border:1px solid #fde68a;border-radius:8px;padding:.5rem .8rem;font-size:.83rem;line-height:2;">
+          資料：<strong>3, 5, 7, 9</strong>（共 4 筆，n = 4）<br>
+          Σxᵢ = 3 + 5 + 7 + 9 = <strong style="color:#065f46;">24</strong><br>
+          平均 μ = Σxᵢ ÷ N = 24 ÷ 4 = <strong style="color:#1d4ed8;">6</strong>
+        </div>
+      </div>
+    </div>
+    <div style="margin-top:.7rem;font-size:.8rem;color:#78350f;background:#fef9c3;border-radius:6px;padding:.4rem .7rem;">
+      💡 使用下方計算機時，只要填入數值，Σ 的加總過程會自動幫你做好。
+    </div>
+  </div>
+</div>
+
+<!-- C1 次數與頻率 -->
+<div class="sec" id="c1">
+  <div class="sec-title">次數分配公式 — 相對次數 &amp; 百分比<span class="page-badge">Week 1-10</span></div>
+  <div class="fc">
+    <div class="fc-head"><h3 style="margin:0;font-size:.95rem;">相對次數 / 百分比次數</h3></div>
+    <div style="padding:1rem 1.1rem;">
+      <div class="lf" style="display:flex;">
+        相對次數 &nbsp;=&nbsp;
+        <span class="lf-frac">
+          <span class="lf-num"><span class="pb" data-tip="f：某類別的觀察次數" onclick="focusParam('c1-f')">f</span></span>
+          <span class="lf-den"><span class="pb" data-tip="n：總觀察次數" onclick="focusParam('c1-n')">n</span></span>
+        </span>
+        &nbsp;&nbsp;&nbsp;&nbsp;
+        百分比 &nbsp;=&nbsp;
+        <span class="lf-frac">
+          <span class="lf-num"><span class="pb" data-tip="f：某類別的觀察次數" onclick="focusParam('c1-f')">f</span></span>
+          <span class="lf-den"><span class="pb" data-tip="n：總觀察次數" onclick="focusParam('c1-n')">n</span></span>
+        </span>
+        &nbsp;× 100
+      </div>
+      <div style="font-size:.82rem;color:#475569;margin-bottom:.9rem;">
+        <strong style="color:#1e293b;">符號：</strong>
+        <span style="background:#dbeafe;color:#1e40af;padding:.05rem .4rem;border-radius:4px;font-family:'Times New Roman',serif;">f</span> 某類別次數 &nbsp;
+        <span style="background:#dbeafe;color:#1e40af;padding:.05rem .4rem;border-radius:4px;font-family:'Times New Roman',serif;">n</span> 總次數
+      </div>
+      <div class="lf-live" id="c1-live"><span class="lhint">← 填入 f 與 n 後自動計算</span></div>
+      <div class="pi-grid" style="margin-top:0;">
+        <div>
+          <div style="margin-bottom:.3rem;font-size:.82rem;font-weight:600;color:#374151;"><span class="pi-sym" onclick="focusParam('c1-f')">f</span> 某類次數</div>
+          <input class="pi-inp" type="number" id="c1-f" placeholder="例：9" min="0" oninput="liveC1()">
+        </div>
+        <div>
+          <div style="margin-bottom:.3rem;font-size:.82rem;font-weight:600;color:#374151;"><span class="pi-sym" onclick="focusParam('c1-n')">n</span> 總次數</div>
+          <input class="pi-inp" type="number" id="c1-n" placeholder="例：20" min="1" oninput="liveC1()">
+        </div>
+      </div>
+      <div class="calc-err" id="c1-err" style="margin-top:.6rem;">請輸入有效數字，且 n &gt; 0。</div>
+    </div>
+  </div>
+</div>
+
+<!-- C2 類別寬度 -->
+<div class="sec" id="c2">
+  <div class="sec-title">近似類別寬度<span class="page-badge">Week 1-13</span></div>
+  <div class="fc">
+    <div class="fc-head"><h3 style="margin:0;font-size:.95rem;">Approximate Class Width</h3></div>
+    <div style="padding:1rem 1.1rem;">
+      <div class="lf" style="display:flex;">
+        寬度 &nbsp;≈&nbsp;
+        <span class="lf-frac">
+          <span class="lf-num">
+            <span class="pb" data-tip="最大值：資料中的最大觀察值" onclick="focusParam('c2-max')">max</span>
+            &nbsp;−&nbsp;
+            <span class="pb" data-tip="最小值：資料中的最小觀察值" onclick="focusParam('c2-min')">min</span>
+          </span>
+          <span class="lf-den"><span class="pb" data-tip="k：要分成幾個類別" onclick="focusParam('c2-k')">k</span></span>
+        </span>
+      </div>
+      <div style="font-size:.82rem;color:#475569;margin-bottom:.9rem;">
+        <strong style="color:#1e293b;">符號：</strong>
+        <span style="background:#dbeafe;color:#1e40af;padding:.05rem .4rem;border-radius:4px;font-family:'Times New Roman',serif;">max</span> 最大值 &nbsp;
+        <span style="background:#dbeafe;color:#1e40af;padding:.05rem .4rem;border-radius:4px;font-family:'Times New Roman',serif;">min</span> 最小值 &nbsp;
+        <span style="background:#dbeafe;color:#1e40af;padding:.05rem .4rem;border-radius:4px;font-family:'Times New Roman',serif;">k</span> 類別數（通常 5–20）
+      </div>
+      <div class="lf-live" id="c2-live"><span class="lhint">← 填入數值後自動計算</span></div>
+      <div class="pi-grid" style="margin-top:0;">
+        <div>
+          <div style="margin-bottom:.3rem;font-size:.82rem;font-weight:600;color:#374151;"><span class="pi-sym" onclick="focusParam('c2-max')">max</span> 最大值</div>
+          <input class="pi-inp" type="number" id="c2-max" placeholder="例：109" oninput="liveC2()">
+        </div>
+        <div>
+          <div style="margin-bottom:.3rem;font-size:.82rem;font-weight:600;color:#374151;"><span class="pi-sym" onclick="focusParam('c2-min')">min</span> 最小值</div>
+          <input class="pi-inp" type="number" id="c2-min" placeholder="例：52" oninput="liveC2()">
+        </div>
+        <div>
+          <div style="margin-bottom:.3rem;font-size:.82rem;font-weight:600;color:#374151;"><span class="pi-sym" onclick="focusParam('c2-k')">k</span> 類別數</div>
+          <input class="pi-inp" type="number" id="c2-k" placeholder="例：6" min="1" oninput="liveC2()">
+        </div>
+      </div>
+      <div class="calc-err" id="c2-err" style="margin-top:.6rem;">請輸入有效數字，且 k ≥ 1。</div>
+    </div>
+  </div>
+</div>
+
+<!-- C3 平均值 -->
+<div class="sec" id="c3">
+  <div class="sec-title">平均值 Mean<span class="page-badge">Week 1-19</span></div>
+  <div class="fc">
+    <div class="fc-head"><h3 style="margin:0;font-size:.95rem;">μ（母體）/ x̄（樣本）</h3></div>
+    <div style="padding:1rem 1.1rem;">
+      <div class="lf" style="display:flex;gap:.5rem;align-items:center;flex-wrap:wrap;">
+        <span class="pb" data-tip="μ：母體平均值（Population Mean）" style="cursor:default;background:#0f766e;">μ</span>
+        &nbsp;=&nbsp;
+        <span class="lf-frac">
+          <span class="lf-num">
+            <span class="lf-sigma">
+              <span class="ss"><span class="pb" data-tip="N：母體資料個數" onclick="focusParam('c3-data')" style="font-size:.6rem;padding:.02rem .3rem;">N</span></span>
+              <span class="sy">Σ</span>
+              <span class="ss">i=1</span>
+            </span>
+            &nbsp;<span class="pb" data-tip="xᵢ：每一筆資料值（輸入逗號分隔的數列）" onclick="focusParam('c3-data')">x<sub style="font-size:.55em;">i</sub></span>
+          </span>
+          <span class="lf-den"><span class="pb" data-tip="N：母體資料個數（自動從資料算出）" onclick="focusParam('c3-data')">N</span></span>
+        </span>
+        &nbsp;&nbsp;&nbsp;
+        <span class="pb" data-tip="x̄：樣本平均值（Sample Mean）" style="cursor:default;background:#0f766e;">x̄</span>
+        &nbsp;=&nbsp;
+        <span class="lf-frac">
+          <span class="lf-num">
+            <span class="lf-sigma">
+              <span class="ss"><span class="pb" data-tip="n：樣本資料個數" onclick="focusParam('c3-data')" style="font-size:.6rem;padding:.02rem .3rem;">n</span></span>
+              <span class="sy">Σ</span>
+              <span class="ss">i=1</span>
+            </span>
+            &nbsp;<span class="pb" data-tip="xᵢ：每一筆資料值" onclick="focusParam('c3-data')">x<sub style="font-size:.55em;">i</sub></span>
+          </span>
+          <span class="lf-den"><span class="pb" data-tip="n：樣本資料個數（自動從資料算出）" onclick="focusParam('c3-data')">n</span></span>
+        </span>
+      </div>
+      <div style="font-size:.82rem;color:#475569;margin-bottom:.9rem;">
+        <strong style="color:#1e293b;">符號：</strong>
+        <span style="background:#dbeafe;color:#1e40af;padding:.05rem .4rem;border-radius:4px;font-family:'Times New Roman',serif;">μ</span> 母體平均值 &nbsp;
+        <span style="background:#dbeafe;color:#1e40af;padding:.05rem .4rem;border-radius:4px;font-family:'Times New Roman',serif;">x̄</span> 樣本平均值 &nbsp;
+        <span style="background:#dbeafe;color:#1e40af;padding:.05rem .4rem;border-radius:4px;font-family:'Times New Roman',serif;">xᵢ</span> 每筆資料 &nbsp;
+        <span style="background:#dbeafe;color:#1e40af;padding:.05rem .4rem;border-radius:4px;font-family:'Times New Roman',serif;">N/n</span> 資料個數
+      </div>
+      <div class="lf-live" id="c3-live"><span class="lhint">← 填入數值後自動計算</span></div>
+      <div class="pi-grid" style="margin-top:0;">
+        <div style="grid-column:1/-1;">
+          <div style="margin-bottom:.3rem;font-size:.82rem;font-weight:600;color:#374151;"><span class="pi-sym" onclick="focusParam('c3-data')">xᵢ</span> 數值（逗號分隔）</div>
+          <input class="pi-inp" type="text" id="c3-data" placeholder="例：33, 35, 40, 41, 42, 44, 44, 44, 47, 50" oninput="liveC3()">
+        </div>
+        <div>
+          <div style="margin-bottom:.3rem;font-size:.82rem;font-weight:600;color:#374151;">計算類型</div>
+          <select class="pi-inp" id="c3-type" onchange="liveC3()">
+            <option value="sample">樣本 (x̄, n)</option>
+            <option value="pop">母體 (μ, N)</option>
+          </select>
+        </div>
+      </div>
+      <div class="calc-err" id="c3-err" style="margin-top:.6rem;">請輸入至少一個數字，以逗號分隔。</div>
+    </div>
+  </div>
+</div>
+
+<!-- C4 中位數 -->
+<div class="sec" id="c4">
+  <div class="sec-title">中位數 Median<span class="page-badge">Week 1-19~20</span></div>
+  <div class="fc">
+    <div class="fc-head"><h3 style="margin:0;font-size:.95rem;">Median — 排序後中間值</h3></div>
+    <div style="padding:1rem 1.1rem;">
+      <div style="display:flex;gap:1.2rem;flex-wrap:wrap;margin-bottom:1rem;">
+        <div class="lf" style="display:flex;flex-direction:column;gap:.3rem;">
+          <div style="font-size:.75rem;color:#065f46;font-weight:600;font-family:'Segoe UI',sans-serif;">n 為奇數</div>
+          <div style="display:flex;align-items:center;gap:.4rem;">
+            位置 =
+            <span class="lf-frac">
+              <span class="lf-num"><span class="pb" data-tip="n：資料個數" onclick="focusParam('c4-data')">n</span> + 1</span>
+              <span class="lf-den">2</span>
+            </span>
+            → 取第 <em>i</em> 個值
+          </div>
+        </div>
+        <div class="lf" style="display:flex;flex-direction:column;gap:.3rem;">
+          <div style="font-size:.75rem;color:#065f46;font-weight:600;font-family:'Segoe UI',sans-serif;">n 為偶數</div>
+          <div style="display:flex;align-items:center;gap:.4rem;">
+            中位數 =
+            <span class="lf-frac">
+              <span class="lf-num">x<sub>n/2</sub> + x<sub>n/2+1</sub></span>
+              <span class="lf-den">2</span>
+            </span>
+          </div>
+        </div>
+      </div>
+      <div style="font-size:.82rem;color:#475569;margin-bottom:.9rem;">
+        <strong style="color:#1e293b;">符號：</strong>
+        <span style="background:#dbeafe;color:#1e40af;padding:.05rem .4rem;border-radius:4px;font-family:'Times New Roman',serif;">xᵢ</span> 排序後第 i 個值 &nbsp;
+        <span style="background:#dbeafe;color:#1e40af;padding:.05rem .4rem;border-radius:4px;font-family:'Times New Roman',serif;">n</span> 資料個數（自動算出）
+      </div>
+      <div class="lf-live" id="c4-live"><span class="lhint">← 填入數值後自動計算</span></div>
+      <div class="pi-grid" style="margin-top:0;">
+        <div style="grid-column:1/-1;">
+          <div style="margin-bottom:.3rem;font-size:.82rem;font-weight:600;color:#374151;"><span class="pi-sym" onclick="focusParam('c4-data')">xᵢ</span> 數值（逗號分隔）</div>
+          <input class="pi-inp" type="text" id="c4-data" placeholder="例：33, 35, 40, 41, 42, 44, 44, 44, 47, 50" oninput="liveC4()">
+        </div>
+      </div>
+      <div class="calc-err" id="c4-err" style="margin-top:.6rem;">請輸入至少一個數字。</div>
+    </div>
+  </div>
+</div>
+
+<!-- C5 百分位數 -->
+<div class="sec" id="c5">
+  <div class="sec-title">百分位數 Percentile<span class="page-badge">Week 1-20</span></div>
+  <div class="fc">
+    <div class="fc-head"><h3 style="margin:0;font-size:.95rem;">P-th Percentile</h3></div>
+    <div style="padding:1rem 1.1rem;">
+      <div class="lf" style="display:flex;align-items:center;gap:.4rem;">
+        位置 &nbsp;<em>i</em> &nbsp;=&nbsp;
+        <span class="lf-frac">
+          <span class="lf-num"><span class="pb" data-tip="p：百分位數（如 25 表示第 25 百分位）" onclick="focusParam('c5-p')">p</span></span>
+          <span class="lf-den">100</span>
+        </span>
+        &nbsp;×&nbsp;
+        <span class="pb" data-tip="n：資料個數（自動算出）" onclick="focusParam('c5-data')">n</span>
+      </div>
+      <div style="font-size:.82rem;color:#475569;margin-bottom:.9rem;">
+        <strong style="color:#1e293b;">符號：</strong>
+        <span style="background:#dbeafe;color:#1e40af;padding:.05rem .4rem;border-radius:4px;font-family:'Times New Roman',serif;">p</span> 百分位（0–100）&nbsp;
+        <span style="background:#dbeafe;color:#1e40af;padding:.05rem .4rem;border-radius:4px;font-family:'Times New Roman',serif;">n</span> 資料個數 &nbsp;
+        <span style="background:#dbeafe;color:#1e40af;padding:.05rem .4rem;border-radius:4px;font-family:'Times New Roman',serif;">i</span> 位置索引<br>
+        <span style="color:#9a3412;">i 非整數 → 進位，取第 ⌈i⌉ 個值；i 整數 → 第 i 與 i+1 個的平均</span>
+      </div>
+      <div class="lf-live" id="c5-live"><span class="lhint">← 填入數值後自動計算</span></div>
+      <div class="pi-grid" style="margin-top:0;">
+        <div style="grid-column:1/-1;">
+          <div style="margin-bottom:.3rem;font-size:.82rem;font-weight:600;color:#374151;"><span class="pi-sym" onclick="focusParam('c5-data')">xᵢ</span> 數值（逗號分隔）</div>
+          <input class="pi-inp" type="text" id="c5-data" placeholder="例：33, 35, 40, 41, 42, 44, 44, 44, 47, 50" oninput="liveC5()">
+        </div>
+        <div>
+          <div style="margin-bottom:.3rem;font-size:.82rem;font-weight:600;color:#374151;"><span class="pi-sym" onclick="focusParam('c5-p')">p</span> 百分位 (%)</div>
+          <input class="pi-inp" type="number" id="c5-p" placeholder="例：25" min="0" max="100" oninput="liveC5()">
+        </div>
+      </div>
+      <div class="calc-err" id="c5-err" style="margin-top:.6rem;">請輸入有效資料與 p 值 (0–100)。</div>
+    </div>
+  </div>
+</div>
+
+<!-- C6 全距 -->
+<div class="sec" id="c6">
+  <div class="sec-title">全距 Range<span class="page-badge">Week 1-21</span></div>
+  <div class="fc">
+    <div class="fc-head"><h3 style="margin:0;font-size:.95rem;">Range = x<sub>max</sub> − x<sub>min</sub></h3></div>
+    <div style="padding:1rem 1.1rem;">
+      <div class="lf" style="display:flex;align-items:center;gap:.4rem;">
+        Range &nbsp;=&nbsp;
+        <span class="pb" data-tip="xmax：資料中最大的值" onclick="focusParam('c6-data')">x<sub style="font-size:.55em;">max</sub></span>
+        &nbsp;−&nbsp;
+        <span class="pb" data-tip="xmin：資料中最小的值" onclick="focusParam('c6-data')">x<sub style="font-size:.55em;">min</sub></span>
+      </div>
+      <div style="font-size:.82rem;color:#475569;margin-bottom:.9rem;">
+        <strong style="color:#1e293b;">符號：</strong>
+        <span style="background:#dbeafe;color:#1e40af;padding:.05rem .4rem;border-radius:4px;font-family:'Times New Roman',serif;">x<sub>max</sub></span> 最大值 &nbsp;
+        <span style="background:#dbeafe;color:#1e40af;padding:.05rem .4rem;border-radius:4px;font-family:'Times New Roman',serif;">x<sub>min</sub></span> 最小值<br>
+        <span style="color:#9a3412;">⚠️ 全距受極端值影響大，僅反映兩端差距。</span>
+      </div>
+      <div class="lf-live" id="c6-live"><span class="lhint">← 填入數值後自動計算</span></div>
+      <div class="pi-grid" style="margin-top:0;">
+        <div style="grid-column:1/-1;">
+          <div style="margin-bottom:.3rem;font-size:.82rem;font-weight:600;color:#374151;"><span class="pi-sym" onclick="focusParam('c6-data')">xᵢ</span> 數值（逗號分隔）</div>
+          <input class="pi-inp" type="text" id="c6-data" placeholder="例：33, 35, 40, 41, 42, 44, 44, 44, 47, 50" oninput="liveC6()">
+        </div>
+      </div>
+      <div class="calc-err" id="c6-err" style="margin-top:.6rem;">請輸入至少兩個數字。</div>
+    </div>
+  </div>
+</div>
+
+<!-- C7 變異數 & 標準差 -->
+<div class="sec" id="c7">
+  <div class="sec-title">變異數 &amp; 標準差<span class="page-badge">Week 1-22</span></div>
+  <div class="fc">
+    <div class="fc-head"><h3 style="margin:0;font-size:.95rem;">Variance &amp; Standard Deviation</h3></div>
+    <div style="padding:1rem 1.1rem;">
+      <div style="display:flex;flex-wrap:wrap;gap:.8rem;margin-bottom:1rem;">
+        <div class="lf" style="display:flex;align-items:center;gap:.4rem;">
+          SS &nbsp;=&nbsp;
+          <span class="lf-sigma">
+            <span class="ss"><span class="pb" data-tip="N/n：資料個數" onclick="focusParam('c7-data')" style="font-size:.6rem;padding:.02rem .3rem;">N</span></span>
+            <span class="sy">Σ</span>
+            <span class="ss">i=1</span>
+          </span>
+          (&nbsp;<span class="pb" data-tip="xᵢ：每筆資料值" onclick="focusParam('c7-data')">x<sub style="font-size:.55em;">i</sub></span>
+          &nbsp;−&nbsp;
+          <span class="pb" data-tip="x̄：平均值（自動從資料算出）" onclick="focusParam('c7-data')">x̄</span>&nbsp;)²
+        </div>
+        <div class="lf" style="display:flex;flex-direction:column;gap:.35rem;">
+          <div style="display:flex;align-items:center;gap:.4rem;">
+            <span style="color:#0f766e;font-weight:700;">σ²</span>&nbsp;=&nbsp;
+            <span class="lf-frac">
+              <span class="lf-num">SS</span>
+              <span class="lf-den"><span class="pb" data-tip="N：母體大小（資料全部）" onclick="focusParam('c7-data')">N</span></span>
+            </span>
+            &nbsp;&nbsp;
+            <span style="color:#0f766e;font-weight:700;">s²</span>&nbsp;=&nbsp;
+            <span class="lf-frac">
+              <span class="lf-num">SS</span>
+              <span class="lf-den"><span class="pb" data-tip="n−1：樣本自由度" onclick="focusParam('c7-data')">n</span>&nbsp;−&nbsp;1</span>
+            </span>
+          </div>
+          <div style="display:flex;align-items:center;gap:.4rem;">
+            <span style="color:#0f766e;font-weight:700;">σ</span>&nbsp;=&nbsp;√σ²&nbsp;&nbsp;&nbsp;
+            <span style="color:#0f766e;font-weight:700;">s</span>&nbsp;=&nbsp;√s²
+          </div>
+        </div>
+      </div>
+      <div style="font-size:.82rem;color:#475569;margin-bottom:.9rem;">
+        <strong style="color:#1e293b;">符號：</strong>
+        <span style="background:#dbeafe;color:#1e40af;padding:.05rem .4rem;border-radius:4px;font-family:'Times New Roman',serif;">SS</span> 偏差平方和 &nbsp;
+        <span style="background:#dbeafe;color:#1e40af;padding:.05rem .4rem;border-radius:4px;font-family:'Times New Roman',serif;">σ²</span> 母體變異數 &nbsp;
+        <span style="background:#dbeafe;color:#1e40af;padding:.05rem .4rem;border-radius:4px;font-family:'Times New Roman',serif;">s²</span> 樣本變異數 &nbsp;
+        <span style="background:#dbeafe;color:#1e40af;padding:.05rem .4rem;border-radius:4px;font-family:'Times New Roman',serif;">σ/s</span> 標準差
+      </div>
+      <div class="lf-live" id="c7-live"><span class="lhint">← 填入數值後自動計算</span></div>
+      <div class="pi-grid" style="margin-top:0;">
+        <div style="grid-column:1/-1;">
+          <div style="margin-bottom:.3rem;font-size:.82rem;font-weight:600;color:#374151;"><span class="pi-sym" onclick="focusParam('c7-data')">xᵢ</span> 數值（逗號分隔）</div>
+          <input class="pi-inp" type="text" id="c7-data" placeholder="例：33, 35, 40, 41, 42, 44, 44, 44, 47, 50" oninput="liveC7()">
+        </div>
+        <div>
+          <div style="margin-bottom:.3rem;font-size:.82rem;font-weight:600;color:#374151;">計算類型</div>
+          <select class="pi-inp" id="c7-type" onchange="liveC7()">
+            <option value="sample">樣本 (s, s²)</option>
+            <option value="pop">母體 (σ, σ²)</option>
+          </select>
+        </div>
+      </div>
+      <div class="calc-err" id="c7-err" style="margin-top:.6rem;">請輸入至少兩個數字。</div>
+    </div>
+  </div>
+</div>
+
+<!-- C8 CV -->
+<div class="sec" id="c8">
+  <div class="sec-title">變異係數 CV<span class="page-badge">Week 1-22</span></div>
+  <div class="fc">
+    <div class="fc-head"><h3 style="margin:0;font-size:.95rem;">Coefficient of Variation</h3></div>
+    <div style="padding:1rem 1.1rem;">
+      <div style="display:flex;flex-wrap:wrap;gap:.8rem;margin-bottom:1rem;">
+        <div class="lf" style="display:flex;flex-direction:column;gap:.35rem;">
+          <div style="font-size:.73rem;color:#065f46;font-weight:600;font-family:'Segoe UI',sans-serif;">母體</div>
+          <div style="display:flex;align-items:center;gap:.35rem;">
+            CV =
+            <span class="lf-frac">
+              <span class="lf-num"><span class="pb" data-tip="σ：母體標準差" onclick="focusParam('c8-sd')">σ</span></span>
+              <span class="lf-den"><span class="pb" data-tip="μ：母體平均值" onclick="focusParam('c8-mean')">μ</span></span>
+            </span>
+            × 100%
+          </div>
+        </div>
+        <div class="lf" style="display:flex;flex-direction:column;gap:.35rem;">
+          <div style="font-size:.73rem;color:#065f46;font-weight:600;font-family:'Segoe UI',sans-serif;">樣本</div>
+          <div style="display:flex;align-items:center;gap:.35rem;">
+            CV =
+            <span class="lf-frac">
+              <span class="lf-num"><span class="pb" data-tip="s：樣本標準差" onclick="focusParam('c8-sd')">s</span></span>
+              <span class="lf-den"><span class="pb" data-tip="x̄：樣本平均值" onclick="focusParam('c8-mean')">x̄</span></span>
+            </span>
+            × 100%
+          </div>
+        </div>
+      </div>
+      <div style="font-size:.82rem;color:#475569;margin-bottom:.9rem;">
+        <strong style="color:#1e293b;">符號：</strong>
+        <span style="background:#dbeafe;color:#1e40af;padding:.05rem .4rem;border-radius:4px;font-family:'Times New Roman',serif;">σ / s</span> 標準差 &nbsp;
+        <span style="background:#dbeafe;color:#1e40af;padding:.05rem .4rem;border-radius:4px;font-family:'Times New Roman',serif;">μ / x̄</span> 平均值<br>
+        <span style="color:#475569;">CV 越小 → 相對分散程度越低；可比較不同單位的資料。</span>
+      </div>
+      <div class="lf-live" id="c8-live"><span class="lhint">← 填入標準差與平均值後自動計算</span></div>
+      <div class="pi-grid" style="margin-top:0;">
+        <div>
+          <div style="margin-bottom:.3rem;font-size:.82rem;font-weight:600;color:#374151;"><span class="pi-sym" onclick="focusParam('c8-sd')">σ / s</span> 標準差</div>
+          <input class="pi-inp" type="number" id="c8-sd" placeholder="例：5.12" step="any" oninput="liveC8()">
+        </div>
+        <div>
+          <div style="margin-bottom:.3rem;font-size:.82rem;font-weight:600;color:#374151;"><span class="pi-sym" onclick="focusParam('c8-mean')">μ / x̄</span> 平均值</div>
+          <input class="pi-inp" type="number" id="c8-mean" placeholder="例：42" step="any" oninput="liveC8()">
+        </div>
+      </div>
+      <div class="calc-err" id="c8-err" style="margin-top:.6rem;">請輸入有效數字，且平均值不能為 0。</div>
+    </div>
+  </div>
+</div>
+
+<!-- C9 z-Score -->
+<div class="sec" id="c9">
+  <div class="sec-title">z 分數 z-Score<span class="page-badge">Week 1-23</span></div>
+  <div class="fc">
+    <div class="fc-head"><h3 style="margin:0;font-size:.95rem;">Standardized Value（標準化分數）</h3></div>
+    <div style="padding:1rem 1.1rem;">
+      <div class="lf" style="display:flex;align-items:center;gap:.4rem;">
+        <span class="pb" data-tip="zᵢ：標準化後的分數（幾個標準差遠離平均）" style="cursor:default;background:#0f766e;">z<sub style="font-size:.55em;">i</sub></span>
+        &nbsp;=&nbsp;
+        <span class="lf-frac">
+          <span class="lf-num">
+            <span class="pb" data-tip="xᵢ：要計算的那筆資料值" onclick="focusParam('c9-x')">x<sub style="font-size:.55em;">i</sub></span>
+            &nbsp;−&nbsp;
+            <span class="pb" data-tip="x̄：平均值（可從 C3 計算機算出）" onclick="focusParam('c9-mean')">x̄</span>
+          </span>
+          <span class="lf-den"><span class="pb" data-tip="s：標準差（可從 C7 計算機算出）" onclick="focusParam('c9-sd')">s</span></span>
+        </span>
+      </div>
+      <div style="font-size:.82rem;color:#475569;margin-bottom:.9rem;">
+        <strong style="color:#1e293b;">符號：</strong>
+        <span style="background:#dbeafe;color:#1e40af;padding:.05rem .4rem;border-radius:4px;font-family:'Times New Roman',serif;">xᵢ</span> 觀察值 &nbsp;
+        <span style="background:#dbeafe;color:#1e40af;padding:.05rem .4rem;border-radius:4px;font-family:'Times New Roman',serif;">x̄</span> 平均值 &nbsp;
+        <span style="background:#dbeafe;color:#1e40af;padding:.05rem .4rem;border-radius:4px;font-family:'Times New Roman',serif;">s</span> 標準差<br>
+        <span style="color:#475569;">z &lt; 0 → 低於平均 &nbsp;|&nbsp; z = 0 → 等於平均 &nbsp;|&nbsp; z &gt; 0 → 高於平均</span>
+      </div>
+      <div class="lf-live" id="c9-live"><span class="lhint">← 填入數值後自動計算</span></div>
+      <div class="pi-grid" style="margin-top:0;">
+        <div>
+          <div style="margin-bottom:.3rem;font-size:.82rem;font-weight:600;color:#374151;"><span class="pi-sym" onclick="focusParam('c9-x')">xᵢ</span> 觀察值</div>
+          <input class="pi-inp" type="number" id="c9-x" placeholder="例：33" step="any" oninput="liveC9()">
+        </div>
+        <div>
+          <div style="margin-bottom:.3rem;font-size:.82rem;font-weight:600;color:#374151;"><span class="pi-sym" onclick="focusParam('c9-mean')">x̄</span> 平均值</div>
+          <input class="pi-inp" type="number" id="c9-mean" placeholder="例：42" step="any" oninput="liveC9()">
+        </div>
+        <div>
+          <div style="margin-bottom:.3rem;font-size:.82rem;font-weight:600;color:#374151;"><span class="pi-sym" onclick="focusParam('c9-sd')">s</span> 標準差</div>
+          <input class="pi-inp" type="number" id="c9-sd" placeholder="例：5.12" step="any" min="0.0001" oninput="liveC9()">
+        </div>
+      </div>
+      <div class="calc-err" id="c9-err" style="margin-top:.6rem;">請輸入有效數字，且標準差 &gt; 0。</div>
+    </div>
+  </div>
+</div>
+
+</main>
+
+<script>
+// ════════════════════════════════════════
+//  計算機輔助函式
+// ════════════════════════════════════════
+function parseData(str){
+  return str.split(/[,\s，]+/).map(s=>s.trim()).filter(s=>s!=='').map(Number).filter(n=>!isNaN(n));
+}
+function r(n,d=4){ return Math.round(n*Math.pow(10,d))/Math.pow(10,d); }
+
+function showResult(id, mainText, stepsText){
+  const res=document.getElementById(id+'-res');
+  const err=document.getElementById(id+'-err');
+  document.getElementById(id+'-main').textContent=mainText;
+  document.getElementById(id+'-steps').textContent=stepsText;
+  res.classList.add('show'); err.classList.remove('show');
+}
+function showErr(id){
+  document.getElementById(id+'-err').classList.add('show');
+  document.getElementById(id+'-res').classList.remove('show');
+}
+
+// ── Param focus helper ──
+function focusParam(id){
+  const el=document.getElementById(id);
+  if(!el) return;
+  el.focus();
+  el.classList.add('lit');
+  setTimeout(()=>el.classList.remove('lit'),1500);
+}
+
+// ── Live calculator helpers ──
+function setLive(id, html){ document.getElementById(id+'-live').innerHTML=html; }
+function hint(id){ setLive(id,'<span class="lhint">← 填入數值後自動計算</span>'); }
+function liveErr(id, msg){ document.getElementById(id+'-err').classList.add('show'); setLive(id,'<span class="lhint">'+msg+'</span>'); }
+function clearErr(id){ document.getElementById(id+'-err').classList.remove('show'); }
+
+// C1 相對次數
+function liveC1(){
+  clearErr('c1');
+  const fv=document.getElementById('c1-f').value, nv=document.getElementById('c1-n').value;
+  if(fv===''||nv===''){hint('c1');return;}
+  const f=+fv, n=+nv;
+  if(isNaN(f)||isNaN(n)||n<=0||f<0){liveErr('c1','n 必須 > 0 且 f ≥ 0');return;}
+  const rf=r(f/n,4), pf=r(rf*100,2);
+  setLive('c1',`相對次數 = <span class="lv">${f} ÷ ${n}</span> = <span class="la">${rf}</span>&nbsp;&nbsp;&nbsp;百分比 = <span class="lv">${rf} × 100</span> = <span class="la">${pf}%</span>`);
+}
+function calc1(){ liveC1(); }
+
+// C2 類別寬度
+function liveC2(){
+  clearErr('c2');
+  const mv=document.getElementById('c2-max').value, mnv=document.getElementById('c2-min').value, kv=document.getElementById('c2-k').value;
+  if(mv===''||mnv===''||kv===''){hint('c2');return;}
+  const mx=+mv, mn=+mnv, k=+kv;
+  if(isNaN(mx)||isNaN(mn)||isNaN(k)||k<1){liveErr('c2','請確認數字正確，k ≥ 1');return;}
+  const w=r((mx-mn)/k,4), wc=Math.ceil(w);
+  setLive('c2',`寬度 = <span class="lv">(${mx} − ${mn}) ÷ ${k}</span> = <span class="lv">${r(mx-mn,4)} ÷ ${k}</span> = <span class="la">${w}</span>&nbsp; → 進位取整數：<span class="la">${wc}</span>`);
+}
+function calc2(){ liveC2(); }
+
+// C3 平均值
+function liveC3(){
+  clearErr('c3');
+  const data=parseData(document.getElementById('c3-data').value);
+  const type=document.getElementById('c3-type').value;
+  if(data.length<1){hint('c3');return;}
+  const n=data.length, sum=r(data.reduce((a,b)=>a+b,0),4), mean=r(sum/n,4);
+  const sym=type==='sample'?'x̄':'μ', Nsym=type==='sample'?'n':'N';
+  const addStr=data.join(' + ');
+  setLive('c3',`${sym} = <span class="lv">(${addStr}) ÷ ${n}</span> = <span class="lv">${sum} ÷ ${n}</span> = <span class="la">${mean}</span>`);
+}
+function calc3(){ liveC3(); }
+
+// C4 中位數
+function liveC4(){
+  clearErr('c4');
+  const data=parseData(document.getElementById('c4-data').value);
+  if(data.length<1){hint('c4');return;}
+  const sorted=[...data].sort((a,b)=>a-b);
+  const n=sorted.length;
+  let med, detail;
+  if(n%2===1){
+    const pos=(n+1)/2;
+    med=sorted[pos-1];
+    detail=`n=${n}（奇數）→ 位置=(${n}+1)/2=<span class="lv">${pos}</span> → 第 ${pos} 個值 = <span class="la">${med}</span>`;
+  } else {
+    const pos=n/2;
+    med=r((sorted[pos-1]+sorted[pos])/2,4);
+    detail=`n=${n}（偶數）→ (${sorted[pos-1]}+${sorted[pos]})÷2 = <span class="la">${med}</span>`;
+  }
+  setLive('c4',`排序：[${sorted.join(', ')}]&nbsp;&nbsp; ${detail}`);
+}
+function calc4(){ liveC4(); }
+
+// C5 百分位數
+function liveC5(){
+  clearErr('c5');
+  const data=parseData(document.getElementById('c5-data').value);
+  const pv=document.getElementById('c5-p').value;
+  if(data.length<1||pv===''){hint('c5');return;}
+  const p=+pv;
+  if(isNaN(p)||p<0||p>100){liveErr('c5','p 需介於 0–100');return;}
+  const sorted=[...data].sort((a,b)=>a-b);
+  const n=sorted.length;
+  const i=p/100*n;
+  let pval, detail;
+  if(Number.isInteger(i)){
+    pval=r((sorted[i-1]+sorted[i])/2,4);
+    detail=`i=${i}（整數）→ (${sorted[i-1]}+${sorted[i]})÷2 = <span class="la">${pval}</span>`;
+  } else {
+    const ci=Math.ceil(i);
+    pval=sorted[ci-1];
+    detail=`i=${r(i,4)}（非整數）→ 進位到 ${ci}，第 ${ci} 個值 = <span class="la">${pval}</span>`;
+  }
+  setLive('c5',`i = (${p}/100) × ${n} = <span class="lv">${r(i,4)}</span>&nbsp;&nbsp; ${detail}`);
+}
+function calc5(){ liveC5(); }
+
+// C6 全距
+function liveC6(){
+  clearErr('c6');
+  const data=parseData(document.getElementById('c6-data').value);
+  if(data.length<2){hint('c6');return;}
+  const mx=Math.max(...data), mn=Math.min(...data), range=r(mx-mn,4);
+  setLive('c6',`Range = <span class="lv">${mx} − ${mn}</span> = <span class="la">${range}</span>`);
+}
+function calc6(){ liveC6(); }
+
+// C7 變異數 & 標準差
+function liveC7(){
+  clearErr('c7');
+  const data=parseData(document.getElementById('c7-data').value);
+  const type=document.getElementById('c7-type').value;
+  if(data.length<2){hint('c7');return;}
+  const n=data.length;
+  const mean=data.reduce((a,b)=>a+b,0)/n;
+  const ss=data.reduce((a,x)=>a+(x-mean)*(x-mean),0);
+  const denom=type==='sample'?n-1:n;
+  const variance=ss/denom;
+  const sd=Math.sqrt(variance);
+  const sym=type==='sample'?['s²','s','x̄','n−1']:['σ²','σ','μ','N'];
+  const devStr=data.map(x=>`(${x}−${r(mean,2)})²`).join(' + ');
+  setLive('c7',`x̄=${r(mean,4)} &nbsp; SS = <span class="lv">${devStr}</span> = <span class="lv">${r(ss,4)}</span> &nbsp; ${sym[0]}=<span class="lv">${r(ss,4)}÷${denom}</span>=<span class="la">${r(variance,4)}</span> &nbsp; ${sym[1]}=√${r(variance,4)}=<span class="la">${r(sd,4)}</span>`);
+}
+function calc7(){ liveC7(); }
+
+// C8 CV
+function liveC8(){
+  clearErr('c8');
+  const sdv=document.getElementById('c8-sd').value, meanv=document.getElementById('c8-mean').value;
+  if(sdv===''||meanv===''){hint('c8');return;}
+  const sd=+sdv, mean=+meanv;
+  if(isNaN(sd)||isNaN(mean)||mean===0){liveErr('c8','平均值不能為 0');return;}
+  const cv=r(Math.abs(sd/mean)*100,2);
+  setLive('c8',`CV = <span class="lv">${sd} ÷ ${mean}</span> × 100% = <span class="lv">${r(sd/mean,4)}</span> × 100% = <span class="la">${cv}%</span>`);
+}
+function calc8(){ liveC8(); }
+
+// C9 z-Score
+function liveC9(){
+  clearErr('c9');
+  const xv=document.getElementById('c9-x').value, meanv=document.getElementById('c9-mean').value, sdv=document.getElementById('c9-sd').value;
+  if(xv===''||meanv===''||sdv===''){hint('c9');return;}
+  const xi=+xv, mean=+meanv, sd=+sdv;
+  if(isNaN(xi)||isNaN(mean)||isNaN(sd)||sd<=0){liveErr('c9','請確認數字正確，標準差 > 0');return;}
+  const z=r((xi-mean)/sd,4);
+  const interp=z<0?`低於平均 ${Math.abs(z)} 個標準差`:z===0?'等於平均值':`高於平均 ${z} 個標準差`;
+  setLive('c9',`z = <span class="lv">(${xi} − ${mean}) ÷ ${sd}</span> = <span class="lv">${r(xi-mean,4)} ÷ ${sd}</span> = <span class="la">${z}</span>&nbsp;&nbsp;（${interp}）`);
+}
+function calc9(){ liveC9(); }
+
+// ── Highlight active nav link on scroll ──
+const links = document.querySelectorAll('#sidenav a');
+const sections = [...links].map(a => document.querySelector(a.getAttribute('href')));
+window.addEventListener('scroll', () => {
+  let cur = 0;
+  sections.forEach((s,i) => { if(s && window.scrollY >= s.offsetTop - 120) cur = i; });
+  links.forEach(l => l.classList.remove('active'));
+  links[cur].classList.add('active');
+}, {passive:true});
+
+// ── Interactive three-feature chart ──
+(function(){
+  const xs = [];
+  for(let i=0;i<=100;i++) xs.push(i);
+  function normalPDF(x,mu,sigma){ return Math.exp(-0.5*((x-mu)/sigma)**2)/(sigma*Math.sqrt(2*Math.PI)); }
+  function getYs(mu,sigma,skew){
+    const base = xs.map(x => normalPDF(x,mu,sigma));
+    if(skew==='sym') return base;
+    return xs.map((x,i)=>{
+      const w = skew==='right'
+        ? 1/(1+Math.exp(-(x-mu)*0.12))
+        : 1/(1+Math.exp( (x-mu)*0.12));
+      return base[i]*w*2;
+    });
+  }
+  const skewLabels = {sym:'對稱', right:'右偏', left:'左偏'};
+  let mu=50, sigma=8, skewMode='sym';
+  const ctx = document.getElementById('threeFeatureChart').getContext('2d');
+  const chart = new Chart(ctx,{
+    type:'line',
+    data:{
+      labels:xs,
+      datasets:[
+        { label:'分佈曲線', data:getYs(mu,sigma,skewMode),
+          borderColor:'#8b5cf6', backgroundColor:'rgba(139,92,246,0.12)',
+          fill:true, tension:0.4, pointRadius:0, borderWidth:2.5 },
+        { label:'📍 中心點（平均值）',
+          data:xs.map(x => x===mu ? Math.max(...getYs(mu,sigma,skewMode))*1.1:null),
+          borderColor:'#f59e0b', borderWidth:2.5, borderDash:[6,3],
+          pointRadius:0, fill:false, tension:0 }
+      ]
+    },
+    options:{
+      animation:{duration:280},
+      plugins:{legend:{display:true,position:'top'},tooltip:{enabled:false}},
+      scales:{
+        x:{title:{display:true,text:'數值'},ticks:{maxTicksLimit:11}},
+        y:{display:false}
+      }
+    }
+  });
+  function update(){
+    mu = +document.getElementById('ctrl-mean').value;
+    sigma = +document.getElementById('ctrl-sd').value;
+    skewMode = document.getElementById('ctrl-skew').value;
+    const ys = getYs(mu,sigma,skewMode);
+    chart.data.datasets[0].data = ys;
+    chart.data.datasets[1].data = xs.map(x => x===mu ? Math.max(...ys)*1.1:null);
+    chart.update();
+    document.getElementById('lbl-mean').textContent = mu;
+    document.getElementById('lbl-sd').textContent   = sigma;
+    document.getElementById('info-mean').textContent = mu;
+    document.getElementById('info-sd').textContent   = sigma;
+    document.getElementById('info-skew').textContent = skewLabels[skewMode];
+  }
+  ['ctrl-mean','ctrl-sd','ctrl-skew'].forEach(id =>
+    document.getElementById(id).addEventListener('input', update));
+})();
+</script>
+</body>
+</html>

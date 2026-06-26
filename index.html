@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>暑期先修課程</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: system-ui, sans-serif; background: #0f172a; color: #e2e8f0; min-height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 2rem; }
+  h1 { font-size: 1.6rem; font-weight: 800; color: white; margin-bottom: .4rem; text-align: center; }
+  .sub { color: #64748b; font-size: .85rem; margin-bottom: 2.5rem; text-align: center; }
+  .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 1.2rem; width: 100%; max-width: 720px; }
+  .course { background: #1e293b; border-radius: 14px; padding: 1.4rem 1.6rem; border: 1px solid #334155; }
+  .course h2 { font-size: 1rem; color: #94a3b8; font-weight: 600; margin-bottom: .8rem; letter-spacing: .05em; text-transform: uppercase; font-size: .75rem; }
+  .week { display: block; padding: .6rem .9rem; border-radius: 8px; text-decoration: none; color: #e2e8f0; font-size: .9rem; font-weight: 500; transition: background .15s; margin-bottom: .4rem; }
+  .week:hover { background: #334155; }
+  .week span { font-size: .75rem; color: #64748b; margin-left: .5rem; }
+  .stat .week:hover { color: #60a5fa; }
+  .econ .week:hover { color: #34d399; }
+  .dot-stat { display: inline-block; width: 8px; height: 8px; border-radius: 50%; background: #3b82f6; margin-right: .5rem; }
+  .dot-econ { display: inline-block; width: 8px; height: 8px; border-radius: 50%; background: #10b981; margin-right: .5rem; }
+</style>
+</head>
+<body>
+  <h1>📚 暑期先修課程</h1>
+  <p class="sub">研究所先修 · 2026 暑期</p>
+  <div class="grid">
+    <div class="course stat">
+      <h2><span class="dot-stat"></span>統計學</h2>
+      <a class="week" href="stat-week1.html">Week 1 <span>統計學導論</span></a>
+    </div>
+    <div class="course econ">
+      <h2><span class="dot-econ"></span>經濟學</h2>
+      <a class="week" href="econ-week1.html">Week 1 <span>經濟學導論</span></a>
+    </div>
+  </div>
+</body>
+</html>

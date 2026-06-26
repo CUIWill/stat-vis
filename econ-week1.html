@@ -1,0 +1,1208 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>經濟學 Week 1 視覺化</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'Segoe UI',sans-serif;background:#f1f5f9;display:flex;min-height:100vh;}
+/* ── Sidebar ── */
+#sidenav{width:210px;min-width:210px;background:#0f172a;height:100vh;position:sticky;top:0;overflow-y:auto;font-size:.78rem;padding-bottom:2rem;}
+#sidenav::-webkit-scrollbar{width:4px;}
+#sidenav::-webkit-scrollbar-thumb{background:#334155;border-radius:2px;}
+#sidenav h2{color:#64748b;font-size:.63rem;text-transform:uppercase;letter-spacing:.08em;padding:.7rem 1rem .25rem;}
+#sidenav a{display:flex;align-items:center;justify-content:space-between;padding:.38rem 1rem .38rem 1.1rem;color:#94a3b8;text-decoration:none;border-left:2px solid transparent;transition:all .15s;}
+#sidenav a:hover,#sidenav a.active{color:white;background:#1e293b;border-left-color:#3b82f6;}
+#sidenav a.active{color:#60a5fa;}
+.pg{font-size:.65rem;background:#1e3a5f;color:#7dd3fc;padding:.05rem .35rem;border-radius:99px;white-space:nowrap;}
+/* ── Main ── */
+#main{flex:1;padding:1.5rem;max-width:1000px;}
+.part-header{background:linear-gradient(135deg,#1e3a8a,#0369a1);color:white;border-radius:14px;padding:1.1rem 1.5rem;margin-bottom:1.2rem;}
+.part-header h2{font-size:1.1rem;margin-bottom:.25rem;}
+.part-header p{font-size:.82rem;opacity:.85;}
+.sec{background:white;border-radius:12px;padding:1.1rem 1.3rem;margin-bottom:1rem;box-shadow:0 1px 6px rgba(0,0,0,.07);border:1px solid #e2e8f0;}
+.sec-title{font-size:.98rem;font-weight:700;color:#1e293b;margin-bottom:.85rem;padding-bottom:.5rem;border-bottom:2px solid #e2e8f0;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:.4rem;}
+.page-badge{font-size:.68rem;background:#eff6ff;color:#2563eb;border:1px solid #bfdbfe;border-radius:99px;padding:.1rem .55rem;font-weight:600;}
+.cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:.7rem;margin-bottom:.9rem;}
+.card{border-radius:10px;padding:.85rem;font-size:.83rem;line-height:1.6;border:1px solid transparent;}
+.card h3{font-size:.88rem;margin-bottom:.3rem;}
+.c-blue{background:#eff6ff;border-color:#bfdbfe;}.c-green{background:#ecfdf5;border-color:#a7f3d0;}
+.c-orange{background:#fff7ed;border-color:#fed7aa;}.c-purple{background:#f5f3ff;border-color:#ddd6fe;}
+.c-red{background:#fff1f2;border-color:#fecdd3;}.c-teal{background:#f0fdfa;border-color:#99f6e4;}
+.c-yellow{background:#fefce8;border-color:#fde68a;}
+.box{background:#f8fafc;border:1px solid #e2e8f0;border-radius:10px;padding:.85rem 1rem;margin-bottom:.75rem;}
+.box h3{font-size:.88rem;color:#1e293b;margin-bottom:.5rem;}
+.tip{background:#f0fdf4;border-left:3px solid #22c55e;padding:.55rem .85rem;border-radius:0 8px 8px 0;font-size:.82rem;color:#166534;margin-top:.65rem;}
+.warn{background:#fffbeb;border-left:3px solid #f59e0b;padding:.55rem .85rem;border-radius:0 8px 8px 0;font-size:.82rem;color:#92400e;margin-top:.65rem;}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:.75rem;margin-bottom:.75rem;}
+@media(max-width:600px){.two{grid-template-columns:1fr;}}
+.tag{display:inline-block;font-size:.68rem;font-weight:700;padding:.1rem .45rem;border-radius:99px;margin-bottom:.35rem;}
+.t-blue{background:#dbeafe;color:#1d4ed8;}.t-green{background:#dcfce7;color:#166534;}
+.t-orange{background:#ffedd5;color:#9a3412;}.t-purple{background:#ede9fe;color:#5b21b6;}
+.t-red{background:#fee2e2;color:#991b1b;}.t-teal{background:#ccfbf1;color:#115e59;}
+.flow{display:flex;flex-wrap:wrap;align-items:center;gap:.4rem;margin:.5rem 0;}
+.fb{background:white;border:1.5px solid #e2e8f0;border-radius:8px;padding:.5rem .75rem;font-size:.8rem;text-align:center;min-width:80px;}
+.fa{color:#94a3b8;font-weight:700;}
+/* SVG diagrams */
+.diagram-wrap{overflow-x:auto;margin:.6rem 0;}
+/* formula cards */
+.fc{background:white;border-radius:12px;overflow:hidden;box-shadow:0 2px 10px rgba(0,0,0,.08);margin-bottom:1.2rem;border:1.5px solid #e2e8f0;}
+.fc-head{background:linear-gradient(135deg,#0c4a6e,#0369a1);color:white;padding:.7rem 1.1rem;}
+.fc-head h3{font-size:.95rem;margin:0;}
+.lf{background:#d1fae5;border:1px solid #6ee7b7;border-radius:8px;padding:.85rem 1.2rem;display:flex;align-items:center;gap:.35rem;font-family:'Times New Roman','Palatino Linotype',serif;font-size:1.1rem;flex-wrap:wrap;margin-bottom:1rem;}
+.lf-frac{display:inline-flex;flex-direction:column;align-items:center;vertical-align:middle;}
+.lf-num{border-bottom:1.8px solid #1e293b;padding:1px 4px 2px;text-align:center;}
+.lf-den{padding:2px 4px 0;text-align:center;}
+.pb{display:inline-block;cursor:pointer;background:#0369a1;color:white;font-family:'Times New Roman',serif;font-size:1rem;font-weight:700;padding:.05rem .45rem;border-radius:4px;vertical-align:middle;transition:background .15s,transform .1s;position:relative;}
+.pb:hover{background:#0284c7;transform:scale(1.08);}
+.pb[data-tip]:hover::after{content:attr(data-tip);position:absolute;bottom:110%;left:50%;transform:translateX(-50%);background:#0f172a;color:white;padding:3px 8px;border-radius:5px;font-size:.68rem;font-family:'Segoe UI',sans-serif;font-weight:400;white-space:nowrap;pointer-events:none;z-index:99;}
+.lf-live{background:#f0fdf4;border:1.5px solid #86efac;border-radius:8px;padding:.65rem 1rem;font-family:'Times New Roman',serif;font-size:1.05rem;min-height:2.8rem;display:flex;align-items:center;gap:.3rem;flex-wrap:wrap;margin-bottom:.9rem;}
+.lf-live .lv{color:#0369a1;font-weight:700;}
+.lf-live .la{color:#065f46;font-weight:700;font-size:1.2rem;background:#bbf7d0;padding:.05rem .4rem;border-radius:4px;}
+.lf-live .lhint{color:#94a3b8;font-family:'Segoe UI',sans-serif;font-size:.8rem;font-style:italic;}
+.pi-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(185px,1fr));gap:.75rem;margin:.5rem 0 .9rem;}
+.pi-sym{background:#0369a1;color:white;font-family:'Times New Roman',serif;font-size:.88rem;font-weight:700;padding:.1rem .45rem;border-radius:4px;cursor:pointer;user-select:none;}
+.pi-sym:hover{background:#0284c7;}
+.pi-inp{border:1.5px solid #cbd5e1;border-radius:7px;padding:.4rem .7rem;font-size:.87rem;outline:none;width:100%;box-sizing:border-box;transition:border .15s,box-shadow .15s;background:white;}
+.pi-inp:focus{border-color:#3b82f6;box-shadow:0 0 0 2px rgba(59,130,246,.15);}
+.pi-inp.lit{border-color:#f59e0b;box-shadow:0 0 0 2px rgba(245,158,11,.18);}
+.calc-err{background:#fff1f2;border:1px solid #fca5a5;border-radius:8px;padding:.6rem .9rem;margin-top:.6rem;color:#991b1b;font-size:.82rem;display:none;}
+.calc-err.show{display:block;}
+/* table */
+.tbl{width:100%;border-collapse:collapse;font-size:.82rem;}
+.tbl th{background:#0f172a;color:white;padding:.45rem .7rem;text-align:left;}
+.tbl td{padding:.4rem .7rem;border-bottom:1px solid #e2e8f0;}
+.tbl tr:nth-child(even) td{background:#f8fafc;}
+</style>
+</head>
+<body>
+<nav id="sidenav">
+  <div style="padding:.5rem 1rem .8rem;border-bottom:1px solid #1e3a5f;">
+    <div style="color:white;font-weight:700;font-size:.9rem;">📈 經濟學 Week 1</div>
+    <div style="color:#64748b;font-size:.72rem;margin-top:.2rem;">Principle of Economics</div>
+  </div>
+  <h2>PART 1 · 導論</h2>
+  <a href="#s1">為何學習經濟學 <span class="pg">p.11</span></a>
+  <a href="#s2">個體經濟三主題 <span class="pg">p.13~16</span></a>
+  <h2>PART 2 · 價格與市場</h2>
+  <a href="#s3">價格的核心角色 <span class="pg">p.17~18</span></a>
+  <a href="#s4">市場定義與類型 <span class="pg">p.19~25</span></a>
+  <a href="#s5">名目 vs 實質價格 <span class="pg">p.29~40</span></a>
+  <h2>PART 3 · 供給與需求</h2>
+  <a href="#s6">需求曲線 <span class="pg">p.42~44</span></a>
+  <a href="#s7">供給曲線 <span class="pg">p.45~47</span></a>
+  <a href="#s8">市場均衡 <span class="pg">p.48~53</span></a>
+  <a href="#s8b">市場失靈 <span class="pg">0623-1</span></a>
+  <h2>PART 4 · 消費者行為</h2>
+  <a href="#s9">消費者偏好 <span class="pg">p.57~63</span></a>
+  <a href="#s10">預算線 <span class="pg">p.64~67</span></a>
+  <a href="#s11">最適消費選擇 <span class="pg">p.68~71</span></a>
+  <h2>PART 5 · 廠商行為</h2>
+  <a href="#s12">生產函數 <span class="pg">p.79~88</span></a>
+  <a href="#s13">等產量線 <span class="pg">p.89~96</span></a>
+  <h2>PART 6 · 成本分析</h2>
+  <a href="#s14">成本類型 <span class="pg">p.97~104</span></a>
+  <a href="#s15">邊際與平均成本 <span class="pg">p.105~110</span></a>
+  <a href="#s16">成本最小化 <span class="pg">p.111~118</span></a>
+  <h2>🧮 公式計算機</h2>
+  <a href="#c1">實質價格換算</a>
+  <a href="#c2">平均 / 邊際產量</a>
+  <a href="#c3">邊際成本 MC</a>
+  <a href="#c4">平均成本 ATC</a>
+</nav>
+
+<main id="main">
+
+<!-- PART 1 -->
+<div class="part-header">
+  <h2>PART 1 &nbsp;·&nbsp; 導論</h2>
+  <p>為什麼要學經濟學？個體經濟學在研究什麼？</p>
+</div>
+
+<div class="sec" id="s1">
+  <div class="sec-title">為何學習經濟學？<span class="page-badge">p.11~12</span></div>
+  <div class="box">
+    <h3>🎯 課程目標</h3>
+    <p style="font-size:.84rem;color:#475569;line-height:1.8;">鞏固經濟學基礎知識，熟悉<strong>分析理論與工具</strong>，擴展應用視野，發展出<strong>經濟與管理決策能力</strong>。</p>
+  </div>
+  <div class="cards">
+    <div class="card c-blue"><h3>📰 航運市場景氣循環</h3><p>長榮、萬海 2021 年巔峰→2022 年循環終結。<strong>景氣循環（Business Cycle）</strong>：產業利潤周期性起伏，是週期性產業的常態。</p></div>
+    <div class="card c-orange"><h3>💾 記憶體「米缸沒米」</h3><p>三星/海力士/美光將產能移往高階 HBM，傳統 DDR4 供給銳減 → 供給缺乏彈性（Supply Inelasticity）。第四季伺服器記憶體合約價預計漲 40–50%。</p></div>
+    <div class="card c-green"><h3>❓ 核心問題</h3><p>這些新聞怎麼和經濟學連結？學完本課程你就能分析背後的供需邏輯。</p></div>
+  </div>
+  <div style="background:#fef3c7;border:1.5px solid #fde68a;border-radius:10px;padding:.8rem 1rem;font-size:.83rem;color:#374151;line-height:1.9;margin-top:.6rem;">
+    <strong>🔑 稀少性（Scarcity）</strong>——所有決策的起點<br>
+    資源是有限的（時間、金錢、產能），所以每個人、每家公司都面臨「取捨」。DDR4 產線就是有限資源——移往 HBM 就無法同時生產 DDR4，這就是稀少性造成的取捨。
+  </div>
+</div>
+
+<div class="sec" id="s2">
+  <div class="sec-title">個體經濟三大主題<span class="page-badge">p.13~16</span></div>
+  <div class="cards">
+    <div class="card c-blue">
+      <span class="tag t-blue">消費者</span>
+      <h3>預算有限</h3>
+      <p>如何在有限所得下，選出使<strong>效用最大</strong>的財貨組合？儲蓄 vs 消費？</p>
+    </div>
+    <div class="card c-purple">
+      <span class="tag t-purple">勞工</span>
+      <h3>時間有限</h3>
+      <p>現在工作 vs 繼續深造？大公司保障 vs 小公司發展？<strong>工作 vs 休閒</strong>？</p>
+    </div>
+    <div class="card c-green">
+      <span class="tag t-green">廠商</span>
+      <h3>資源有限</h3>
+      <p>生產哪些產品？僱用多少勞工？如何以<strong>最小成本</strong>達到目標產量？</p>
+    </div>
+  </div>
+  <div class="box">
+    <h3>三者共同的核心議題：「取捨」(Trade-off)</h3>
+    <p style="font-size:.84rem;color:#475569;line-height:1.8;">個體經濟學就是研究人們在<strong>限制條件</strong>下如何做<strong>理性選擇</strong>，而這些選擇最終都會反映在<strong>價格</strong>上。</p>
+  </div>
+  <div class="box">
+    <h3>🎯 效用極大化的邏輯（Utility Maximization）</h3>
+    <p style="font-size:.84rem;color:#475569;line-height:1.8;">理性決策的目標：在限制下追求最大滿足。數學上可以寫成：</p>
+    <div style="font-family:'Times New Roman',serif;font-size:.95rem;background:#f5f3ff;border-radius:7px;padding:.65rem 1rem;margin:.5rem 0;">
+      最大化 U(x, y) &nbsp; 受限於 &nbsp; P<sub>x</sub>X + P<sub>y</sub>Y ≤ I
+    </div>
+    <p style="font-size:.82rem;color:#64748b;line-height:1.8;margin-top:.3rem;">
+      白話：在花費不超過收入（I）的前提下，選擇讓自己最滿足的商品組合（x, y）。<br>
+      理性決策者會持續調整，直到<strong>每花1元在不同商品上的邊際收益相等</strong>為止。
+    </p>
+    <div class="tip">💡 「早買早享受、晚買有折扣」是偏好問題（無異曲線），不是理性限制——每個人有不同的時間偏好。</div>
+  </div>
+</div>
+
+<!-- PART 2 -->
+<div class="part-header" style="background:linear-gradient(135deg,#0f4c75,#1b6ca8);">
+  <h2>PART 2 &nbsp;·&nbsp; 價格與市場</h2>
+  <p>價格如何形成？市場是什麼？名目與實質價格有何不同？</p>
+</div>
+
+<div class="sec" id="s3">
+  <div class="sec-title">價格的核心角色<span class="page-badge">p.17~18</span></div>
+  <div class="cards">
+    <div class="card c-blue"><h3>消費者</h3><p>價格決定效用最大化的選擇。</p></div>
+    <div class="card c-orange"><h3>廠商</h3><p>工資率與機器價格影響生產決策。</p></div>
+    <div class="card c-purple"><h3>勞工</h3><p>工資（勞動力的價格）左右職涯流動。</p></div>
+  </div>
+  <div class="two">
+    <div class="box">
+      <span class="tag t-blue">市場經濟</span>
+      <h3>「看不見的手」</h3>
+      <p style="font-size:.83rem;color:#475569;line-height:1.7;">價格由<strong>消費者、勞工與廠商的互動</strong>決定，資源自發配置。</p>
+    </div>
+    <div class="box">
+      <span class="tag t-red">中央計劃經濟</span>
+      <h3>政府決定價格</h3>
+      <p style="font-size:.83rem;color:#475569;line-height:1.7;">例：北韓以糧食券強制規定交換比例，缺乏市場回饋→資源扭曲。</p>
+    </div>
+  </div>
+  <div class="tip">💡 工資 = 勞動力的價格。台灣科技業員工股權（Equity）/分紅費用化，改變了人才市場的定價結構。</div>
+</div>
+
+<div class="sec" id="s4">
+  <div class="sec-title">市場定義與類型<span class="page-badge">p.19~25</span></div>
+  <div class="box">
+    <h3>什麼是市場？</h3>
+    <p style="font-size:.84rem;color:#475569;line-height:1.8;">市場是<strong>買方與賣方相互影響的組合</strong>，透過互動決定產品價格。可以是實體（菜市場）或虛擬（股市、加密貨幣）。</p>
+    <div style="display:flex;flex-wrap:wrap;gap:.5rem;margin-top:.6rem;font-size:.82rem;">
+      <div style="background:#eff6ff;border-radius:7px;padding:.45rem .75rem;"><strong>買方：</strong>消費者、購買投入的廠商</div>
+      <div style="background:#f5f3ff;border-radius:7px;padding:.45rem .75rem;"><strong>賣方：</strong>廠商、勞工、資源擁有者</div>
+    </div>
+  </div>
+  <div class="two">
+    <div class="box">
+      <span class="tag t-blue">完全競爭市場</span>
+      <h3>Perfectly Competitive</h3>
+      <ul style="font-size:.83rem;color:#475569;line-height:2;padding-left:1.1rem;">
+        <li>許多買賣方，無人能影響價格</li>
+        <li>產品同質、資訊透明、進出門檻低</li>
+        <li>廠商只能賺<strong>正常利潤</strong></li>
+        <li>例：農產品、大眾餐飲、路邊攤</li>
+      </ul>
+      <div class="warn">⚠️ 老師建議：「老闆不應在完全競爭市場做生意」</div>
+    </div>
+    <div class="box">
+      <span class="tag t-orange">非競爭市場</span>
+      <h3>Noncompetitive</h3>
+      <ul style="font-size:.83rem;color:#475569;line-height:2;padding-left:1.1rem;">
+        <li>個別廠商可影響價格（有<strong>定價權</strong>）</li>
+        <li>卡特爾（Cartel）：生產者聯合行動</li>
+        <li>例：OPEC 控制石油供給</li>
+        <li>例：鼎泰豐的「18摺小籠包」技術壁壘</li>
+      </ul>
+      <div class="tip">✅ 目標：透過差異化進入非競爭市場，取得<strong>超額利潤</strong></div>
+    </div>
+  </div>
+  <div class="box">
+    <h3>市場範圍的界定（Market Definition）</h3>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:.6rem;font-size:.83rem;margin-top:.5rem;">
+      <div style="background:#eff6ff;border-radius:8px;padding:.6rem;">
+        <strong>地理維度</strong><br>
+        台北 vs 全台灣 vs APAC vs 全球<br>
+        <span style="color:#64748b;">→ 鄰近鼎泰豐的小吃店面臨極大替代壓力</span>
+      </div>
+      <div style="background:#f5f3ff;border-radius:8px;padding:.6rem;">
+        <strong>產品功能維度</strong><br>
+        高階公路車（6–40萬）vs 大賣場腳踏車<br>
+        <span style="color:#64748b;">→ 電輔車（E-bike）自成一個市場</span>
+      </div>
+    </div>
+  </div>
+  <div class="box">
+    <h3>📰 時事：市場範圍與政府干預</h3>
+    <div style="display:flex;flex-wrap:wrap;gap:.5rem;font-size:.8rem;">
+      <div style="background:#fee2e2;border-radius:7px;padding:.5rem .75rem;"><strong>Nvidia 併購 ARM 告吹</strong><br>美國政府：壟斷疑慮 + 地緣政治</div>
+      <div style="background:#fef3c7;border-radius:7px;padding:.5rem .75rem;"><strong>Uber Eats 併購 Foodpanda</strong><br>公平交易法審查市場集中度</div>
+      <div style="background:#f3e8ff;border-radius:7px;padding:.5rem .75rem;"><strong>Meta 收購 Manus AI 受阻</strong><br>中國 NDRC 干預，AI 壓縮技術被視為戰略資產</div>
+    </div>
+  </div>
+</div>
+
+<div class="sec" id="s5">
+  <div class="sec-title">名目 vs 實質價格<span class="page-badge">p.29~40</span></div>
+  <div class="two">
+    <div class="box">
+      <span class="tag t-orange">名目價格</span>
+      <h3>Nominal Price</h3>
+      <p style="font-size:.84rem;color:#475569;line-height:1.8;">商品的<strong>絕對價格</strong>，未依通貨膨脹調整。就是標籤上的數字。</p>
+    </div>
+    <div class="box">
+      <span class="tag t-green">實質價格</span>
+      <h3>Real Price</h3>
+      <p style="font-size:.84rem;color:#475569;line-height:1.8;">相對於整體物價水準的價格，<strong>剔除通膨影響</strong>，反映真實購買力。</p>
+    </div>
+  </div>
+  <div class="box">
+    <h3>📐 實質價格公式</h3>
+    <div class="lf" style="display:flex;align-items:center;gap:.5rem;flex-wrap:wrap;">
+      實質價格 =
+      <span class="lf-frac">
+        <span class="lf-num">CPI<sub style="font-size:.6em;">基年</sub></span>
+        <span class="lf-den">CPI<sub style="font-size:.6em;">現年</sub></span>
+      </span>
+      × 名目價格<sub style="font-size:.6em;">現年</sub>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:.6rem;margin-top:.5rem;font-size:.82rem;">
+      <div style="background:#eff6ff;border-radius:8px;padding:.6rem .8rem;">
+        <strong>🔵 CPI（消費者物價指數）</strong><br>
+        <span style="color:#475569;">政府定期調查，衡量「一籃子商品」的整體物價水準。數字越高代表東西越貴。</span>
+      </div>
+      <div style="background:#eff6ff;border-radius:8px;padding:.6rem .8rem;">
+        <strong>🔵 基準年（Base Year）</strong><br>
+        <span style="color:#475569;">選定一個「正常年份」作為比較起點，令該年 CPI = 某基準值（如100）。用來衡量其他年份相對漲了多少。</span>
+      </div>
+      <div style="background:#f0fdf4;border-radius:8px;padding:.6rem .8rem;">
+        <strong>🟢 名目價格（Nominal Price）</strong><br>
+        <span style="color:#475569;">當年標籤上的實際數字，沒有排除通膨。例：2016年雞蛋 $2.47。</span>
+      </div>
+      <div style="background:#f0fdf4;border-radius:8px;padding:.6rem .8rem;">
+        <strong>🟢 實質價格（Real Price）</strong><br>
+        <span style="color:#475569;">換算回基準年的「真實」價格，反映實際購買力是否提升。例：2016年雞蛋實質只值 $0.40。</span>
+      </div>
+    </div>
+    <div class="tip" style="margin-top:.6rem;">💡 公式邏輯：CPI<sub>基年</sub>/CPI<sub>現年</sub> 就是「縮水比例」。若現在物價是基年的6倍，名目價格要除以6才是實質購買力。</div>
+  </div>
+  <div class="box">
+    <h3>雞蛋 & 大學學費：名目 vs 實質（以1970年為基年）</h3>
+    <div style="overflow-x:auto;">
+      <table class="tbl">
+        <tr><th>項目</th><th>1970</th><th>1980</th><th>1990</th><th>2000</th><th>2016</th></tr>
+        <tr><td>CPI</td><td>38.8</td><td>82.4</td><td>130.7</td><td>172.2</td><td>241.7</td></tr>
+        <tr><td>雞蛋名目價格</td><td>$0.61</td><td>$0.84</td><td>$1.01</td><td>$0.91</td><td>$2.47</td></tr>
+        <tr><td style="color:#065f46;font-weight:600;">雞蛋實質價格</td><td style="color:#065f46;">$0.61</td><td style="color:#065f46;">$0.40</td><td style="color:#065f46;">$0.30</td><td style="color:#065f46;">$0.21</td><td style="color:#065f46;">$0.40</td></tr>
+        <tr><td>大學學費名目</td><td>$1,784</td><td>$3,499</td><td>$7,602</td><td>$12,922</td><td>$25,694</td></tr>
+        <tr><td style="color:#9a3412;font-weight:600;">大學學費實質</td><td style="color:#9a3412;">$1,784</td><td style="color:#9a3412;">$1,624</td><td style="color:#9a3412;">$2,239</td><td style="color:#9a3412;">$2,912</td><td style="color:#9a3412;">$4,125</td></tr>
+      </table>
+    </div>
+    <div class="tip">💡 雞蛋名目漲了4倍，但實質價格其實更便宜了！大學學費實質漲幅（約2.3倍）比名目漲幅（約14倍）小很多。</div>
+  </div>
+  <div class="two">
+    <div class="box">
+      <span class="tag t-blue">CPI 消費者物價指數</span>
+      <p style="font-size:.83rem;color:#475569;line-height:1.9;margin-top:.4rem;">
+        衡量<strong>一般消費者</strong>購買商品的物價變動。<br>
+        台灣CPI包含：食物、衣著、居住、交通、醫療、教育娛樂、雜項。<br>
+        <strong>核心CPI（Core CPI）</strong>：扣除食物與能源（這兩項受天氣/戰爭波動大），留下更穩定的通膨趨勢。
+      </p>
+      <div style="background:#dbeafe;border-radius:7px;padding:.45rem .7rem;font-size:.8rem;color:#1e40af;margin-top:.4rem;">
+        📌 初學者記法：CPI 就像「物價溫度計」，數字每年公布，100基準→120代表物價漲了20%。
+      </div>
+    </div>
+    <div class="box">
+      <span class="tag t-purple">PPI 生產者物價指數</span>
+      <p style="font-size:.83rem;color:#475569;line-height:1.9;margin-top:.4rem;">
+        衡量<strong>批發/廠商層面</strong>的物價變動。<br>
+        若產品由企業購買 → 用 PPI 轉換。<br>
+        PPI 是 CPI 的<strong>領先指標</strong>（廠商先漲成本→再傳導到消費終端）。
+      </p>
+      <div style="background:#ede9fe;border-radius:7px;padding:.45rem .7rem;font-size:.8rem;color:#5b21b6;margin-top:.4rem;">
+        📌 初學者記法：PPI 是「進貨價格溫度計」，PPI 先漲通常代表幾個月後 CPI 也會漲。電子零組件 PPI 曾在短期內暴漲 10 倍，後來反映在手機售價上。
+      </div>
+    </div>
+  </div>
+  <div class="warn">📰 美國CPI走勢：2021年5.4% → 2022年8.6% → 2023年4% → 目標2%（Higher for Longer）。油價戰爭造成機票從3~4萬漲至6~7萬，核心CPI能更精準反映結構性通膨。</div>
+</div>
+
+<!-- PART 3 -->
+<div class="part-header" style="background:linear-gradient(135deg,#134e4a,#0f766e);">
+  <h2>PART 3 &nbsp;·&nbsp; 供給與需求</h2>
+  <p>市場如何透過供需互動達到均衡價格？</p>
+</div>
+
+<div class="sec" id="s6">
+  <div class="sec-title">需求曲線<span class="page-badge">p.42~44</span></div>
+  <div class="two">
+    <div>
+      <div class="box">
+        <h3>需求曲線特性</h3>
+        <ul style="font-size:.83rem;color:#475569;line-height:2;padding-left:1.1rem;">
+          <li><strong>負斜率</strong>：價格↑ → 需求量↓</li>
+          <li>其他因素不變（Ceteris Paribus）</li>
+          <li>Q<sub>D</sub> = Q<sub>D</sub>(P)</li>
+        </ul>
+      </div>
+      <div class="box">
+        <h3>需求曲線移動的原因</h3>
+        <ul style="font-size:.83rem;color:#475569;line-height:2;padding-left:1.1rem;">
+          <li>👉 <strong>右移</strong>（需求增加）：所得增加、替代品漲價、互補品降價、偏好改變、預期漲價</li>
+          <li>👈 <strong>左移</strong>（需求減少）：所得減少、替代品降價、互補品漲價</li>
+        </ul>
+      </div>
+    </div>
+    <div class="diagram-wrap">
+      <svg viewBox="0 0 240 200" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-width:280px;display:block;margin:0 auto;">
+        <!-- axes -->
+        <line x1="35" y1="15" x2="35" y2="175" stroke="#1e293b" stroke-width="1.5"/>
+        <line x1="35" y1="175" x2="225" y2="175" stroke="#1e293b" stroke-width="1.5"/>
+        <text x="28" y="12" text-anchor="middle" font-size="11" fill="#1e293b" font-weight="700">P</text>
+        <text x="228" y="179" font-size="11" fill="#1e293b" font-weight="700">Q</text>
+        <!-- demand curve (convex to origin) -->
+        <path d="M 57 28 C 82 65, 182 130, 207 167" stroke="#3b82f6" stroke-width="2.5" fill="none"/>
+        <text x="210" y="170" font-size="11" fill="#3b82f6" font-weight="700">D</text>
+        <!-- P1, P2 reference lines -->
+        <line x1="35" y1="72" x2="101" y2="72" stroke="#94a3b8" stroke-width="1" stroke-dasharray="4,3"/>
+        <line x1="101" y1="72" x2="101" y2="175" stroke="#94a3b8" stroke-width="1" stroke-dasharray="4,3"/>
+        <line x1="35" y1="128" x2="168" y2="128" stroke="#94a3b8" stroke-width="1" stroke-dasharray="4,3"/>
+        <line x1="168" y1="128" x2="168" y2="175" stroke="#94a3b8" stroke-width="1" stroke-dasharray="4,3"/>
+        <text x="28" y="76" text-anchor="middle" font-size="9" fill="#475569">P₁</text>
+        <text x="28" y="132" text-anchor="middle" font-size="9" fill="#475569">P₂</text>
+        <text x="101" y="187" text-anchor="middle" font-size="9" fill="#475569">Q₁</text>
+        <text x="168" y="187" text-anchor="middle" font-size="9" fill="#475569">Q₂</text>
+        <text x="128" y="95" font-size="9" fill="#1d4ed8">P↓ → Q↑</text>
+      </svg>
+    </div>
+  </div>
+</div>
+
+<div class="sec" id="s7">
+  <div class="sec-title">供給曲線<span class="page-badge">p.45~47</span></div>
+  <div class="two">
+    <div>
+      <div class="box">
+        <h3>供給曲線特性</h3>
+        <ul style="font-size:.83rem;color:#475569;line-height:2;padding-left:1.1rem;">
+          <li><strong>正斜率</strong>：價格↑ → 供給量↑</li>
+          <li>其他因素不變</li>
+          <li>Q<sub>S</sub> = Q<sub>S</sub>(P)</li>
+        </ul>
+      </div>
+      <div class="box">
+        <h3>供給曲線移動的原因</h3>
+        <ul style="font-size:.83rem;color:#475569;line-height:2;padding-left:1.1rem;">
+          <li>👉 <strong>右移</strong>（供給增加）：原料成本↓、技術進步、廠商數量增加</li>
+          <li>👈 <strong>左移</strong>（供給減少）：原料成本↑、稅賦增加</li>
+        </ul>
+      </div>
+    </div>
+    <div class="diagram-wrap">
+      <svg viewBox="0 0 240 200" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-width:280px;display:block;margin:0 auto;">
+        <line x1="35" y1="15" x2="35" y2="175" stroke="#1e293b" stroke-width="1.5"/>
+        <line x1="35" y1="175" x2="225" y2="175" stroke="#1e293b" stroke-width="1.5"/>
+        <text x="28" y="12" text-anchor="middle" font-size="11" fill="#1e293b" font-weight="700">P</text>
+        <text x="228" y="179" font-size="11" fill="#1e293b" font-weight="700">Q</text>
+        <!-- supply curve (convex to origin from lower-left) -->
+        <path d="M 57 167 C 82 130, 182 65, 207 28" stroke="#10b981" stroke-width="2.5" fill="none"/>
+        <text x="210" y="26" font-size="11" fill="#10b981" font-weight="700">S</text>
+        <!-- P1, P2 reference lines -->
+        <line x1="35" y1="75" x2="159" y2="75" stroke="#94a3b8" stroke-width="1" stroke-dasharray="4,3"/>
+        <line x1="159" y1="75" x2="159" y2="175" stroke="#94a3b8" stroke-width="1" stroke-dasharray="4,3"/>
+        <line x1="35" y1="130" x2="93" y2="130" stroke="#94a3b8" stroke-width="1" stroke-dasharray="4,3"/>
+        <line x1="93" y1="130" x2="93" y2="175" stroke="#94a3b8" stroke-width="1" stroke-dasharray="4,3"/>
+        <text x="28" y="79" text-anchor="middle" font-size="9" fill="#475569">P₂</text>
+        <text x="28" y="134" text-anchor="middle" font-size="9" fill="#475569">P₁</text>
+        <text x="159" y="187" text-anchor="middle" font-size="9" fill="#475569">Q₂</text>
+        <text x="93" y="187" text-anchor="middle" font-size="9" fill="#475569">Q₁</text>
+        <text x="100" y="100" font-size="9" fill="#065f46">P↑ → Q↑</text>
+      </svg>
+    </div>
+  </div>
+</div>
+
+<div class="sec" id="s8">
+  <div class="sec-title">市場均衡與市場機能<span class="page-badge">p.48~53</span></div>
+  <div class="diagram-wrap">
+    <svg viewBox="0 0 480 200" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-width:520px;display:block;margin:0 auto;">
+      <!-- Graph 1: Equilibrium -->
+      <text x="100" y="12" text-anchor="middle" font-size="10" fill="#1e293b" font-weight="700">均衡</text>
+      <line x1="30" y1="20" x2="30" y2="178" stroke="#1e293b" stroke-width="1.5"/>
+      <line x1="30" y1="178" x2="190" y2="178" stroke="#1e293b" stroke-width="1.5"/>
+      <text x="24" y="18" text-anchor="middle" font-size="9" fill="#475569">P</text>
+      <text x="192" y="181" font-size="9" fill="#475569">Q</text>
+      <!-- S curve -->
+      <path d="M 45 165 C 60 120, 160 75, 175 30" stroke="#10b981" stroke-width="2" fill="none"/>
+      <text x="178" y="28" font-size="9" fill="#10b981" font-weight="700">S</text>
+      <!-- D curve -->
+      <path d="M 45 30 C 60 75, 160 120, 175 165" stroke="#3b82f6" stroke-width="2" fill="none"/>
+      <text x="178" y="168" font-size="9" fill="#3b82f6" font-weight="700">D</text>
+      <!-- equilibrium point -->
+      <circle cx="110" cy="97" r="5" fill="#f59e0b"/>
+      <line x1="30" y1="97" x2="110" y2="97" stroke="#f59e0b" stroke-width="1" stroke-dasharray="4,3"/>
+      <line x1="110" y1="97" x2="110" y2="178" stroke="#f59e0b" stroke-width="1" stroke-dasharray="4,3"/>
+      <text x="22" y="100" text-anchor="middle" font-size="8" fill="#92400e">P₀</text>
+      <text x="110" y="190" text-anchor="middle" font-size="8" fill="#92400e">Q₀</text>
+      <text x="110" y="88" text-anchor="middle" font-size="8" fill="#92400e" font-weight="700">均衡點</text>
+      <!-- Graph 2: Surplus -->
+      <text x="340" y="12" text-anchor="middle" font-size="10" fill="#1e293b" font-weight="700">剩餘 → 價格下跌</text>
+      <line x1="250" y1="20" x2="250" y2="178" stroke="#1e293b" stroke-width="1.5"/>
+      <line x1="250" y1="178" x2="450" y2="178" stroke="#1e293b" stroke-width="1.5"/>
+      <text x="244" y="18" text-anchor="middle" font-size="9" fill="#475569">P</text>
+      <text x="452" y="181" font-size="9" fill="#475569">Q</text>
+      <!-- S curve -->
+      <path d="M 265 165 C 280 120, 380 75, 430 30" stroke="#10b981" stroke-width="2" fill="none"/>
+      <text x="433" y="28" font-size="9" fill="#10b981" font-weight="700">S</text>
+      <!-- D curve -->
+      <path d="M 265 30 C 280 75, 380 120, 430 165" stroke="#3b82f6" stroke-width="2" fill="none"/>
+      <text x="433" y="168" font-size="9" fill="#3b82f6" font-weight="700">D</text>
+      <!-- P1 high price line -->
+      <line x1="250" y1="65" x2="440" y2="65" stroke="#ef4444" stroke-width="1" stroke-dasharray="4,3"/>
+      <text x="244" y="68" text-anchor="middle" font-size="8" fill="#ef4444">P₁</text>
+      <!-- QD and QS at P1 (approx intersection with curves) -->
+      <circle cx="290" cy="65" r="3" fill="#3b82f6"/>
+      <circle cx="383" cy="65" r="3" fill="#10b981"/>
+      <line x1="290" y1="65" x2="290" y2="178" stroke="#3b82f6" stroke-width="1" stroke-dasharray="3,2"/>
+      <line x1="383" y1="65" x2="383" y2="178" stroke="#10b981" stroke-width="1" stroke-dasharray="3,2"/>
+      <text x="290" y="190" text-anchor="middle" font-size="7" fill="#3b82f6">Qd</text>
+      <text x="383" y="190" text-anchor="middle" font-size="7" fill="#10b981">Qs</text>
+      <rect x="293" y="60" width="88" height="10" fill="#fee2e2" opacity=".7"/>
+      <text x="343" y="69" text-anchor="middle" font-size="7.5" fill="#991b1b">剩餘 Qs&gt;Qd → 降價</text>
+    </svg>
+  </div>
+  <div class="cards">
+    <div class="card c-green">
+      <h3>⚖️ 均衡（Equilibrium）</h3>
+      <p>供給量 = 需求量時的價格 P₀。無短缺、無剩餘，市場達到穩定。</p>
+    </div>
+    <div class="card c-red">
+      <h3>📦 剩餘（Surplus）</h3>
+      <p>P 高於均衡 → Qs &gt; Qd → 庫存累積 → 廠商降價 → 趨向均衡。</p>
+    </div>
+    <div class="card c-orange">
+      <h3>🛒 短缺（Shortage）</h3>
+      <p>P 低於均衡 → Qd &gt; Qs → 供不應求 → 消費者出高價 → 價格上漲 → 趨向均衡。</p>
+    </div>
+  </div>
+  <div class="box">
+    <h3>均衡移動：所得增加 + 原料漲價</h3>
+    <div style="font-size:.83rem;color:#475569;line-height:2;">
+      <span style="color:#3b82f6;">需求↑（D右移）</span>：所得增加 → 均衡價量均↑<br>
+      <span style="color:#10b981;">供給↓（S左移）</span>：原料漲價 → 均衡價↑、量↓<br>
+      <span style="font-weight:700;color:#1e293b;">同時發生</span>：D增加幅度 &gt; S減少幅度 → 均衡價格↑
+    </div>
+  </div>
+  <div class="box" style="border:1.5px solid #fca5a5;">
+    <span class="tag t-red">真實案例：DDR4 記憶體「雙重夾擊」效應</span>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:.6rem;margin:.55rem 0;font-size:.83rem;">
+      <div style="background:#fff1f2;border-radius:8px;padding:.6rem .8rem;">
+        <strong style="color:#991b1b;">需求曲線右移 D₀→D₁</strong><br>
+        <span style="color:#475569;">AI 運算爆發 → 全球對記憶體需求倍增，特別是 HBM（高頻寬記憶體）</span>
+      </div>
+      <div style="background:#fff1f2;border-radius:8px;padding:.6rem .8rem;">
+        <strong style="color:#991b1b;">供給曲線左移 S₀→S₁</strong><br>
+        <span style="color:#475569;">三星/海力士/美光將產能移往高階 HBM → DDR4 傳統產線被壓縮（「米缸沒米」）</span>
+      </div>
+    </div>
+    <div style="font-size:.83rem;color:#475569;line-height:1.9;">
+      ➜ 結果：DDR4 均衡價格<strong>非線性爆發</strong>式上漲，第四季伺服器記憶體合約價漲幅達 <strong>40–50%</strong>，甚至出現韓國大廠「停止報價」的極端現象。<br>
+      ➜ 悖論：DDR4（舊規格）價格反超 DDR5（新規格）——因為舊系統無法即時切換新規格，「受困需求」在供給急劇縮減下反而推高舊產品價格。<br>
+      ➜ 製造板塊位移：韓國（高階HBM）→ 台灣（南亞科、華邦電遞補中階）→ 中國大陸（介入競爭）
+    </div>
+    <div class="tip">💡 華邦電因此編列 355 億元擴產，資本支出調升 5.7 倍——這就是市場均衡變動帶動的企業決策。</div>
+  </div>
+</div>
+
+<div class="sec" id="s8b">
+  <div class="sec-title">市場失靈與政府介入<span class="page-badge">0623-1 課堂</span></div>
+  <div class="box">
+    <h3>什麼是市場失靈（Market Failure）？</h3>
+    <p style="font-size:.84rem;color:#475569;line-height:1.8;">
+      經濟學假設人是<strong>理性</strong>的，但個體的「局部理性」有時會導致整體的<strong>集體非理性</strong>（泡沫、過度投機），使市場無法有效率地配置資源，這就叫市場失靈。
+    </p>
+  </div>
+  <div class="two">
+    <div class="box">
+      <span class="tag t-orange">葛林斯潘悖論</span>
+      <h3>「非理性繁榮」</h3>
+      <p style="font-size:.83rem;color:#475569;line-height:1.8;">
+        聯準會前主席葛林斯潘（Greenspan）任期長達 19 年，長期維持低利率，初衷是理性的政策引導，卻意外催生<strong>資產膨脹</strong>與「非理性繁榮（Irrational Exuberance）」，最終引發泡沫。
+      </p>
+      <div class="warn">⚠️ 單純的理性模型，無法預測集體投機行為的後果。</div>
+    </div>
+    <div class="box">
+      <span class="tag t-red">韓國槓桿 ETF 事件</span>
+      <h3>「政府之手」的強制介入</h3>
+      <p style="font-size:.83rem;color:#475569;line-height:1.8;">
+        韓國金融委員會認為開放<strong>個股 2–3 倍槓桿 ETF</strong> 放大市場非理性，決定干預。結果：三星、海力士股價重挫 <strong>~12%</strong>，相關槓桿 ETF 跌幅達 <strong>20–30%</strong>，連帶波及台灣南亞科等供應鏈。
+      </p>
+      <div class="tip">✅ 政府介入的正當性：當市場無法自我修正泡沫時，政府干預具合理性。</div>
+    </div>
+  </div>
+  <div class="box">
+    <h3>🔑 初學者重點：市場 vs 政府的角色</h3>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:.6rem;font-size:.83rem;margin-top:.4rem;">
+      <div style="background:#ecfdf5;border-radius:8px;padding:.6rem .8rem;">
+        <strong>「看不見的手」（市場）</strong><br>
+        <span style="color:#475569;">多數情況下，供需自動調節，不需干預。</span>
+      </div>
+      <div style="background:#fff7ed;border-radius:8px;padding:.6rem .8rem;">
+        <strong>「政府之手」（干預）</strong><br>
+        <span style="color:#475569;">泡沫、壟斷、外部性等市場失靈時，政府介入以恢復效率。</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- PART 4 -->
+<div class="part-header" style="background:linear-gradient(135deg,#4c1d95,#6d28d9);">
+  <h2>PART 4 &nbsp;·&nbsp; 消費者行為</h2>
+  <p>偏好、預算與選擇——消費者如何做最理性的決定？</p>
+</div>
+
+<div class="sec" id="s9">
+  <div class="sec-title">消費者偏好與無異曲線<span class="page-badge">p.57~63</span></div>
+  <div class="box">
+    <h3>三大基本假設</h3>
+    <div class="cards" style="margin-bottom:0;">
+      <div class="card c-purple"><h3>① 完整性</h3><p>消費者能對所有財貨組合進行比較並排序。</p></div>
+      <div class="card c-blue"><h3>② 遞移性</h3><p>若 A &gt; B 且 B &gt; C，則 A &gt; C。偏好有一致邏輯。</p></div>
+      <div class="card c-green"><h3>③ 多比少好</h3><p>在其他條件相同下，消費者永遠偏好更多財貨。</p></div>
+    </div>
+  </div>
+  <div class="two">
+    <div>
+      <div class="box">
+        <h3>無異曲線（Indifference Curve）</h3>
+        <p style="font-size:.83rem;color:#475569;line-height:1.8;">連結提供<strong>相同滿足程度</strong>的所有財貨組合。曲線上任何一點對消費者的效用相同。</p>
+        <ul style="font-size:.83rem;color:#475569;line-height:2;padding-left:1.1rem;margin-top:.4rem;">
+          <li>離原點越遠 → 效用越高</li>
+          <li>曲線<strong>凸向原點</strong>（凸性）</li>
+          <li>兩條無異曲線不相交</li>
+        </ul>
+      </div>
+      <div class="box">
+        <h3>邊際替代率 MRS</h3>
+        <p style="font-size:.83rem;color:#475569;line-height:1.8;">為獲得多1單位食物願意放棄的衣服量。<br>= 無異曲線的斜率（負值取正）</p>
+        <div style="background:#f5f3ff;border-radius:7px;padding:.5rem .8rem;font-family:'Times New Roman',serif;font-size:.95rem;margin-top:.5rem;">
+          MRS = −ΔC/ΔF
+        </div>
+        <div class="tip">💡 沿曲線向右下移動，MRS 遞減：擁有越多食物，願意放棄的衣服越少。</div>
+      </div>
+    </div>
+    <div class="diagram-wrap">
+      <svg viewBox="0 0 200 190" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-width:220px;display:block;margin:0 auto;">
+        <line x1="25" y1="15" x2="25" y2="175" stroke="#1e293b" stroke-width="1.5"/>
+        <line x1="25" y1="175" x2="190" y2="175" stroke="#1e293b" stroke-width="1.5"/>
+        <text x="18" y="13" font-size="9" fill="#1e293b" font-weight="700">衣服</text>
+        <text x="183" y="179" font-size="9" fill="#1e293b" font-weight="700">食物</text>
+        <!-- IC1 (inner, closest to origin) -->
+        <path d="M 48 92 C 52 145, 72 166, 135 168" stroke="#9a3412" stroke-width="2.2" fill="none"/>
+        <text x="138" y="170" font-size="8" fill="#9a3412">U₁</text>
+        <!-- IC2 (middle) -->
+        <path d="M 62 60 C 66 118, 96 150, 160 156" stroke="#f59e0b" stroke-width="2.2" fill="none"/>
+        <text x="163" y="158" font-size="8" fill="#f59e0b">U₂</text>
+        <!-- IC3 (outer, highest utility) -->
+        <path d="M 78 32 C 82 95, 120 134, 182 140" stroke="#c2410c" stroke-width="2.2" fill="none"/>
+        <text x="184" y="142" font-size="8" fill="#c2410c">U₃</text>
+        <!-- one point per curve: D on U3, B on U2, A on U1 -->
+        <g fill="#1e293b">
+          <circle cx="82" cy="59" r="2.6"/><circle cx="99" cy="136" r="2.6"/><circle cx="117" cy="167" r="2.6"/>
+        </g>
+        <text x="72" y="59" font-size="8" font-weight="700" font-style="italic" fill="#1e293b">D</text>
+        <text x="89" y="137" font-size="8" font-weight="700" font-style="italic" fill="#1e293b">B</text>
+        <text x="120" y="166" font-size="8" font-weight="700" font-style="italic" fill="#1e293b">A</text>
+        <!-- preference annotation box -->
+        <rect x="96" y="18" width="100" height="26" rx="2" fill="#e0e7ff" stroke="#a5b4fc" stroke-width="0.6"/>
+        <text x="101" y="29" font-size="6.2" fill="#3730a3">財貨組合 A 比 B 更受偏好</text>
+        <text x="101" y="39" font-size="6.2" fill="#3730a3">財貨組合 B 比 D 更受偏好</text>
+      </svg>
+    </div>
+  </div>
+
+  <div class="box" style="margin-top:1rem;">
+    <h3>MRS 遞減示意（沿曲線移動）</h3>
+    <svg viewBox="0 0 300 230" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-width:480px;display:block;margin:.4rem auto 0;">
+      <!-- axes -->
+      <line x1="45" y1="20" x2="45" y2="190" stroke="#1e293b" stroke-width="1.5"/>
+      <line x1="45" y1="190" x2="275" y2="190" stroke="#1e293b" stroke-width="1.5"/>
+      <text x="40" y="14" font-size="9" fill="#1e293b" font-weight="700">衣服</text>
+      <text x="10" y="26" font-size="6.5" fill="#64748b">(每週單位數)</text>
+      <text x="258" y="195" font-size="9" fill="#1e293b" font-weight="700">食物</text>
+      <text x="240" y="221" font-size="6.5" fill="#64748b">(每週單位數)</text>
+      <!-- y ticks -->
+      <text x="32" y="46" font-size="7" fill="#475569" text-anchor="end">16</text>
+      <text x="32" y="88" font-size="7" fill="#475569" text-anchor="end">12</text>
+      <text x="32" y="109" font-size="7" fill="#475569" text-anchor="end">10</text>
+      <text x="32" y="130" font-size="7" fill="#475569" text-anchor="end">8</text>
+      <text x="32" y="151" font-size="7" fill="#475569" text-anchor="end">6</text>
+      <text x="32" y="172" font-size="7" fill="#475569" text-anchor="end">4</text>
+      <text x="32" y="193" font-size="7" fill="#475569" text-anchor="end">2</text>
+      <!-- x ticks -->
+      <text x="85" y="202" font-size="7" fill="#475569" text-anchor="middle">1</text>
+      <text x="125" y="202" font-size="7" fill="#475569" text-anchor="middle">2</text>
+      <text x="165" y="202" font-size="7" fill="#475569" text-anchor="middle">3</text>
+      <text x="205" y="202" font-size="7" fill="#475569" text-anchor="middle">4</text>
+      <text x="245" y="202" font-size="7" fill="#475569" text-anchor="middle">5</text>
+      <!-- step lines -->
+      <g stroke="#1e293b" stroke-width="0.8" stroke-dasharray="3,2">
+        <line x1="85" y1="43" x2="85" y2="106"/><line x1="85" y1="106" x2="125" y2="106"/>
+        <line x1="125" y1="106" x2="125" y2="148"/><line x1="125" y1="148" x2="165" y2="148"/>
+        <line x1="165" y1="148" x2="165" y2="169"/><line x1="165" y1="169" x2="205" y2="169"/>
+        <line x1="205" y1="169" x2="205" y2="180"/><line x1="205" y1="180" x2="245" y2="180"/>
+      </g>
+      <text x="78" y="78" font-size="7" fill="#1e293b" text-anchor="end">-6</text>
+      <text x="105" y="116" font-size="7" fill="#1e293b" text-anchor="middle">1</text>
+      <text x="118" y="130" font-size="7" fill="#1e293b" text-anchor="end">-4</text>
+      <text x="145" y="158" font-size="7" fill="#1e293b" text-anchor="middle">1</text>
+      <text x="158" y="162" font-size="7" fill="#1e293b" text-anchor="end">-2</text>
+      <text x="185" y="179" font-size="7" fill="#1e293b" text-anchor="middle">1</text>
+      <text x="200" y="177" font-size="7" fill="#1e293b" text-anchor="end">-1</text>
+      <text x="225" y="190" font-size="7" fill="#1e293b" text-anchor="middle">1</text>
+      <!-- indifference curve -->
+      <path d="M 85 43 Q 100 95 125 106 Q 150 135 165 148 Q 188 163 205 169 Q 228 177 245 180" stroke="#9a3412" stroke-width="2.2" fill="none"/>
+      <!-- points -->
+      <g fill="#1e293b">
+        <circle cx="85" cy="43" r="3"/><circle cx="125" cy="106" r="3"/>
+        <circle cx="165" cy="148" r="3"/><circle cx="205" cy="169" r="3"/><circle cx="245" cy="180" r="3"/>
+      </g>
+      <text x="92" y="42" font-size="9" fill="#1e293b" font-style="italic" font-weight="700">A</text>
+      <text x="132" y="105" font-size="9" fill="#1e293b" font-style="italic" font-weight="700">B</text>
+      <text x="172" y="147" font-size="9" fill="#1e293b" font-style="italic" font-weight="700">D</text>
+      <text x="212" y="168" font-size="9" fill="#1e293b" font-style="italic" font-weight="700">E</text>
+      <text x="252" y="179" font-size="9" fill="#1e293b" font-style="italic" font-weight="700">G</text>
+      <!-- observation box -->
+      <rect x="150" y="40" width="120" height="32" rx="2" fill="#e0e7ff" stroke="#a5b4fc" stroke-width="0.6"/>
+      <text x="156" y="54" font-size="7" fill="#3730a3">觀察：增加 1 單位的食物，</text>
+      <text x="156" y="65" font-size="7" fill="#3730a3">必須放棄 6 單位的衣服。</text>
+    </svg>
+  </div>
+</div>
+
+<div class="sec" id="s10">
+  <div class="sec-title">預算線<span class="page-badge">p.64~67</span></div>
+  <div class="two">
+    <div>
+      <div class="box">
+        <h3>預算線公式</h3>
+        <div style="font-family:'Times New Roman',serif;font-size:1.05rem;background:#f8fafc;border-radius:7px;padding:.6rem .9rem;margin:.4rem 0;">
+          P<sub>F</sub>·F + P<sub>C</sub>·C = I
+        </div>
+        <p style="font-size:.82rem;color:#475569;line-height:1.8;">I = 所得，P<sub>F</sub> = 食物價格，P<sub>C</sub> = 衣服價格。斜率 = −P<sub>F</sub>/P<sub>C</sub></p>
+      </div>
+      <div class="cards" style="margin-bottom:0;">
+        <div class="card c-blue"><h3>所得↑</h3><p>預算線<strong>平行外移</strong>（兩端點都擴大）</p></div>
+        <div class="card c-orange"><h3>食物價格↓</h3><p>預算線<strong>向外旋轉</strong>（食物軸端點遠離）</p></div>
+      </div>
+    </div>
+    <div class="diagram-wrap">
+      <!-- Diagram 1: 預算線 F + 2C = $80 -->
+      <svg viewBox="0 0 268 200" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-width:330px;display:block;margin:0 auto;">
+        <line x1="35" y1="15" x2="35" y2="170" stroke="#1e293b" stroke-width="1.5"/>
+        <line x1="35" y1="170" x2="240" y2="170" stroke="#1e293b" stroke-width="1.5"/>
+        <text x="14" y="13" font-size="8.5" fill="#1e293b" font-weight="700">衣服</text>
+        <text x="40" y="18" font-size="6" fill="#475569">(I/Pc)</text>
+        <text x="222" y="184" font-size="8.5" fill="#1e293b" font-weight="700">食物</text>
+        <!-- y ticks -->
+        <text x="30" y="28" font-size="6.5" fill="#475569" text-anchor="end">40</text>
+        <text x="30" y="64" font-size="6.5" fill="#475569" text-anchor="end">30</text>
+        <text x="30" y="101" font-size="6.5" fill="#475569" text-anchor="end">20</text>
+        <text x="30" y="137" font-size="6.5" fill="#475569" text-anchor="end">10</text>
+        <!-- x ticks -->
+        <text x="132" y="180" font-size="6.5" fill="#475569" text-anchor="middle">40</text>
+        <text x="230" y="180" font-size="6.5" fill="#475569" text-anchor="middle">80</text>
+        <text x="243" y="167" font-size="5.5" fill="#475569">=(I/Pf)</text>
+        <!-- budget line A..G -->
+        <line x1="35" y1="25" x2="230" y2="170" stroke="#2563eb" stroke-width="2.6"/>
+        <!-- step between B and D -->
+        <line x1="84" y1="61" x2="84" y2="98" stroke="#1e293b" stroke-width="0.8" stroke-dasharray="3,2"/>
+        <line x1="84" y1="98" x2="132" y2="98" stroke="#1e293b" stroke-width="0.8" stroke-dasharray="3,2"/>
+        <text x="78" y="83" font-size="6.5" fill="#1e293b" text-anchor="end">10</text>
+        <text x="108" y="108" font-size="6.5" fill="#1e293b" text-anchor="middle">20</text>
+        <!-- points -->
+        <g fill="#1e293b">
+          <circle cx="35" cy="25" r="2.6"/><circle cx="84" cy="61" r="2.6"/><circle cx="132" cy="98" r="2.6"/>
+          <circle cx="181" cy="134" r="2.6"/><circle cx="230" cy="170" r="2.6"/>
+        </g>
+        <text x="40" y="24" font-size="8" font-weight="700" font-style="italic" fill="#1e293b">A</text>
+        <text x="89" y="60" font-size="8" font-weight="700" font-style="italic" fill="#1e293b">B</text>
+        <text x="137" y="97" font-size="8" font-weight="700" font-style="italic" fill="#1e293b">D</text>
+        <text x="186" y="133" font-size="8" font-weight="700" font-style="italic" fill="#1e293b">E</text>
+        <text x="222" y="166" font-size="8" font-weight="700" font-style="italic" fill="#1e293b">G</text>
+        <!-- budget line label -->
+        <text x="120" y="44" font-size="7" fill="#1e293b">預算線 F + 2C = $80</text>
+        <!-- slope box -->
+        <rect x="146" y="55" width="118" height="20" rx="2" fill="#dbeafe" stroke="#93c5fd" stroke-width="0.6"/>
+        <text x="152" y="68" font-size="6" fill="#1e3a8a">斜率 = ΔC/ΔF = −½ = −Pf/Pc</text>
+      </svg>
+    </div>
+  </div>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:1.2rem;margin-top:1.2rem;">
+    <div class="diagram-wrap">
+      <div style="text-align:center;font-size:.82rem;font-weight:700;color:#1e293b;margin-bottom:.3rem;">所得變動 → 平行移動</div>
+      <!-- Diagram 2: income shift -->
+      <svg viewBox="0 0 300 190" xmlns="http://www.w3.org/2000/svg" style="width:100%;display:block;margin:0 auto;">
+        <line x1="35" y1="12" x2="35" y2="165" stroke="#1e293b" stroke-width="1.5"/>
+        <line x1="35" y1="165" x2="295" y2="165" stroke="#1e293b" stroke-width="1.5"/>
+        <text x="16" y="12" font-size="8" fill="#1e293b" font-weight="700">衣服</text>
+        <text x="276" y="179" font-size="8" fill="#1e293b" font-weight="700">食物</text>
+        <!-- y ticks -->
+        <text x="30" y="95" font-size="6" fill="#475569" text-anchor="end">40</text>
+        <text x="30" y="23" font-size="6" fill="#475569" text-anchor="end">80</text>
+        <!-- x ticks -->
+        <text x="97" y="175" font-size="6" fill="#475569" text-anchor="middle">40</text>
+        <text x="160" y="175" font-size="6" fill="#475569" text-anchor="middle">80</text>
+        <text x="222" y="175" font-size="6" fill="#475569" text-anchor="middle">120</text>
+        <text x="285" y="175" font-size="6" fill="#475569" text-anchor="middle">160</text>
+        <!-- L3 I=40 -->
+        <line x1="35" y1="129" x2="97" y2="165" stroke="#60a5fa" stroke-width="1.8"/>
+        <text x="22" y="135" font-size="6.5" fill="#2563eb">L₃</text>
+        <text x="60" y="150" font-size="5.8" fill="#2563eb">(I=$40)</text>
+        <!-- L1 I=80 -->
+        <line x1="35" y1="93" x2="160" y2="165" stroke="#2563eb" stroke-width="2"/>
+        <text x="150" y="160" font-size="6.5" fill="#2563eb">L₁</text>
+        <text x="120" y="158" font-size="5.8" fill="#2563eb">(I=$80)</text>
+        <!-- L2 I=160 dotted -->
+        <line x1="35" y1="20" x2="285" y2="165" stroke="#2563eb" stroke-width="1.8" stroke-dasharray="4,3"/>
+        <text x="262" y="155" font-size="6.5" fill="#2563eb">L₂</text>
+        <text x="236" y="150" font-size="5.8" fill="#2563eb">(I=$160)</text>
+        <!-- arrows -->
+        <text x="170" y="60" font-size="6.5" fill="#1e3a8a">↗ 所得增加→外移</text>
+        <text x="70" y="120" font-size="6.5" fill="#1e3a8a">↙ 所得減少→內移</text>
+      </svg>
+    </div>
+    <div class="diagram-wrap">
+      <div style="text-align:center;font-size:.82rem;font-weight:700;color:#1e293b;margin-bottom:.3rem;">價格變動 → 旋轉</div>
+      <!-- Diagram 3: price rotation -->
+      <svg viewBox="0 0 300 175" xmlns="http://www.w3.org/2000/svg" style="width:100%;display:block;margin:0 auto;">
+        <line x1="35" y1="12" x2="35" y2="150" stroke="#1e293b" stroke-width="1.5"/>
+        <line x1="35" y1="150" x2="295" y2="150" stroke="#1e293b" stroke-width="1.5"/>
+        <text x="16" y="12" font-size="8" fill="#1e293b" font-weight="700">衣服</text>
+        <text x="276" y="164" font-size="8" fill="#1e293b" font-weight="700">食物</text>
+        <!-- y tick 40 (common intercept) -->
+        <text x="30" y="23" font-size="6" fill="#475569" text-anchor="end">40</text>
+        <!-- x ticks -->
+        <text x="97" y="160" font-size="6" fill="#475569" text-anchor="middle">40</text>
+        <text x="160" y="160" font-size="6" fill="#475569" text-anchor="middle">80</text>
+        <text x="222" y="160" font-size="6" fill="#475569" text-anchor="middle">120</text>
+        <text x="285" y="160" font-size="6" fill="#475569" text-anchor="middle">160</text>
+        <!-- L3 PF=2 (red, inner) -->
+        <line x1="35" y1="20" x2="97" y2="150" stroke="#dc2626" stroke-width="2"/>
+        <text x="78" y="120" font-size="6.5" fill="#dc2626">L₃</text>
+        <text x="58" y="140" font-size="5.8" fill="#dc2626">(P_F=2)</text>
+        <!-- L1 PF=1 (blue, middle) -->
+        <line x1="35" y1="20" x2="160" y2="150" stroke="#2563eb" stroke-width="2"/>
+        <text x="135" y="120" font-size="6.5" fill="#2563eb">L₁</text>
+        <text x="120" y="140" font-size="5.8" fill="#2563eb">(P_F=1)</text>
+        <!-- L2 PF=1/2 (purple, outer) -->
+        <line x1="35" y1="20" x2="285" y2="150" stroke="#7c3aed" stroke-width="2"/>
+        <text x="225" y="118" font-size="6.5" fill="#7c3aed">L₂</text>
+        <text x="240" y="140" font-size="5.8" fill="#7c3aed">(P_F=½)</text>
+        <!-- notes -->
+        <text x="120" y="40" font-size="6.5" fill="#7c3aed">食物價格↓→向外旋轉</text>
+        <text x="40" y="78" font-size="6.5" fill="#dc2626">食物價格↑→向內旋轉</text>
+      </svg>
+    </div>
+</div>
+
+<div class="sec" id="s11">
+  <div class="sec-title">消費者最適選擇<span class="page-badge">p.68~71</span></div>
+  <div class="two">
+    <div>
+      <div class="box">
+        <h3>最適條件</h3>
+        <div style="font-family:'Times New Roman',serif;font-size:1.05rem;background:#f5f3ff;border-radius:7px;padding:.65rem .9rem;margin:.4rem 0;text-align:center;">
+          MRS = P<sub>F</sub> / P<sub>C</sub>
+        </div>
+        <p style="font-size:.82rem;color:#475569;line-height:1.8;">無異曲線與預算線的<strong>切點</strong>就是最適選擇。此時消費者效用最大，且在預算限制內。</p>
+      </div>
+      <div class="box">
+        <h3>調整邏輯</h3>
+        <ul style="font-size:.83rem;color:#475569;line-height:2;padding-left:1rem;">
+          <li>MRS &gt; P<sub>F</sub>/P<sub>C</sub> → 多買食物、少買衣服</li>
+          <li>MRS &lt; P<sub>F</sub>/P<sub>C</sub> → 多買衣服、少買食物</li>
+          <li>直到 MRS = P<sub>F</sub>/P<sub>C</sub> → 停止調整</li>
+        </ul>
+      </div>
+    </div>
+    <div class="diagram-wrap">
+      <img src="img/optimal-choice.png" alt="消費者最適選擇圖：A、B 在預算線上，D 效用最高但負擔不起，最適選擇為 A"
+           style="width:100%;max-width:380px;display:block;margin:0 auto;border-radius:6px;">
+    </div>
+  </div>
+</div>
+
+<!-- PART 5 -->
+<div class="part-header" style="background:linear-gradient(135deg,#7c2d12,#c2410c);">
+  <h2>PART 5 &nbsp;·&nbsp; 廠商行為</h2>
+  <p>廠商如何將投入（勞力、資本）轉換為產出？</p>
+</div>
+
+<div class="sec" id="s12">
+  <div class="sec-title">生產函數與平均/邊際產量<span class="page-badge">p.79~88</span></div>
+  <div class="box">
+    <h3>生產函數</h3>
+    <div style="font-family:'Times New Roman',serif;font-size:1.05rem;background:#fff7ed;border-radius:7px;padding:.6rem .9rem;margin:.4rem 0;">
+      q = f(K, L) &nbsp;&nbsp; 投入（勞力L、資本K）→ 最高產量q
+    </div>
+  </div>
+  <div class="two">
+    <div class="box">
+      <span class="tag t-orange">平均產量 AP<sub>L</sub></span>
+      <p style="font-size:.84rem;color:#475569;margin:.4rem 0;">每單位勞動投入生產的產出，衡量平均<strong>生產力</strong>。</p>
+      <div style="font-family:'Times New Roman',serif;font-size:1rem;background:#fff7ed;border-radius:7px;padding:.5rem .8rem;">
+        AP<sub>L</sub> = q / L
+      </div>
+    </div>
+    <div class="box">
+      <span class="tag t-red">邊際產量 MP<sub>L</sub></span>
+      <p style="font-size:.84rem;color:#475569;margin:.4rem 0;">每增加1單位勞動所<strong>增加的產量</strong>。</p>
+      <div style="font-family:'Times New Roman',serif;font-size:1rem;background:#fff1f2;border-radius:7px;padding:.5rem .8rem;">
+        MP<sub>L</sub> = Δq / ΔL
+      </div>
+    </div>
+  </div>
+  <div class="box">
+    <h3>⚠️ 邊際報酬遞減法則（Law of Diminishing Marginal Returns）</h3>
+    <p style="font-size:.84rem;color:#475569;line-height:1.8;">當其他投入固定，某一投入不斷增加，最後會達到額外產量<strong>開始減少</strong>的一點。</p>
+    <div class="warn">例：工廠機器固定，不斷增加工人 → 工人互相擁擠 → 每多一人的貢獻愈來愈小。</div>
+    <div class="tip">💡 台積電赴美設廠面臨的「規模問題」，本質就是生產函數在不同地點的邊際效益差異。</div>
+  </div>
+  <div class="diagram-wrap">
+    <img src="img/production-curves.png" alt="生產曲線：(a) 總產量曲線 TP 與 A/B/C 點；(b) 平均產量與邊際產量曲線"
+         style="width:100%;max-width:640px;display:block;margin:0 auto;border-radius:6px;">
+  </div>
+  <div class="box" style="margin-top:.8rem;">
+    <h3>📖 給初學者：怎麼看這兩張圖？</h3>
+    <p style="font-size:.84rem;color:#475569;line-height:1.9;">
+      想像一間工廠，機器數量固定，只增加工人數（橫軸＝每月勞動數）。
+    </p>
+    <ul style="font-size:.84rem;color:#475569;line-height:2;padding-left:1.1rem;">
+      <li><strong>左圖（a）總產量 TP</strong>：工人越多，總產出越高，但增加速度先快後慢，到 C 點後甚至開始下滑（人太多反而互相妨礙）。</li>
+      <li><strong>平均產量 AP</strong>＝<em>原點</em>拉一條直線連到 TP 曲線上某點的<strong>斜率</strong>。代表「平均每位工人」的產出。</li>
+      <li><strong>邊際產量 MP</strong>＝TP 曲線上某點<em>切線</em>的<strong>斜率</strong>。代表「再多請 1 位工人」能多生產多少。</li>
+      <li><strong>右圖（b）</strong>把 AP、MP 單獨畫出來：兩條都先升後降。<strong>MP 會先到頂、再下降</strong>，並在 <strong>D 點穿過 AP 的最高點</strong>。</li>
+    </ul>
+    <div class="tip">💡 口訣：<strong>MP &gt; AP 時，AP 上升；MP &lt; AP 時，AP 下降；MP = AP 時，AP 最高（D 點）</strong>。就像「新同學的成績比全班平均高，班平均就被拉高」。</div>
+    <div class="warn">⚠️ MP 開始下降，就是「<strong>邊際報酬遞減</strong>」生效的時刻——這是生產理論最核心的觀念。</div>
+  </div>
+</div>
+
+<div class="sec" id="s13">
+  <div class="sec-title">等產量線與邊際技術替代率<span class="page-badge">p.89~96</span></div>
+  <div class="two">
+    <div>
+      <div class="box">
+        <h3>等產量線（Isoquant）</h3>
+        <p style="font-size:.84rem;color:#475569;line-height:1.8;">連結所有能生產<strong>相同產量</strong>的 K（資本）與 L（勞力）組合。類比消費者的無異曲線。</p>
+        <ul style="font-size:.83rem;color:#475569;line-height:2;padding-left:1rem;margin-top:.3rem;">
+          <li>離原點越遠 → 產量越高</li>
+          <li>凸向原點（邊際技術替代率遞減）</li>
+        </ul>
+      </div>
+      <div class="box">
+        <h3>邊際技術替代率 MRTS</h3>
+        <div style="font-family:'Times New Roman',serif;font-size:1rem;background:#fff7ed;border-radius:7px;padding:.55rem .85rem;margin:.4rem 0;">
+          MRTS = −ΔK/ΔL = MP<sub>L</sub>/MP<sub>K</sub>
+        </div>
+        <p style="font-size:.82rem;color:#475569;line-height:1.8;">為維持相同產量，增加1單位勞力所能減少的資本量。沿等產量線向右下移，MRTS 遞減。</p>
+      </div>
+    </div>
+    <div class="diagram-wrap">
+      <img src="img/isoquant.png" alt="等產量線圖：q1=55、q2=75、q3=90 三條等產量線，及 A、B、C、D、E 點"
+           style="width:100%;max-width:480px;display:block;margin:0 auto;border-radius:6px;">
+    </div>
+  </div>
+  <div class="box" style="margin-top:.8rem;">
+    <h3>📖 給初學者：怎麼看這張圖？</h3>
+    <p style="font-size:.84rem;color:#475569;line-height:1.9;">
+      橫軸是<strong>勞動</strong>（請幾個工人），縱軸是<strong>資本</strong>（用幾台機器）。每一條彎曲線代表「<strong>產量相同</strong>」的所有搭配方式——同一條線上的點，產出一樣多。
+    </p>
+    <ul style="font-size:.84rem;color:#475569;line-height:2;padding-left:1.1rem;">
+      <li><strong>三條線 q₁=55 &lt; q₂=75 &lt; q₃=90</strong>：離原點越遠的線，產量越高（多用資源、產更多）。</li>
+      <li><strong>固定資本=3（看 A→B→C）</strong>：只增加勞動，從 1→2→3 個工人，產量從 55→75→90，但每多 1 人增加的產量越來越少 → <strong>勞動報酬遞減</strong>。</li>
+      <li><strong>固定勞動=3（看 C→D→E）</strong>：只減少資本，從 3→2→1 台機器，產量從 90→75→55，這顯示<strong>資本報酬遞減</strong>。</li>
+      <li><strong>曲線凸向原點</strong>：代表 <strong>MRTS 遞減</strong>——資本越少時，要再少 1 台機器，得補上越來越多的工人才能維持同樣產量。</li>
+    </ul>
+    <div class="tip">💡 等產量線就是生產版的「無異曲線」：消費者用它看「效用相同」的商品組合，廠商用它看「產量相同」的資源組合。</div>
+  </div>
+</div>
+
+<!-- PART 6 -->
+<div class="part-header" style="background:linear-gradient(135deg,#064e3b,#065f46);">
+  <h2>PART 6 &nbsp;·&nbsp; 成本分析</h2>
+  <p>廠商如何衡量成本？如何達到成本最小化？</p>
+</div>
+
+<div class="sec" id="s14">
+  <div class="sec-title">成本類型<span class="page-badge">p.97~104</span></div>
+  <div class="cards">
+    <div class="card c-blue">
+      <span class="tag t-blue">會計成本</span>
+      <h3>看得到的支出</h3>
+      <p>資本設備實際支出、折舊。依國稅局規定認列。</p>
+    </div>
+    <div class="card c-green">
+      <span class="tag t-green">經濟成本</span>
+      <h3>含機會成本</h3>
+      <p>生產資源的<strong>全部成本</strong>，包含放棄其他用途的機會。</p>
+    </div>
+    <div class="card c-orange">
+      <span class="tag t-orange">機會成本</span>
+      <h3>放棄的最高價值</h3>
+      <p>資源用於此用途，放棄的<strong>最佳替代用途</strong>之價值。</p>
+    </div>
+    <div class="card c-red">
+      <span class="tag t-red">沉入成本</span>
+      <h3>已付出、無法回收</h3>
+      <p>決策時應<strong>忽略</strong>！沉入成本不影響未來決策。</p>
+    </div>
+  </div>
+  <div class="two">
+    <div class="box">
+      <span class="tag t-blue">固定成本 FC</span>
+      <p style="font-size:.84rem;color:#475569;line-height:1.8;margin-top:.3rem;">不隨產出變動的成本。<br>例：廠房維護、保險、最低雇工費用。<br>唯一消除方式：<strong>歇業</strong>。</p>
+    </div>
+    <div class="box">
+      <span class="tag t-orange">變動成本 VC</span>
+      <p style="font-size:.84rem;color:#475569;line-height:1.8;margin-top:.3rem;">隨產出增加而增加的成本。<br>例：原料、薪資。<br>TC = FC + VC</p>
+    </div>
+  </div>
+  <div class="box">
+    <h3>沉入成本 vs 固定成本</h3>
+    <p style="font-size:.84rem;color:#475569;line-height:1.8;">半導體廠花60億美元建廠（沉入成本）可攤提6年，視為每年10億固定成本。但<strong>關廠無法省回</strong>這10億，故不影響是否停產的決定。</p>
+  </div>
+</div>
+
+<div class="sec" id="s15">
+  <div class="sec-title">邊際成本與平均成本<span class="page-badge">p.105~110</span></div>
+  <div class="cards">
+    <div class="card c-red">
+      <span class="tag t-red">MC 邊際成本</span>
+      <h3>多生產1單位的額外成本</h3>
+      <div style="font-family:'Times New Roman',serif;font-size:.95rem;margin:.3rem 0;">MC = ΔVC/Δq = ΔTC/Δq</div>
+    </div>
+    <div class="card c-blue">
+      <span class="tag t-blue">ATC 平均總成本</span>
+      <h3>每單位產品的總成本</h3>
+      <div style="font-family:'Times New Roman',serif;font-size:.95rem;margin:.3rem 0;">ATC = TC/q = AFC + AVC</div>
+    </div>
+    <div class="card c-purple">
+      <span class="tag t-purple">AVC 平均變動成本</span>
+      <div style="font-family:'Times New Roman',serif;font-size:.95rem;margin:.5rem 0;">AVC = VC/q</div>
+    </div>
+    <div class="card c-teal">
+      <span class="tag t-teal">AFC 平均固定成本</span>
+      <div style="font-family:'Times New Roman',serif;font-size:.95rem;margin:.5rem 0;">AFC = FC/q（持續遞減）</div>
+    </div>
+  </div>
+  <div class="diagram-wrap">
+    <svg viewBox="0 0 300 170" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-width:360px;display:block;margin:0 auto;">
+      <line x1="30" y1="15" x2="30" y2="150" stroke="#1e293b" stroke-width="1.5"/>
+      <line x1="30" y1="150" x2="290" y2="150" stroke="#1e293b" stroke-width="1.5"/>
+      <text x="23" y="13" font-size="9" fill="#1e293b" font-weight="700">成本</text>
+      <text x="292" y="153" font-size="9" fill="#1e293b" font-weight="700">q</text>
+      <!-- MC: U-shape, rises quickly -->
+      <path d="M 45 120 C 70 90 90 65 110 55 C 130 48 150 50 175 60 C 200 73 225 95 265 130" stroke="#ef4444" stroke-width="2" fill="none"/>
+      <text x="267" y="130" font-size="8" fill="#ef4444" font-weight="700">MC</text>
+      <!-- ATC: U-shape, wider -->
+      <path d="M 45 135 C 80 100 110 80 145 72 C 170 68 200 72 240 88 C 260 97 270 108 275 120" stroke="#3b82f6" stroke-width="2" fill="none"/>
+      <text x="277" y="118" font-size="8" fill="#3b82f6" font-weight="700">ATC</text>
+      <!-- AVC: between MC and ATC -->
+      <path d="M 45 145 C 80 115 110 100 145 95 C 175 91 205 95 245 108 C 258 113 267 118 275 128" stroke="#8b5cf6" stroke-width="2" fill="none"/>
+      <text x="277" y="126" font-size="8" fill="#8b5cf6" font-weight="700">AVC</text>
+      <!-- MC intersects AVC min -->
+      <circle cx="145" cy="95" r="3" fill="#f59e0b"/>
+      <!-- MC intersects ATC min -->
+      <circle cx="145" cy="72" r="3" fill="#f59e0b"/>
+      <!-- Rule annotation -->
+      <text x="50" y="25" font-size="7.5" fill="#64748b">MC從下方穿越AVC和ATC的最低點</text>
+      <text x="50" y="35" font-size="7.5" fill="#64748b">AFC=ATC−AVC，持續下降</text>
+    </svg>
+  </div>
+  <div class="box">
+    <h3>📐 MC 與 ATC/AVC 的關係</h3>
+    <ul style="font-size:.83rem;color:#475569;line-height:2;padding-left:1.1rem;">
+      <li>MC &lt; AVC → AVC 持續下降</li>
+      <li>MC &gt; AVC → AVC 持續上升</li>
+      <li>MC 從下方穿越 AVC 的<strong>最低點</strong></li>
+      <li>同理，MC 也從下方穿越 ATC 的最低點</li>
+    </ul>
+    <div class="tip">💡 這是「平均與邊際的關係」。想像成績：當本次（邊際）低於平均，拉低平均；高於平均，拉高平均。</div>
+  </div>
+</div>
+
+<div class="sec" id="s16">
+  <div class="sec-title">等成本線與成本最小化<span class="page-badge">p.111~118</span></div>
+  <div class="two">
+    <div>
+      <div class="box">
+        <h3>等成本線（Isocost Line）</h3>
+        <div style="font-family:'Times New Roman',serif;font-size:1rem;background:#ecfdf5;border-radius:7px;padding:.55rem .85rem;margin:.4rem 0;">
+          C = wL + rK &nbsp;（w=工資，r=資本租用成本）
+        </div>
+        <p style="font-size:.82rem;color:#475569;line-height:1.8;">固定總成本下所有勞力與資本的組合。斜率 = −w/r</p>
+      </div>
+      <div class="box">
+        <h3>成本最小化條件</h3>
+        <div style="font-family:'Times New Roman',serif;font-size:1rem;background:#ecfdf5;border-radius:7px;padding:.55rem .85rem;margin:.4rem 0;">
+          MP<sub>L</sub>/w = MP<sub>K</sub>/r &nbsp;→&nbsp; MP<sub>L</sub>/MP<sub>K</sub> = w/r = MRTS
+        </div>
+        <p style="font-size:.82rem;color:#475569;line-height:1.8;">等產量線與等成本線的<strong>切點</strong>。類比消費者 MRS = P<sub>F</sub>/P<sub>C</sub>。</p>
+      </div>
+    </div>
+    <div class="box" style="align-self:start;">
+      <h3>規模經濟 vs 規模不經濟</h3>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:.5rem;margin-top:.4rem;font-size:.82rem;">
+        <div style="background:#ecfdf5;border-radius:7px;padding:.55rem;text-align:center;">
+          <div style="font-weight:700;color:#065f46;">規模經濟</div>
+          <div style="color:#475569;margin-top:.3rem;">產量×2<br>成本&lt;×2<br>E<sub>c</sub> &lt; 1</div>
+        </div>
+        <div style="background:#fff1f2;border-radius:7px;padding:.55rem;text-align:center;">
+          <div style="font-weight:700;color:#991b1b;">規模不經濟</div>
+          <div style="color:#475569;margin-top:.3rem;">產量×2<br>成本&gt;×2<br>E<sub>c</sub> &gt; 1</div>
+        </div>
+      </div>
+      <div class="tip">💡 台積電在美國設廠面臨「規模問題」：海外廠成本遠高於台灣廠，即規模不經濟。</div>
+    </div>
+  </div>
+  <div class="box">
+    <h3>總覽：消費者 vs 廠商的對稱關係</h3>
+    <div style="overflow-x:auto;">
+      <table class="tbl">
+        <tr><th>概念</th><th>消費者</th><th>廠商</th></tr>
+        <tr><td>曲線</td><td>無異曲線</td><td>等產量線</td></tr>
+        <tr><td>限制</td><td>預算線</td><td>等成本線</td></tr>
+        <tr><td>最適條件</td><td>MRS = P<sub>F</sub>/P<sub>C</sub></td><td>MRTS = w/r</td></tr>
+        <tr><td>目標</td><td>效用最大化</td><td>成本最小化</td></tr>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- 公式計算機 -->
+<div class="part-header" style="background:linear-gradient(135deg,#0f172a,#1e3a8a);">
+  <h2>🧮 公式計算機</h2>
+  <p>點擊藍色符號跳至對應欄位 → 填入數字後即時顯示代入結果。</p>
+</div>
+
+<div class="sec" style="padding-bottom:.8rem;">
+  <div style="background:#fefce8;border:1.5px solid #fde68a;border-radius:12px;padding:1rem 1.2rem;">
+    <div style="font-size:.95rem;font-weight:700;color:#92400e;margin-bottom:.6rem;">📖 計算機使用說明</div>
+    <div style="font-size:.83rem;color:#374151;line-height:1.9;">
+      各計算機中的<span style="background:#0369a1;color:white;padding:.02rem .4rem;border-radius:4px;font-family:'Times New Roman',serif;">藍色符號</span>可點擊 → 跳到對應輸入框。填入數字後下方綠色框<strong>自動顯示代入過程</strong>。
+    </div>
+  </div>
+</div>
+
+<!-- C1 實質價格 -->
+<div class="sec" id="c1">
+  <div class="sec-title">實質價格換算<span class="page-badge">p.38</span></div>
+  <div class="fc">
+    <div class="fc-head"><h3>Real Price = (CPI基年 / CPI現年) × 名目價格現年</h3></div>
+    <div style="padding:1rem 1.1rem;">
+      <div class="lf" style="display:flex;align-items:center;gap:.4rem;flex-wrap:wrap;">
+        實質價格 =
+        <span class="lf-frac">
+          <span class="lf-num">CPI<span class="pb" data-tip="基年CPI：選定的基準年份的消費者物價指數" onclick="focusParam('c1-cpibase')" style="font-size:.7rem;padding:.02rem .35rem;">基年</span></span>
+          <span class="lf-den">CPI<span class="pb" data-tip="現年CPI：要換算之年份的消費者物價指數" onclick="focusParam('c1-cpinow')" style="font-size:.7rem;padding:.02rem .35rem;">現年</span></span>
+        </span>
+        × <span class="pb" data-tip="名目價格：標籤上的實際金額（未調整通膨）" onclick="focusParam('c1-nominal')">P<sub style="font-size:.55em;">名目</sub></span>
+      </div>
+      <div style="font-size:.82rem;color:#475569;margin-bottom:.9rem;">
+        <strong>符號：</strong>
+        <span style="background:#dbeafe;color:#1e40af;padding:.05rem .4rem;border-radius:4px;">CPI<sub>基年</sub></span> 基準年物價指數 &nbsp;
+        <span style="background:#dbeafe;color:#1e40af;padding:.05rem .4rem;border-radius:4px;">CPI<sub>現年</sub></span> 換算年物價指數 &nbsp;
+        <span style="background:#dbeafe;color:#1e40af;padding:.05rem .4rem;border-radius:4px;">P<sub>名目</sub></span> 現年名目價格
+      </div>
+      <div style="background:#fefce8;border:1px solid #fde68a;border-radius:8px;padding:.6rem .9rem;font-size:.81rem;color:#374151;line-height:1.8;margin-bottom:.8rem;">
+        <strong>💡 初學者說明：</strong><br>
+        ① <strong>CPI 基年</strong>：你選定的「起點年份」的物價指數。例如以1970年為基準，1970年的CPI就是38.8。<br>
+        ② <strong>CPI 現年</strong>：你想換算的「目標年份」的物價指數。1970→2016，CPI從38.8漲到241.7，代表物價漲了約6倍。<br>
+        ③ <strong>名目價格</strong>：目標年份的標籤售價，例如2016年雞蛋售價 $2.47。<br>
+        → 公式會算出「用1970年的錢衡量，2016年的雞蛋值多少？」
+      </div>
+      <div class="lf-live" id="c1-live"><span class="lhint">← 填入數值後自動計算</span></div>
+      <div class="pi-grid">
+        <div>
+          <div style="margin-bottom:.3rem;font-size:.82rem;font-weight:600;color:#374151;"><span class="pi-sym" onclick="focusParam('c1-cpibase')">CPI<sub>基年</sub></span> 基準年物價指數（起點年份）</div>
+          <input class="pi-inp" type="number" id="c1-cpibase" placeholder="例：38.8（1970年基準）" step="any" oninput="liveC1()">
+        </div>
+        <div>
+          <div style="margin-bottom:.3rem;font-size:.82rem;font-weight:600;color:#374151;"><span class="pi-sym" onclick="focusParam('c1-cpinow')">CPI<sub>現年</sub></span> 目標年物價指數（要換算的年份）</div>
+          <input class="pi-inp" type="number" id="c1-cpinow" placeholder="例：241.7（2016年）" step="any" oninput="liveC1()">
+        </div>
+        <div>
+          <div style="margin-bottom:.3rem;font-size:.82rem;font-weight:600;color:#374151;"><span class="pi-sym" onclick="focusParam('c1-nominal')">P<sub>名目</sub></span> 目標年的標籤售價（未調整通膨）</div>
+          <input class="pi-inp" type="number" id="c1-nominal" placeholder="例：2.47（2016年雞蛋售價）" step="any" oninput="liveC1()">
+        </div>
+      </div>
+      <div class="calc-err" id="c1-err">請輸入有效數字，且 CPI現年 &gt; 0。</div>
+    </div>
+  </div>
+</div>
+
+<!-- C2 AP/MP -->
+<div class="sec" id="c2">
+  <div class="sec-title">平均產量 AP<sub>L</sub> / 邊際產量 MP<sub>L</sub><span class="page-badge">p.83~84</span></div>
+  <div class="fc">
+    <div class="fc-head"><h3>AP<sub>L</sub> = q/L &nbsp;&nbsp;|&nbsp;&nbsp; MP<sub>L</sub> = Δq/ΔL</h3></div>
+    <div style="padding:1rem 1.1rem;">
+      <div style="display:flex;flex-wrap:wrap;gap:.8rem;margin-bottom:1rem;">
+        <div class="lf" style="display:flex;align-items:center;gap:.4rem;">
+          AP<sub>L</sub> =
+          <span class="lf-frac">
+            <span class="lf-num"><span class="pb" data-tip="q：總產量" onclick="focusParam('c2-q')">q</span></span>
+            <span class="lf-den"><span class="pb" data-tip="L：勞動投入數量（人數）" onclick="focusParam('c2-l')">L</span></span>
+          </span>
+        </div>
+        <div class="lf" style="display:flex;align-items:center;gap:.4rem;">
+          MP<sub>L</sub> =
+          <span class="lf-frac">
+            <span class="lf-num">Δ<span class="pb" data-tip="Δq：產量的變化量" onclick="focusParam('c2-dq')">q</span></span>
+            <span class="lf-den">Δ<span class="pb" data-tip="ΔL：勞動投入的變化量" onclick="focusParam('c2-dl')">L</span></span>
+          </span>
+        </div>
+      </div>
+      <div style="font-size:.82rem;color:#475569;margin-bottom:.6rem;">
+        <strong>符號：</strong>
+        <span style="background:#dbeafe;color:#1e40af;padding:.05rem .4rem;border-radius:4px;">q</span> 總產量 &nbsp;
+        <span style="background:#dbeafe;color:#1e40af;padding:.05rem .4rem;border-radius:4px;">L</span> 勞動投入 &nbsp;
+        <span style="background:#dbeafe;color:#1e40af;padding:.05rem .4rem;border-radius:4px;">Δq</span> 產量變化 &nbsp;
+        <span style="background:#dbeafe;color:#1e40af;padding:.05rem .4rem;border-radius:4px;">ΔL</span> 勞動變化
+      </div>
+      <div style="background:#fefce8;border:1px solid #fde68a;border-radius:8px;padding:.6rem .9rem;font-size:.81rem;color:#374151;line-height:1.8;margin-bottom:.8rem;">
+        <strong>💡 初學者說明：</strong><br>
+        <strong>APL（平均產量）</strong>：5人共生產90個零件，平均每人產出18個 → AP=90÷5=18。衡量「整體平均效率」。<br>
+        <strong>MPL（邊際產量）</strong>：再多雇1人，多生產了15個 → MP=15÷1=15。衡量「多雇1人的貢獻」。<br>
+        → 當 MP &lt; AP，平均產量下降（邊際報酬遞減開始顯現）。
+      </div>
+      <div class="lf-live" id="c2-live"><span class="lhint">← 填入數值後自動計算</span></div>
+      <div class="pi-grid">
+        <div>
+          <div style="margin-bottom:.3rem;font-size:.82rem;font-weight:600;color:#374151;"><span class="pi-sym" onclick="focusParam('c2-q')">q</span> 總產量</div>
+          <input class="pi-inp" type="number" id="c2-q" placeholder="例：90" step="any" oninput="liveC2()">
+        </div>
+        <div>
+          <div style="margin-bottom:.3rem;font-size:.82rem;font-weight:600;color:#374151;"><span class="pi-sym" onclick="focusParam('c2-l')">L</span> 勞動投入量</div>
+          <input class="pi-inp" type="number" id="c2-l" placeholder="例：5（人）" step="any" oninput="liveC2()">

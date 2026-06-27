@@ -1,0 +1,1376 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>入門統計學 Week 2 · 機率與離散分配</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'Segoe UI','Microsoft JhengHei',sans-serif;background:#f1f5f9;color:#1e293b;display:flex;min-height:100vh;}
+
+/* ── Side nav ── */
+#sidenav{
+  width:210px;min-width:210px;background:#0f1e30;
+  position:fixed;top:0;left:0;height:100vh;overflow-y:auto;z-index:200;
+  padding:1rem 0;
+}
+#sidenav h2{color:#94a3b8;font-size:.72rem;letter-spacing:.08em;text-transform:uppercase;padding:.5rem 1rem .3rem;margin-top:.5rem;}
+#sidenav a{
+  display:block;color:#cbd5e1;font-size:.8rem;padding:.42rem 1rem;
+  text-decoration:none;border-left:3px solid transparent;transition:all .15s;
+  line-height:1.4;
+}
+#sidenav a:hover{color:white;background:rgba(255,255,255,.06);}
+#sidenav a.active{color:#38bdf8;border-left-color:#38bdf8;background:rgba(56,189,248,.08);}
+#sidenav .pg{color:#475569;font-size:.7rem;margin-left:.3rem;}
+
+/* ── Main ── */
+#main{margin-left:210px;width:100%;max-width:1210px;padding:2rem 2.4rem 4rem;}
+
+/* Part headers */
+.part-header{
+  background:linear-gradient(135deg,#1e3a5f,#2563eb);
+  color:white;border-radius:14px;padding:1.1rem 1.6rem;margin:2.5rem 0 1.4rem;
+}
+.part-header h2{font-size:1.15rem;margin:0;}
+.part-header p{font-size:.82rem;opacity:.85;margin-top:.25rem;}
+
+/* Section */
+.sec{margin-bottom:2.2rem;}
+.sec-title{
+  display:flex;align-items:center;gap:.7rem;flex-wrap:wrap;
+  font-size:1.05rem;font-weight:700;color:#1e3a5f;
+  margin-bottom:.9rem;padding-bottom:.35rem;
+  border-bottom:2px solid #bfdbfe;
+}
+.page-badge{
+  background:#e0f2fe;color:#0369a1;font-size:.7rem;
+  font-weight:600;padding:.2rem .55rem;border-radius:99px;white-space:nowrap;
+}
+
+/* Cards */
+.cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:.85rem;}
+.card{background:white;border-radius:10px;padding:1.1rem;box-shadow:0 1px 6px rgba(0,0,0,.08);border-top:4px solid;}
+.card.c-blue{border-color:#3b82f6;} .card.c-purple{border-color:#8b5cf6;}
+.card.c-green{border-color:#10b981;} .card.c-orange{border-color:#f59e0b;}
+.card.c-red{border-color:#ef4444;}   .card.c-teal{border-color:#0891b2;}
+.card.c-sky{border-color:#38bdf8;}
+.card h3{font-size:.92rem;margin-bottom:.38rem;}
+.card p{font-size:.82rem;color:#475569;line-height:1.65;}
+
+/* Box */
+.box{background:white;border-radius:10px;padding:1.3rem;box-shadow:0 1px 6px rgba(0,0,0,.08);margin-bottom:.9rem;}
+.box h3{font-size:.9rem;color:#334155;margin-bottom:.75rem;}
+
+/* Tag */
+.tag{display:inline-block;font-size:.7rem;font-weight:700;padding:.12rem .5rem;border-radius:6px;margin-bottom:.4rem;}
+.t-blue{background:#dbeafe;color:#1d4ed8;} .t-green{background:#d1fae5;color:#065f46;}
+.t-orange{background:#fef3c7;color:#92400e;} .t-purple{background:#ede9fe;color:#6d28d9;}
+.t-red{background:#fee2e2;color:#991b1b;} .t-teal{background:#cffafe;color:#155e75;}
+
+/* Table */
+.tbl{width:100%;border-collapse:collapse;font-size:.84rem;}
+.tbl th{background:#1e3a5f;color:white;padding:.5rem .8rem;text-align:left;}
+.tbl td{padding:.45rem .8rem;border-bottom:1px solid #e2e8f0;}
+.tbl tr:nth-child(even) td{background:#f8fafc;}
+
+/* Inline formula chip */
+.fml{background:#0f172a;color:#e2e8f0;border-radius:8px;padding:.7rem 1.1rem;
+  font-family:'Times New Roman',serif;font-size:1rem;margin:.45rem 0;line-height:1.95;}
+.hl{color:#fbbf24;font-weight:700;}
+
+/* Tip / warn */
+.tip{background:#f0fdf4;border-left:4px solid #22c55e;border-radius:8px;
+  padding:.7rem .9rem;font-size:.82rem;color:#166534;margin-top:.7rem;line-height:1.75;}
+.warn{background:#fffbeb;border-left:4px solid #f59e0b;border-radius:8px;
+  padding:.7rem .9rem;font-size:.82rem;color:#92400e;margin-top:.7rem;line-height:1.75;}
+
+/* Two col */
+.two{display:grid;grid-template-columns:1fr 1fr;gap:.85rem;}
+.three{display:grid;grid-template-columns:1fr 1fr 1fr;gap:.8rem;}
+@media(max-width:760px){.two,.three{grid-template-columns:1fr;} #sidenav{display:none;} #main{margin-left:0;}}
+
+/* Flow row */
+.flow{display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:0;margin:.9rem 0;}
+.fb{background:white;border:2px solid #c7d2fe;border-radius:8px;padding:.55rem .9rem;
+  font-size:.84rem;text-align:center;min-width:95px;box-shadow:0 1px 5px rgba(0,0,0,.06);}
+.fa{font-size:1.2rem;color:#2563eb;padding:0 .3rem;}
+
+/* skew cards */
+.skb{background:white;border-radius:10px;padding:.9rem;text-align:center;box-shadow:0 1px 5px rgba(0,0,0,.07);}
+
+/* ── Formula Card ── */
+.fc{background:white;border-radius:12px;overflow:hidden;box-shadow:0 2px 10px rgba(0,0,0,.08);margin-bottom:1.2rem;border:1.5px solid #e2e8f0;}
+.fc-head{background:linear-gradient(135deg,#1e3a5f,#2563eb);color:white;padding:.7rem 1.1rem;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:.4rem;}
+.fc-head h3{font-size:.95rem;margin:0;}
+.fc-body{padding:1.1rem 1.2rem;}
+
+/* Green lecture formula box */
+.lf{background:#d1fae5;border:1px solid #6ee7b7;border-radius:8px;padding:.85rem 1.2rem;display:inline-flex;align-items:center;gap:.35rem;font-family:'Times New Roman','Palatino Linotype',serif;font-size:1.1rem;flex-wrap:wrap;margin-bottom:1rem;}
+.lf-eq{color:#374151;}
+
+/* Fraction */
+.lf-frac{display:inline-flex;flex-direction:column;align-items:center;vertical-align:middle;margin:0 .1rem;}
+.lf-num{border-bottom:1.8px solid #1e293b;padding:1px 4px 2px;text-align:center;white-space:nowrap;}
+.lf-den{padding:2px 4px 0;text-align:center;white-space:nowrap;}
+
+/* Param badge */
+.pb{
+  display:inline-block;cursor:pointer;
+  background:#1e3a5f;color:white;
+  font-family:'Times New Roman',serif;font-size:1rem;font-weight:700;
+  padding:.05rem .45rem;border-radius:4px;vertical-align:middle;
+  transition:background .15s, transform .1s;position:relative;
+}
+.pb:hover{background:#2563eb;transform:scale(1.08);}
+.pb.active{background:#f59e0b;color:#1e293b;}
+.pb[data-tip]:hover::after{
+  content:attr(data-tip);
+  position:absolute;bottom:120%;left:50%;transform:translateX(-50%);
+  background:#0f172a;color:white;padding:3px 8px;border-radius:5px;
+  font-size:.68rem;font-family:'Segoe UI',sans-serif;font-weight:400;
+  white-space:nowrap;pointer-events:none;z-index:99;
+}
+
+/* Live substitution bar */
+.lf-live{
+  background:#f0fdf4;border:1.5px solid #86efac;border-radius:8px;
+  padding:.65rem 1rem;font-family:'Times New Roman',serif;font-size:1.05rem;
+  min-height:2.8rem;display:flex;align-items:center;gap:.3rem;flex-wrap:wrap;
+  margin-bottom:.9rem;line-height:1.8;
+}
+.lf-live .lv{color:#1d4ed8;font-weight:700;}
+.lf-live .la{color:#065f46;font-weight:700;font-size:1.2rem;background:#bbf7d0;padding:.05rem .4rem;border-radius:4px;}
+.lf-live .lhint{color:#94a3b8;font-family:'Segoe UI',sans-serif;font-size:.8rem;font-style:italic;}
+
+/* Param input grid */
+.pi-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(185px,1fr));gap:.75rem;margin:.5rem 0 .9rem;}
+.pi-inp{
+  border:1.5px solid #cbd5e1;border-radius:7px;padding:.4rem .7rem;
+  font-size:.87rem;outline:none;width:100%;box-sizing:border-box;
+  transition:border .15s,box-shadow .15s;background:white;
+}
+.pi-inp:focus{border-color:#2563eb;box-shadow:0 0 0 2px rgba(37,99,235,.15);}
+.pi-inp.lit{border-color:#f59e0b;box-shadow:0 0 0 2px rgba(245,158,11,.18);}
+textarea.pi-inp{resize:vertical;font-family:'Courier New',monospace;font-size:.85rem;line-height:1.6;min-height:4rem;}
+.pi-sym{
+  background:#1e3a5f;color:white;font-family:'Times New Roman',serif;
+  font-size:.88rem;font-weight:700;padding:.1rem .45rem;border-radius:4px;
+  cursor:pointer;user-select:none;transition:background .12s;
+}
+.pi-sym:hover{background:#2563eb;}
+
+/* Beginner note box */
+.bnote{background:#eff6ff;border:1px dashed #93c5fd;border-radius:8px;padding:.7rem .95rem;font-size:.8rem;color:#1e40af;line-height:1.7;margin-bottom:.9rem;}
+.bnote b{color:#1e3a5f;}
+
+.calc-err{background:#fff1f2;border:1px solid #fca5a5;border-radius:7px;padding:.55rem .85rem;font-size:.82rem;color:#991b1b;display:none;margin-top:.5rem;}
+.calc-err.show{display:block;}
+
+mark{padding:.05rem .3rem;border-radius:4px;}
+.sym{background:#dbeafe;color:#1e40af;padding:.05rem .4rem;border-radius:4px;font-family:'Times New Roman',serif;}
+sub{font-size:.6em;}
+</style>
+</head>
+<body>
+
+<!-- ── Side Navigation ── -->
+<nav id="sidenav">
+  <div style="padding:.5rem 1rem .6rem;border-bottom:1px solid #1e3a5f;">
+    <div style="color:white;font-weight:700;font-size:.9rem;">🎲 統計學 Week 2</div>
+    <div style="color:#64748b;font-size:.7rem;margin-top:.2rem;">機率與離散分配</div>
+  </div>
+  <div style="color:#64748b;font-size:.7rem;padding:.4rem 1rem;">📖 第一版（上課後更新）</div>
+
+  <h2>PART 1 · 機率基礎</h2>
+  <a href="#s1">機率導論 <span class="pg">2-1</span></a>
+  <a href="#s2">實驗與樣本空間 <span class="pg">2-1</span></a>
+  <a href="#s3">計數法則 <span class="pg">2-1~2</span></a>
+  <a href="#s4">排列 Permutation <span class="pg">2-3</span></a>
+  <a href="#s5">組合 Combination <span class="pg">2-4</span></a>
+  <a href="#s6">指定機率方法 <span class="pg">2-5~6</span></a>
+
+  <h2>PART 2 · 事件與機率關係</h2>
+  <a href="#s7">事件與其機率 <span class="pg">2-6</span></a>
+  <a href="#s8">互補・聯集・交集 <span class="pg">2-7~8</span></a>
+  <a href="#s9">加法法則 <span class="pg">2-8~9</span></a>
+  <a href="#s10">條件機率 <span class="pg">2-9~10</span></a>
+  <a href="#s11">乘法法則 <span class="pg">2-10</span></a>
+  <a href="#s12">獨立事件 <span class="pg">2-11</span></a>
+  <a href="#s13">貝氏定理 <span class="pg">2-11~13</span></a>
+
+  <h2>PART 3 · 隨機變數</h2>
+  <a href="#s14">隨機變數 <span class="pg">2-14~15</span></a>
+  <a href="#s15">離散機率分配 <span class="pg">2-15~16</span></a>
+  <a href="#s16">期望值與變異數 <span class="pg">2-16~17</span></a>
+
+  <h2>PART 4 · 常見離散分配</h2>
+  <a href="#s17">均勻分配 <span class="pg">2-18</span></a>
+  <a href="#s18">伯努利試驗 <span class="pg">2-19</span></a>
+  <a href="#s19">二項式分配 <span class="pg">2-19~21</span></a>
+  <a href="#s20">布阿松分配 <span class="pg">2-22~23</span></a>
+  <a href="#s21">超幾何分配 <span class="pg">2-24~25</span></a>
+  <a href="#s22">幾何分配 <span class="pg">2-26~27</span></a>
+  <a href="#s23">負二項分配 <span class="pg">2-27~28</span></a>
+  <a href="#s24">多項式分配 <span class="pg">2-28</span></a>
+
+  <h2>🧮 公式計算機</h2>
+  <a href="#c1">排列・組合</a>
+  <a href="#c2">加法法則</a>
+  <a href="#c3">條件機率</a>
+  <a href="#c4">貝氏定理</a>
+  <a href="#c5">期望值・變異數</a>
+  <a href="#c6">二項式分配</a>
+  <a href="#c7">布阿松分配</a>
+  <a href="#c8">超幾何分配</a>
+  <a href="#c9">幾何分配</a>
+</nav>
+
+<!-- ── Main Content ── -->
+<main id="main">
+<!-- ══════════ PART 1 ══════════ -->
+<div class="part-header">
+  <h2>PART 1 &nbsp;·&nbsp; 機率基礎</h2>
+  <p>機率是什麼？怎麼數出所有可能結果（計數法則、排列、組合），又怎麼把機率分配給每個結果。</p>
+</div>
+
+<!-- S1 機率導論 -->
+<div class="sec" id="s1">
+  <div class="sec-title">機率導論：Probability 是什麼？<span class="page-badge">Week 2-1</span></div>
+  <div class="cards">
+    <div class="card c-blue">
+      <span class="tag t-blue">核心定義</span>
+      <h3>機率 Probability</h3>
+      <p>一個<strong>數字</strong>，用來衡量某件事（事件）<strong>發生的可能性有多高</strong>。</p>
+    </div>
+    <div class="card c-teal">
+      <span class="tag t-teal">範圍</span>
+      <h3>永遠在 0 到 1 之間</h3>
+      <p>0 = 幾乎不可能；1 = 幾乎一定發生；0.5 = 發生與不發生一樣可能。</p>
+    </div>
+    <div class="card c-orange">
+      <span class="tag t-orange">白話比喻</span>
+      <h3>像「信心刻度尺」</h3>
+      <p>把「我覺得會不會發生」量化成 0~1 的一把尺，數字越大越有把握。</p>
+    </div>
+  </div>
+  <div class="box" style="margin-top:.85rem;">
+    <h3>機率刻度尺（讀圖方法：越往右越可能發生）</h3>
+    <svg viewBox="0 0 720 90" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-width:720px;display:block;margin:.4rem auto;">
+      <defs><linearGradient id="probGrad" x1="0" y1="0" x2="1" y2="0">
+        <stop offset="0" stop-color="#ef4444"/><stop offset="0.5" stop-color="#f59e0b"/><stop offset="1" stop-color="#22c55e"/>
+      </linearGradient></defs>
+      <rect x="40" y="34" width="640" height="20" rx="10" fill="url(#probGrad)"/>
+      <line x1="40" y1="30" x2="40" y2="58" stroke="#334155" stroke-width="2"/>
+      <line x1="360" y1="30" x2="360" y2="58" stroke="#334155" stroke-width="2"/>
+      <line x1="680" y1="30" x2="680" y2="58" stroke="#334155" stroke-width="2"/>
+      <text x="40" y="24" text-anchor="middle" font-size="13" font-weight="700" fill="#b91c1c">0</text>
+      <text x="360" y="24" text-anchor="middle" font-size="13" font-weight="700" fill="#b45309">0.5</text>
+      <text x="680" y="24" text-anchor="middle" font-size="13" font-weight="700" fill="#15803d">1</text>
+      <text x="40" y="76" text-anchor="middle" font-size="10.5" fill="#64748b">幾乎不可能</text>
+      <text x="360" y="76" text-anchor="middle" font-size="10.5" fill="#64748b">一半一半</text>
+      <text x="680" y="76" text-anchor="middle" font-size="10.5" fill="#64748b">幾乎必然</text>
+    </svg>
+  </div>
+</div>
+
+<!-- S2 實驗與樣本空間 -->
+<div class="sec" id="s2">
+  <div class="sec-title">實驗、樣本空間、樣本點<span class="page-badge">Week 2-1</span></div>
+  <div class="cards">
+    <div class="card c-blue"><h3>實驗 Experiment（實驗）</h3><p>任何會產生「明確結果」的過程。<br>例：擲一顆骰子。</p></div>
+    <div class="card c-purple"><h3>樣本空間 Sample Space（樣本空間）</h3><p>記作 <span class="sym">S</span>，是「<strong>所有可能結果</strong>」的集合。</p></div>
+    <div class="card c-green"><h3>樣本點 Sample Point</h3><p>樣本空間裡的<strong>一個</strong>結果，例：骰子出現「3」。</p></div>
+  </div>
+  <div class="two" style="margin-top:.85rem;">
+    <div class="box">
+      <h3>例：擲一顆骰子，哪個 S 比較好？</h3>
+      <div class="fml">S = <span class="hl">{1,2,3,4,5,6}</span> &nbsp; 還是 &nbsp; S = {偶, 奇}？</div>
+      <div class="tip">💡 原則：選「<strong>能給你最多資訊</strong>」的樣本空間。{1,2,3,4,5,6} 比 {偶,奇} 保留更多細節，所以比較好。</div>
+    </div>
+    <div class="box">
+      <h3>S 也可以用條件描述</h3>
+      <div class="fml">S = { x | x 是人口超過 100 萬的城市 }</div>
+      <div class="fml">S = { (x, y) | x² + y² ≤ 4 }</div>
+      <p style="font-size:.8rem;color:#64748b;">「|」唸作「使得 / such that」，左邊是元素長相，右邊是它要滿足的條件。</p>
+    </div>
+  </div>
+</div>
+
+<!-- S3 計數法則 -->
+<div class="sec" id="s3">
+  <div class="sec-title">計數法則：乘法法則與樹狀圖<span class="page-badge">Week 2-1 ~ 2-2</span></div>
+  <div class="box">
+    <span class="tag t-blue">廣義乘法法則 Generalized Multiplication Rule</span>
+    <h3 style="margin-top:.3rem;">分 k 個步驟，每步可能數相乘</h3>
+    <div class="fml">總結果數 = <span class="hl">n₁ × n₂ × n₃ × … × n<sub>k</sub></span></div>
+    <p style="font-size:.82rem;color:#475569;">第 1 步有 n₁ 種、第 2 步有 n₂ 種…把每一步的可能數「<strong>連乘</strong>」就是全部結果數。</p>
+    <div class="tip">💡 白話：做一件事要分好幾關，每關有幾條岔路，全部走法就是各關岔路數相乘。</div>
+  </div>
+  <div class="two">
+    <div class="box">
+      <h3>例：用 1,2,5,6,9 排出幾個「3 位數偶數」？（每個數字只用一次）</h3>
+      <div class="fml">個位（須偶）：只有 <span class="hl">2,6</span> → <span class="hl">2</span> 種<br>百位：剩 4 個 → <span class="hl">4</span> 種<br>十位：剩 3 個 → <span class="hl">3</span> 種</div>
+      <div class="fml">總數 = 4 × 3 × 2 = <span class="hl">24</span> 個</div>
+      <div class="tip">💡 訣竅：有限制的位置（個位要偶數）<strong>先決定</strong>，再排其他位置。</div>
+    </div>
+    <div class="box">
+      <h3>樹狀圖 Tree Diagram（Bradley 投資）</h3>
+      <p style="font-size:.8rem;color:#475569;margin-bottom:.4rem;">兩支股票各有可能漲跌，畫成「分岔」一路展開，葉子就是所有結果。</p>
+      <svg viewBox="0 0 360 230" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-width:360px;display:block;margin:.2rem auto;">
+        <line x1="20" y1="115" x2="120" y2="40"  stroke="#94a3b8" stroke-width="1.5"/>
+        <line x1="20" y1="115" x2="120" y2="190" stroke="#94a3b8" stroke-width="1.5"/>
+        <circle cx="20" cy="115" r="5" fill="#1e3a5f"/>
+        <text x="14" y="112" text-anchor="end" font-size="10" fill="#475569">Markley</text>
+        <line x1="120" y1="40"  x2="230" y2="22" stroke="#cbd5e1" stroke-width="1.3"/>
+        <line x1="120" y1="40"  x2="230" y2="62" stroke="#cbd5e1" stroke-width="1.3"/>
+        <line x1="120" y1="190" x2="230" y2="168" stroke="#cbd5e1" stroke-width="1.3"/>
+        <line x1="120" y1="190" x2="230" y2="208" stroke="#cbd5e1" stroke-width="1.3"/>
+        <circle cx="120" cy="40" r="4" fill="#2563eb"/><text x="112" y="36" text-anchor="end" font-size="9" fill="#1d4ed8">漲10</text>
+        <circle cx="120" cy="190" r="4" fill="#ef4444"/><text x="112" y="186" text-anchor="end" font-size="9" fill="#b91c1c">跌20</text>
+        <text x="236" y="25" font-size="9" fill="#065f46">(10,8) 賺$18k</text>
+        <text x="236" y="65" font-size="9" fill="#065f46">(10,2) 賺$8k</text>
+        <text x="236" y="171" font-size="9" fill="#b91c1c">(20,8) 賠$12k</text>
+        <text x="236" y="211" font-size="9" fill="#b91c1c">(20,2) 賠$22k</text>
+        <text x="180" y="120" text-anchor="middle" font-size="9" fill="#64748b">…(中間分支略)…</text>
+      </svg>
+    </div>
+  </div>
+</div>
+
+<!-- S4 排列 -->
+<div class="sec" id="s4">
+  <div class="sec-title">排列 Permutation（排列）— 有順序<span class="page-badge">Week 2-3</span></div>
+  <div class="bnote"><b>白話：</b>排列在意「<b>順序</b>」。把人排成一排照相，AB 和 BA 算<b>不一樣</b>。</div>
+  <div class="two">
+    <div class="box">
+      <h3>N 個相異物件全部排</h3>
+      <div class="lf">N! = N(N−1)(N−2)…(2)(1)</div>
+      <p style="font-size:.82rem;color:#475569;">「!」叫<strong>階乘</strong>。規定 1! = 1，<strong>0! = 1</strong>。</p>
+      <div class="fml">例：5 個不同數字排 5 位數 = 5! = <span class="hl">120</span></div>
+    </div>
+    <div class="box">
+      <h3>N 取 n 個來排</h3>
+      <div class="lf">
+        <span class="lf-eq">P<sub>n</sub><sup style="font-size:.6em">N</sup> =</span>
+        <span class="lf-frac"><span class="lf-num">N!</span><span class="lf-den">(N − n)!</span></span>
+        <span class="lf-eq">= N(N−1)…(N−n+1)</span>
+      </div>
+      <div class="fml">例：5 個數字取 2 位數 = 5×4 = <span class="hl">20</span></div>
+    </div>
+  </div>
+  <div class="box">
+    <h3>有重複物件的排列（去掉重複算法）</h3>
+    <p style="font-size:.82rem;color:#475569;">N 個東西中，有 n₁ 個一樣、n₂ 個一樣…時，相異排法為：</p>
+    <div class="lf"><span class="lf-frac"><span class="lf-num">N!</span><span class="lf-den">n₁! n₂! … n<sub>k</sub>!</span></span></div>
+    <div class="fml">例：1,1,5,5,9 排 5 位數 = 5! / (2!·2!) = 120 / 4 = <span class="hl">30</span></div>
+    <div class="tip">💡 為什麼要除？因為兩個「1」交換你看不出差別，這些重複的排法要<strong>除掉</strong>。</div>
+  </div>
+</div>
+
+<!-- S5 組合 -->
+<div class="sec" id="s5">
+  <div class="sec-title">組合 Combination（組合）— 不管順序<span class="page-badge">Week 2-4</span></div>
+  <div class="bnote"><b>白話：</b>組合<b>不管順序</b>，只看「選到誰」。從一群人選 2 個代表，AB 和 BA 是<b>同一組</b>。</div>
+  <div class="box">
+    <h3>N 取 n 的組合數</h3>
+    <div class="lf">
+      <span class="lf-eq">C<sub>n</sub><sup style="font-size:.6em">N</sup> = </span>
+      <span style="font-size:1.4rem;">(</span><span class="lf-frac"><span class="lf-num" style="border:none;">N</span><span class="lf-den">n</span></span><span style="font-size:1.4rem;">)</span>
+      <span class="lf-eq"> = </span>
+      <span class="lf-frac"><span class="lf-num">N!</span><span class="lf-den">n!(N − n)!</span></span>
+    </div>
+    <div class="tip">💡 排列 ÷ n! = 組合。因為排列把 n 個被選中的東西「又排了順序」，組合不要順序，所以再除掉 n!。</div>
+  </div>
+  <div class="two">
+    <div class="box">
+      <span class="tag t-purple">例：撲克牌 Black Jack</span>
+      <h3 style="margin-top:.3rem;">52 張抽 2 張的機率</h3>
+      <div class="fml">總抽法 = C(52,2) = <span class="hl">1326</span></div>
+      <div class="fml">Black Jack：1 張 A(4 張) × 1 張 10點(16 張) = 4×16 = <span class="hl">64</span></div>
+      <div class="fml">P(Black Jack) = 64 / 1326 ≈ <span class="hl">4.8%</span></div>
+    </div>
+    <div class="box">
+      <span class="tag t-orange">例：樂透 Lottery（樂透）</span>
+      <h3 style="margin-top:.3rem;">42 選 6 的頭獎機率</h3>
+      <div class="fml">總組合 = C(42,6) = <span class="hl">5,245,786</span></div>
+      <div class="fml">頭獎機率 = 1 / 5,245,786 ≈ <span class="hl">0.000019%</span></div>
+      <div class="warn">⚠️ 直觀體會：中頭獎比被雷劈還難很多。組合數一大，機率就極小。</div>
+    </div>
+  </div>
+</div>
+
+<!-- S6 指定機率方法 -->
+<div class="sec" id="s6">
+  <div class="sec-title">指定機率的三種方法<span class="page-badge">Week 2-5 ~ 2-6</span></div>
+  <div class="three">
+    <div class="card c-blue">
+      <span class="tag t-blue">① 古典法 Classical</span>
+      <h3>假設每個結果一樣可能</h3>
+      <p>機率 = 有利結果數 / 總結果數。<br>例：公正骰子每面 = 1/6。</p>
+    </div>
+    <div class="card c-green">
+      <span class="tag t-green">② 相對次數法 Relative Frequency</span>
+      <h3>看歷史/實驗資料</h3>
+      <p>用「過去發生比例」當機率。<br>例：過去 200 天賣電視的紀錄。</p>
+    </div>
+    <div class="card c-orange">
+      <span class="tag t-orange">③ 主觀法 Subjective</span>
+      <h3>靠判斷與經驗</h3>
+      <p>環境快速變化、沒歷史資料時，用專家「信念程度」估計。</p>
+    </div>
+  </div>
+  <div class="box" style="margin-top:.85rem;">
+    <h3>機率的基本要求（兩條鐵則）</h3>
+    <div class="two">
+      <div class="fml">① 每個機率介於 0 與 1：<br><span class="hl">0 ≤ P(Eᵢ) ≤ 1</span></div>
+      <div class="fml">② 全部加起來等於 1：<br><span class="hl">P(E₁)+P(E₂)+…+P(E<sub>n</sub>) = 1</span></div>
+    </div>
+    <div class="tip">💡 主觀法常與古典/相對次數法「混搭」，得到的估計往往最好。</div>
+  </div>
+  <div class="box">
+    <h3>Bradley 投資 — 主觀指定的機率表（後面會一直用到）</h3>
+    <table class="tbl">
+      <tr><th>結果 (Markley, Collins)</th><th>淨損益</th><th>機率</th></tr>
+      <tr><td>(10, 8)</td><td>賺 $18,000</td><td>0.20</td></tr>
+      <tr><td>(10, 2)</td><td>賺 $8,000</td><td>0.08</td></tr>
+      <tr><td>(5, 8)</td><td>賺 $13,000</td><td>0.16</td></tr>
+      <tr><td>(5, 2)</td><td>賺 $3,000</td><td>0.26</td></tr>
+      <tr><td>(0, 8)</td><td>賺 $8,000</td><td>0.10</td></tr>
+      <tr><td>(0, 2)</td><td>賠 $2,000</td><td>0.12</td></tr>
+      <tr><td>(20, 8)</td><td>賠 $12,000</td><td>0.02</td></tr>
+      <tr><td>(20, 2)</td><td>賠 $22,000</td><td>0.06</td></tr>
+    </table>
+    <p style="font-size:.78rem;color:#64748b;margin-top:.4rem;">註：括號數字是兩股票的損益（千元），8 種結果機率加總 = 1.00。</p>
+  </div>
+</div>
+
+<!-- ══════════ PART 2 ══════════ -->
+<div class="part-header">
+  <h2>PART 2 &nbsp;·&nbsp; 事件與機率關係</h2>
+  <p>把結果打包成「事件」，再用集合運算（互補、聯集、交集）與條件、獨立、貝氏定理算機率。</p>
+</div>
+
+<!-- S7 事件 -->
+<div class="sec" id="s7">
+  <div class="sec-title">事件與其機率<span class="page-badge">Week 2-6</span></div>
+  <div class="bnote"><b>事件 Event：</b>樣本空間的一個「子集合」，也就是把幾個樣本點<b>打包</b>起來。某事件的機率 = 它<b>包含的所有樣本點機率相加</b>。</div>
+  <div class="two">
+    <div class="box">
+      <span class="tag t-blue">事件 M：Markley 獲利</span>
+      <div class="fml">M = {(10,8),(10,2),(5,8),(5,2)}</div>
+      <div class="fml">P(M) = 0.20+0.08+0.16+0.26 = <span class="hl">0.70</span></div>
+    </div>
+    <div class="box">
+      <span class="tag t-green">事件 C：Collins 獲利</span>
+      <div class="fml">C = {(10,8),(5,8),(0,8),(20,8)}</div>
+      <div class="fml">P(C) = 0.20+0.16+0.10+0.02 = <span class="hl">0.48</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- S8 互補聯集交集 -->
+<div class="sec" id="s8">
+  <div class="sec-title">互補・聯集・交集（集合三兄弟）<span class="page-badge">Week 2-7 ~ 2-8</span></div>
+  <div class="three">
+    <div class="box">
+      <span class="tag t-red">互補 Complement（互補事件）</span>
+      <h3 style="margin-top:.3rem;">Aᶜ = 不在 A 裡的全部</h3>
+      <svg viewBox="0 0 160 110" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-width:160px;display:block;margin:.3rem auto;">
+        <rect x="5" y="5" width="150" height="100" rx="6" fill="#fee2e2" stroke="#94a3b8"/>
+        <text x="140" y="20" text-anchor="end" font-size="11" fill="#991b1b">Aᶜ</text>
+        <circle cx="70" cy="55" r="34" fill="#fff" stroke="#1e3a5f" stroke-width="2"/>
+        <text x="70" y="60" text-anchor="middle" font-size="14" font-weight="700" fill="#1e3a5f">A</text>
+      </svg>
+      <div class="fml" style="font-size:.85rem;">P(Aᶜ) = 1 − P(A)</div>
+    </div>
+    <div class="box">
+      <span class="tag t-blue">聯集 Union（聯集）</span>
+      <h3 style="margin-top:.3rem;">A ∪ B = 在 A 或 B（或都在）</h3>
+      <svg viewBox="0 0 160 110" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-width:160px;display:block;margin:.3rem auto;">
+        <rect x="5" y="5" width="150" height="100" rx="6" fill="#f8fafc" stroke="#94a3b8"/>
+        <circle cx="62" cy="55" r="32" fill="#bfdbfe" fill-opacity="0.8" stroke="#1d4ed8" stroke-width="2"/>
+        <circle cx="98" cy="55" r="32" fill="#bfdbfe" fill-opacity="0.8" stroke="#1d4ed8" stroke-width="2"/>
+        <text x="48" y="60" text-anchor="middle" font-size="13" font-weight="700" fill="#1e3a5f">A</text>
+        <text x="112" y="60" text-anchor="middle" font-size="13" font-weight="700" fill="#1e3a5f">B</text>
+      </svg>
+      <p style="font-size:.78rem;color:#64748b;">藍色塗滿＝聯集（任一邊都算）</p>
+    </div>
+    <div class="box">
+      <span class="tag t-purple">交集 Intersection（交集）</span>
+      <h3 style="margin-top:.3rem;">A ∩ B = 同時在 A 和 B</h3>
+      <svg viewBox="0 0 160 110" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-width:160px;display:block;margin:.3rem auto;">
+        <rect x="5" y="5" width="150" height="100" rx="6" fill="#f8fafc" stroke="#94a3b8"/>
+        <defs><clipPath id="clpA"><circle cx="62" cy="55" r="32"/></clipPath></defs>
+        <circle cx="62" cy="55" r="32" fill="#fff" stroke="#7c3aed" stroke-width="2"/>
+        <circle cx="98" cy="55" r="32" fill="#fff" stroke="#7c3aed" stroke-width="2"/>
+        <circle cx="98" cy="55" r="32" fill="#ddd6fe" clip-path="url(#clpA)"/>
+        <text x="44" y="60" text-anchor="middle" font-size="13" font-weight="700" fill="#5b21b6">A</text>
+        <text x="116" y="60" text-anchor="middle" font-size="13" font-weight="700" fill="#5b21b6">B</text>
+      </svg>
+      <p style="font-size:.78rem;color:#64748b;">只有<strong>中間重疊</strong>才算交集</p>
+    </div>
+  </div>
+  <div class="two">
+    <div class="box">
+      <h3>例：M ∪ C（Markley 或 Collins 獲利）</h3>
+      <div class="fml">P(M∪C) = 0.20+0.08+0.16+0.26+0.10+0.02 = <span class="hl">0.82</span></div>
+    </div>
+    <div class="box">
+      <h3>例：M ∩ C（兩者都獲利）</h3>
+      <div class="fml">M∩C = {(10,8),(5,8)} → 0.20+0.16 = <span class="hl">0.36</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- S9 加法法則 -->
+<div class="sec" id="s9">
+  <div class="sec-title">加法法則 Addition Law<span class="page-badge">Week 2-8 ~ 2-9</span></div>
+  <div class="box">
+    <h3>算「A 或 B」發生的機率</h3>
+    <div class="lf">P(A ∪ B) = P(A) + P(B) − P(A ∩ B)</div>
+    <div class="tip">💡 為什麼要減 P(A∩B)？因為中間重疊的部分被「A 算一次、B 又算一次」，多算了一次要扣回來。</div>
+    <div class="fml">驗證 Bradley：P(M∪C) = 0.70 + 0.48 − 0.36 = <span class="hl">0.82</span> ✓（和直接相加一樣）</div>
+  </div>
+  <div class="box">
+    <span class="tag t-red">互斥事件 Mutually Exclusive（互斥事件）</span>
+    <h3 style="margin-top:.3rem;">兩事件「沒有共同樣本點」</h3>
+    <div class="two" style="align-items:center;">
+      <svg viewBox="0 0 200 100" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-width:200px;display:block;margin:.2rem auto;">
+        <rect x="5" y="5" width="190" height="90" rx="6" fill="#f8fafc" stroke="#94a3b8"/>
+        <circle cx="60" cy="50" r="30" fill="#fecaca" stroke="#b91c1c" stroke-width="2"/>
+        <circle cx="140" cy="50" r="30" fill="#fed7aa" stroke="#c2410c" stroke-width="2"/>
+        <text x="60" y="55" text-anchor="middle" font-size="13" font-weight="700" fill="#991b1b">A</text>
+        <text x="140" y="55" text-anchor="middle" font-size="13" font-weight="700" fill="#9a3412">B</text>
+      </svg>
+      <div>
+        <p style="font-size:.82rem;color:#475569;">一個發生，另一個就<strong>不可能</strong>發生 → 沒有重疊 → P(A∩B)=0。</p>
+        <div class="lf" style="font-size:1rem;">P(A ∪ B) = P(A) + P(B)</div>
+        <p style="font-size:.78rem;color:#64748b;">互斥時加法法則少了那一項，直接相加即可。</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- S10 條件機率 -->
+<div class="sec" id="s10">
+  <div class="sec-title">條件機率 Conditional Probability（條件機率）<span class="page-badge">Week 2-9 ~ 2-10</span></div>
+  <div class="bnote"><b>白話：</b>「<b>已經知道 B 發生了</b>，那 A 發生的機率是多少？」記作 <span class="sym">P(A|B)</span>，唸「在 B 條件下的 A」。新資訊會<b>縮小樣本空間</b>。</div>
+  <div class="box">
+    <h3>公式</h3>
+    <div class="lf">
+      P(A | B) =
+      <span class="lf-frac"><span class="lf-num">P(A ∩ B)</span><span class="lf-den">P(B)</span></span>
+      <span class="lf-eq" style="font-size:.85rem;margin-left:.5rem;">（須 P(B) &gt; 0）</span>
+    </div>
+    <div class="tip">💡 讀法：分母換成「已知條件 B」的機率，等於把整個世界<strong>限縮在 B 之內</strong>，再看 A 佔多少。</div>
+  </div>
+  <div class="box">
+    <h3>例：P(C | M) — 已知 Markley 獲利，Collins 也獲利的機率</h3>
+    <div class="fml">P(C|M) = P(C∩M) / P(M) = 0.36 / 0.70 ≈ <span class="hl">0.51</span></div>
+    <p style="font-size:.8rem;color:#64748b;">原本 P(C)=0.48；知道 M 獲利後升到 0.51 → 兩者略有正關聯。</p>
+  </div>
+</div>
+
+<!-- S11 乘法法則 -->
+<div class="sec" id="s11">
+  <div class="sec-title">乘法法則 Multiplication Law<span class="page-badge">Week 2-10</span></div>
+  <div class="box">
+    <h3>算「A 且 B」同時發生（交集）</h3>
+    <div class="lf">P(A ∩ B) = P(B)·P(A|B) = P(A)·P(B|A)</div>
+    <p style="font-size:.82rem;color:#475569;">把條件機率公式兩邊乘回 P(B) 就得到它。先發生一件、再在其條件下發生另一件。</p>
+    <div class="fml">驗證：P(M∩C) = P(M)·P(C|M) = 0.7 × 0.51 ≈ <span class="hl">0.36</span> ✓</div>
+    <div class="tip">💡 多事件連鎖版：P(E₁∩E₂∩…∩E<sub>n</sub>) = P(E₁)·P(E₂|E₁)·P(E₃|E₁∩E₂)···一路接龍。</div>
+  </div>
+</div>
+
+<!-- S12 獨立事件 -->
+<div class="sec" id="s12">
+  <div class="sec-title">獨立事件 Independent Events（獨立事件）<span class="page-badge">Week 2-11</span></div>
+  <div class="bnote"><b>白話：</b>A 發生與否，<b>完全不影響</b> B 的機率 → 兩者獨立。判斷標準：<span class="sym">P(A|B)=P(A)</span>。</div>
+  <div class="two">
+    <div class="box">
+      <h3>獨立的乘法法則（變簡單了）</h3>
+      <div class="lf">P(A ∩ B) = P(A)·P(B)</div>
+      <p style="font-size:.8rem;color:#475569;">獨立時不用條件機率，直接相乘。多事件：全部機率連乘。</p>
+    </div>
+    <div class="box">
+      <h3>反過來也能「檢驗」是否獨立</h3>
+      <div class="fml">P(M∩C)=0.36，但 P(M)·P(C)=0.7×0.48=<span class="hl">0.336</span></div>
+      <div class="warn">⚠️ 0.36 ≠ 0.336 → M 與 C <strong>不獨立</strong>（兩股票走勢有關聯）。</div>
+    </div>
+  </div>
+</div>
+
+<!-- S13 貝氏定理 -->
+<div class="sec" id="s13">
+  <div class="sec-title">貝氏定理 Bayes' Theorem（貝氏定理）<span class="page-badge">Week 2-11 ~ 2-13</span></div>
+  <div class="box">
+    <h3>核心想法：用新資訊「更新」舊機率</h3>
+    <div class="flow">
+      <div class="fb" style="background:#eff6ff;">事前機率<br><small style="color:#64748b;">Prior</small></div>
+      <div class="fa">→</div>
+      <div class="fb" style="background:#fffbeb;">新資訊<br><small style="color:#64748b;">New Info</small></div>
+      <div class="fa">→</div>
+      <div class="fb" style="background:#ecfdf5;font-weight:700;border-color:#22c55e;">事後機率<br><small style="color:#64748b;">Posterior</small></div>
+    </div>
+    <p style="font-size:.82rem;color:#475569;">事前機率（事前機率 Prior）= 還沒拿到證據前的猜測；事後機率（事後機率 Posterior）= 看到證據後修正的結果。</p>
+  </div>
+  <div class="two">
+    <div class="box">
+      <h3>全機率定理 Theorem of Total Probability</h3>
+      <p style="font-size:.8rem;color:#475569;">B 可能透過好幾條互斥路徑 A₁,A₂… 發生，把每條路的機率加起來：</p>
+      <div class="lf" style="font-size:.95rem;">P(B) = P(A₁)P(B|A₁) + P(A₂)P(B|A₂) + …</div>
+    </div>
+    <div class="box">
+      <h3>貝氏定理公式</h3>
+      <div class="lf" style="font-size:.95rem;">
+        P(Aᵢ|B) =
+        <span class="lf-frac">
+          <span class="lf-num">P(Aᵢ)·P(B|Aᵢ)</span>
+          <span class="lf-den">Σ P(Aⱼ)·P(B|Aⱼ)</span>
+        </span>
+      </div>
+      <p style="font-size:.78rem;color:#64748b;">適用條件：A₁,A₂… 互斥，且聯集是整個樣本空間。</p>
+    </div>
+  </div>
+  <div class="box">
+    <h3>例：兩條路徑 A₁, A₂（課本數字）</h3>
+    <table class="tbl">
+      <tr><th>事前</th><th>條件機率</th><th>P(Aᵢ∩B)</th></tr>
+      <tr><td>P(A₁)=.7</td><td>P(B|A₁)=.2</td><td>.14</td></tr>
+      <tr><td>P(A₂)=.3</td><td>P(B|A₂)=.9</td><td>.27</td></tr>
+      <tr><td colspan="2" style="text-align:right;font-weight:700;">P(B)=</td><td style="font-weight:700;">.41</td></tr>
+    </table>
+    <div class="two" style="margin-top:.6rem;">
+      <div class="fml">P(A₁|B) = .14 / .41 ≈ <span class="hl">0.34</span></div>
+      <div class="fml">P(A₂|B) = .27 / .41 ≈ <span class="hl">0.66</span></div>
+    </div>
+    <div class="tip">💡 經典應用「選擇題」：學生會的機率 p、用猜的 1−p、每題 m 個選項。答對的條件下「真的會」的機率 = p / [p + (1−p)/m] = mp / [1+(m−1)p]。</div>
+  </div>
+</div>
+
+<!-- ══════════ PART 3 ══════════ -->
+<div class="part-header">
+  <h2>PART 3 &nbsp;·&nbsp; 隨機變數與機率分配</h2>
+  <p>把實驗結果變成數字（隨機變數），用機率分配描述它，再算它的中心（期望值）與分散（變異數）。</p>
+</div>
+
+<!-- S14 隨機變數 -->
+<div class="sec" id="s14">
+  <div class="sec-title">隨機變數 Random Variable（隨機變數）<span class="page-badge">Week 2-14 ~ 2-15</span></div>
+  <div class="bnote"><b>白話：</b>把「實驗結果」翻譯成一個<b>數字</b>。例如擲兩顆骰子，把結果對應成「點數和」X。它是一個從樣本空間 S 對應到實數 R 的「對照表」。</div>
+  <div class="box">
+    <h3>讀圖方法：把結果 → 數字（map X: S → R）</h3>
+    <svg viewBox="0 0 440 160" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-width:440px;display:block;margin:.3rem auto;">
+      <rect x="10" y="20" width="150" height="125" rx="10" fill="#eff6ff" stroke="#3b82f6" stroke-width="2"/>
+      <text x="85" y="40" text-anchor="middle" font-size="12" font-weight="700" fill="#1d4ed8">樣本空間 S</text>
+      <text x="85" y="65" text-anchor="middle" font-size="11" fill="#475569">(1,1)</text>
+      <text x="85" y="88" text-anchor="middle" font-size="11" fill="#475569">(1,2),(2,1)</text>
+      <text x="85" y="111" text-anchor="middle" font-size="11" fill="#475569">…</text>
+      <text x="85" y="134" text-anchor="middle" font-size="11" fill="#475569">(6,6)</text>
+      <rect x="280" y="20" width="150" height="125" rx="10" fill="#f0fdf4" stroke="#22c55e" stroke-width="2"/>
+      <text x="355" y="40" text-anchor="middle" font-size="12" font-weight="700" fill="#15803d">實數 R（X = 點數和）</text>
+      <text x="355" y="65" text-anchor="middle" font-size="11" fill="#475569">2</text>
+      <text x="355" y="88" text-anchor="middle" font-size="11" fill="#475569">3</text>
+      <text x="355" y="111" text-anchor="middle" font-size="11" fill="#475569">…</text>
+      <text x="355" y="134" text-anchor="middle" font-size="11" fill="#475569">12</text>
+      <defs><marker id="arX" markerWidth="9" markerHeight="7" refX="9" refY="3.5" orient="auto"><polygon points="0 0,9 3.5,0 7" fill="#f59e0b"/></marker></defs>
+      <line x1="165" y1="62"  x2="275" y2="63"  stroke="#f59e0b" stroke-width="1.6" marker-end="url(#arX)"/>
+      <line x1="165" y1="86"  x2="275" y2="87"  stroke="#f59e0b" stroke-width="1.6" marker-end="url(#arX)"/>
+      <line x1="165" y1="132" x2="275" y2="133" stroke="#f59e0b" stroke-width="1.6" marker-end="url(#arX)"/>
+      <text x="220" y="50" text-anchor="middle" font-size="11" font-weight="700" fill="#b45309">X</text>
+    </svg>
+  </div>
+  <div class="two">
+    <div class="card c-blue">
+      <span class="tag t-blue">離散 Discrete（離散隨機變數）</span>
+      <h3>數得出來的值</h3>
+      <p>有限個或可數的值。例：一天賣出電視 0,1,2,3,4 台；一天來客數 0,1,2,…（無上限但仍可數）。</p>
+    </div>
+    <div class="card c-green">
+      <span class="tag t-green">連續 Continuous（連續隨機變數）</span>
+      <h3>區間中任何值</h3>
+      <p>可取某區間內任意數值。例：身高、時間、重量（本週聚焦離散，連續下週）。</p>
+    </div>
+  </div>
+</div>
+
+<!-- S15 離散機率分配 -->
+<div class="sec" id="s15">
+  <div class="sec-title">離散機率分配 Discrete Probability Distribution<span class="page-badge">Week 2-15 ~ 2-16</span></div>
+  <div class="bnote"><b>白話：</b>機率分配＝告訴你「每個值各分到多少機率」的<b>分配表</b>。用機率函數 <span class="sym">f(x)</span> 表示每個 x 的機率。</div>
+  <div class="box">
+    <h3>離散機率函數的兩個必要條件</h3>
+    <div class="two">
+      <div class="fml">① 每個機率 ≥ 0：<span class="hl">f(x) ≥ 0</span></div>
+      <div class="fml">② 全部加起來 = 1：<span class="hl">Σ f(x) = 1</span></div>
+    </div>
+  </div>
+  <div class="two">
+    <div class="box">
+      <h3>例：電視店一天銷量 X 的分配表</h3>
+      <table class="tbl">
+        <tr><th>賣出 x</th><th>天數</th><th>f(x)</th></tr>
+        <tr><td>0</td><td>80</td><td>0.40</td></tr>
+        <tr><td>1</td><td>50</td><td>0.25</td></tr>
+        <tr><td>2</td><td>40</td><td>0.20</td></tr>
+        <tr><td>3</td><td>10</td><td>0.05</td></tr>
+        <tr><td>4</td><td>20</td><td>0.10</td></tr>
+        <tr><td style="font-weight:700;">共 200 天</td><td></td><td style="font-weight:700;">1.00</td></tr>
+      </table>
+      <p style="font-size:.78rem;color:#64748b;margin-top:.3rem;">f(x) = 該銷量天數 ÷ 200（相對次數法）。</p>
+    </div>
+    <div class="box">
+      <h3>長條圖（讀圖方法：柱高 = 機率）</h3>
+      <svg viewBox="0 0 300 200" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-width:300px;display:block;margin:.2rem auto;">
+        <line x1="40" y1="170" x2="290" y2="170" stroke="#334155" stroke-width="1.5"/>
+        <line x1="40" y1="20" x2="40" y2="170" stroke="#334155" stroke-width="1.5"/>
+        <text x="18" y="30" font-size="9" fill="#64748b">0.5</text>
+        <text x="18" y="100" font-size="9" fill="#64748b">0.25</text>
+        <!-- bars: scale 0.5 -> 150px tall region (y from 170 up). 1 unit prob=300px -->
+        <rect x="55"  y="50"  width="34" height="120" fill="#2563eb"/>
+        <rect x="103" y="95"  width="34" height="75"  fill="#2563eb"/>
+        <rect x="151" y="110" width="34" height="60"  fill="#2563eb"/>
+        <rect x="199" y="155" width="34" height="15"  fill="#2563eb"/>
+        <rect x="247" y="140" width="34" height="30"  fill="#2563eb"/>
+        <text x="72"  y="183" text-anchor="middle" font-size="10" fill="#475569">0</text>
+        <text x="120" y="183" text-anchor="middle" font-size="10" fill="#475569">1</text>
+        <text x="168" y="183" text-anchor="middle" font-size="10" fill="#475569">2</text>
+        <text x="216" y="183" text-anchor="middle" font-size="10" fill="#475569">3</text>
+        <text x="264" y="183" text-anchor="middle" font-size="10" fill="#475569">4</text>
+        <text x="165" y="197" text-anchor="middle" font-size="9" fill="#64748b">賣出台數 x</text>
+        <text x="72"  y="45" text-anchor="middle" font-size="8.5" fill="#1e3a5f">.40</text>
+        <text x="120" y="90" text-anchor="middle" font-size="8.5" fill="#1e3a5f">.25</text>
+        <text x="168" y="105" text-anchor="middle" font-size="8.5" fill="#1e3a5f">.20</text>
+        <text x="216" y="150" text-anchor="middle" font-size="8.5" fill="#1e3a5f">.05</text>
+        <text x="264" y="135" text-anchor="middle" font-size="8.5" fill="#1e3a5f">.10</text>
+      </svg>
+    </div>
+  </div>
+  <div class="box">
+    <h3>看一個分配，看三件事</h3>
+    <div class="three">
+      <div class="skb"><div style="font-size:1.5rem;">📍</div><strong>中心點</strong><br><small style="color:#64748b;">Central tendency 在哪裡</small></div>
+      <div class="skb"><div style="font-size:1.5rem;">↔️</div><strong>散佈</strong><br><small style="color:#64748b;">Spread 多分散</small></div>
+      <div class="skb"><div style="font-size:1.5rem;">🔔</div><strong>形狀</strong><br><small style="color:#64748b;">Shape 長什麼樣</small></div>
+    </div>
+  </div>
+</div>
+
+<!-- S16 期望值與變異數 -->
+<div class="sec" id="s16">
+  <div class="sec-title">期望值與變異數（離散）<span class="page-badge">Week 2-16 ~ 2-17</span></div>
+  <div class="two">
+    <div class="box">
+      <span class="tag t-blue">期望值 Expected Value（期望值）</span>
+      <h3 style="margin-top:.3rem;">分配的「中心 / 平均」</h3>
+      <div class="lf">E(X) = μ = Σ x·f(x)</div>
+      <p style="font-size:.8rem;color:#475569;">把每個值 × 它的機率，全部加起來＝「長期平均會落在哪」。</p>
+    </div>
+    <div class="box">
+      <span class="tag t-orange">變異數 Variance（變異數）</span>
+      <h3 style="margin-top:.3rem;">分配的「分散程度」</h3>
+      <div class="lf" style="font-size:.95rem;">Var(X) = σ² = Σ(x−μ)²·f(x)</div>
+      <div class="lf" style="font-size:.95rem;">= Σx²·f(x) − μ²　<span style="font-size:.8rem;color:#64748b;">(快算版)</span></div>
+      <p style="font-size:.8rem;color:#475569;">標準差 σ = √Var(X)，把分散程度換回原單位。</p>
+    </div>
+  </div>
+  <div class="box">
+    <h3>例：電視銷量 X 的 E(X)、Var(X)（逐欄計算）</h3>
+    <table class="tbl">
+      <tr><th>x</th><th>f(x)</th><th>x·f(x)</th><th>x−μ</th><th>(x−μ)²·f(x)</th></tr>
+      <tr><td>0</td><td>0.40</td><td>0.00</td><td>−1.2</td><td>0.576</td></tr>
+      <tr><td>1</td><td>0.25</td><td>0.25</td><td>−0.2</td><td>0.010</td></tr>
+      <tr><td>2</td><td>0.20</td><td>0.40</td><td>0.8</td><td>0.128</td></tr>
+      <tr><td>3</td><td>0.05</td><td>0.15</td><td>1.8</td><td>0.162</td></tr>
+      <tr><td>4</td><td>0.10</td><td>0.40</td><td>2.8</td><td>0.784</td></tr>
+      <tr><td colspan="2" style="text-align:right;font-weight:700;">合計</td><td style="font-weight:700;">μ=1.2</td><td></td><td style="font-weight:700;">σ²=1.66</td></tr>
+    </table>
+    <div class="three" style="margin-top:.6rem;">
+      <div class="fml" style="font-size:.85rem;">E(X) = <span class="hl">1.2</span> 台</div>
+      <div class="fml" style="font-size:.85rem;">Var(X) = <span class="hl">1.66</span></div>
+      <div class="fml" style="font-size:.85rem;">σ = √1.66 ≈ <span class="hl">1.29</span> 台</div>
+    </div>
+    <div class="tip">💡 快算版驗證：Σx²f(x)=3.1，μ²=1.2²=1.44 → Var = 3.1 − 1.44 = 1.66，和逐欄一致。</div>
+  </div>
+</div>
+
+<!-- ══════════ PART 4 ══════════ -->
+<div class="part-header">
+  <h2>PART 4 &nbsp;·&nbsp; 常見的離散機率分配</h2>
+  <p>七種常用模型：均勻、伯努利、二項、布阿松、超幾何、幾何、負二項（＋補充多項式）。每個都附「用在什麼情境」與公式計算機。</p>
+</div>
+
+<!-- S17 均勻 -->
+<div class="sec" id="s17">
+  <div class="sec-title">離散均勻分配 Discrete Uniform<span class="page-badge">Week 2-18</span></div>
+  <div class="bnote"><b>用在哪：</b>每個值「<b>機率都一樣</b>」。例：公正骰子 1~6，每面 1/6。</div>
+  <div class="two">
+    <div class="box">
+      <h3>機率函數</h3>
+      <div class="lf">f(x) = <span class="lf-frac"><span class="lf-num">1</span><span class="lf-den">n</span></span>　<span style="font-size:.85rem;color:#64748b;">x = x₁,…,x<sub>n</sub></span></div>
+      <p style="font-size:.8rem;color:#475569;">n = 可能值的個數。每格一樣高。</p>
+      <div class="fml" style="font-size:.85rem;">μ = (1/n)Σxᵢ　σ² = (1/n)Σ(xᵢ−μ)²</div>
+    </div>
+    <div class="box">
+      <h3>形狀（讀圖方法：每柱等高）</h3>
+      <svg viewBox="0 0 260 130" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-width:260px;display:block;margin:.2rem auto;">
+        <line x1="30" y1="100" x2="250" y2="100" stroke="#334155" stroke-width="1.5"/>
+        <line x1="30" y1="20" x2="30" y2="100" stroke="#334155" stroke-width="1.5"/>
+        <rect x="50"  y="50" width="28" height="50" fill="#2563eb"/>
+        <rect x="92"  y="50" width="28" height="50" fill="#2563eb"/>
+        <rect x="134" y="50" width="28" height="50" fill="#2563eb"/>
+        <rect x="176" y="50" width="28" height="50" fill="#2563eb"/>
+        <rect x="218" y="50" width="28" height="50" fill="#2563eb"/>
+        <text x="64"  y="113" text-anchor="middle" font-size="9" fill="#475569">1</text>
+        <text x="106" y="113" text-anchor="middle" font-size="9" fill="#475569">2</text>
+        <text x="148" y="113" text-anchor="middle" font-size="9" fill="#475569">3</text>
+        <text x="190" y="113" text-anchor="middle" font-size="9" fill="#475569">4</text>
+        <text x="232" y="113" text-anchor="middle" font-size="9" fill="#475569">5</text>
+      </svg>
+    </div>
+  </div>
+</div>
+
+<!-- S18 伯努利 -->
+<div class="sec" id="s18">
+  <div class="sec-title">伯努利試驗 Bernoulli Trial<span class="page-badge">Week 2-19</span></div>
+  <div class="bnote"><b>用在哪：</b>只做<b>一次</b>、只有<b>兩種結果</b>的試驗 — 成功(1, 機率 p) 或失敗(0, 機率 q=1−p)。例：投一次硬幣。</div>
+  <div class="two">
+    <div class="box">
+      <h3>期望值與變異數</h3>
+      <div class="lf">μ = E(X) = p</div>
+      <div class="lf">σ² = Var(X) = p·q = p(1−p)</div>
+    </div>
+    <div class="box">
+      <span class="tag t-blue">伯努利過程 Bernoulli Process</span>
+      <h3 style="margin-top:.3rem;">把伯努利試驗重複 n 次（四條件）</h3>
+      <p style="font-size:.82rem;color:#475569;line-height:1.9;">① n 次重複試驗　② 每次只有兩種結果　③ 成功機率 p <strong>固定不變</strong>　④ 每次<strong>互相獨立</strong>。<br>→ 滿足這四點，就能用下面的二項式分配。</p>
+    </div>
+  </div>
+</div>
+
+<!-- S19 二項式 -->
+<div class="sec" id="s19">
+  <div class="sec-title">二項式分配 Binomial Distribution（二項式分配）<span class="page-badge">Week 2-19 ~ 2-21</span></div>
+  <div class="bnote"><b>用在哪：</b>n 次獨立伯努利試驗中，「<b>成功幾次</b>」。例：抽 3 個產品，有幾個不良品。參數：<span class="sym">n</span>（次數）、<span class="sym">p</span>（單次成功機率）。</div>
+  <div class="box">
+    <h3>機率函數</h3>
+    <div class="lf" style="font-size:1.05rem;">
+      f(x) = <span style="font-size:1.3rem;">(</span><span class="lf-frac"><span class="lf-num" style="border:none;">n</span><span class="lf-den">x</span></span><span style="font-size:1.3rem;">)</span> pˣ q<sup>n−x</sup>　<span style="font-size:.82rem;color:#64748b;">x = 0,1,…,n</span>
+    </div>
+    <p style="font-size:.8rem;color:#475569;">C(n,x) = 在 n 次中挑出哪幾次成功的組合數；pˣ = 那幾次成功；q^(n−x) = 其餘失敗。</p>
+    <div class="two" style="margin-top:.5rem;">
+      <div class="fml" style="font-size:.9rem;">μ = E(X) = <span class="hl">np</span></div>
+      <div class="fml" style="font-size:.9rem;">σ² = Var(X) = <span class="hl">npq</span></div>
+    </div>
+  </div>
+  <div class="two">
+    <div class="box">
+      <h3>例：3 個產品、不良率 10%，恰好 1 個不良？</h3>
+      <div class="fml" style="font-size:.85rem;">n=3, p=0.1, 求 f(1)</div>
+      <div class="fml" style="font-size:.85rem;">f(1)=C(3,1)·0.1¹·0.9² = 3×0.1×0.81 = <span class="hl">0.243</span></div>
+      <div class="fml" style="font-size:.85rem;">E(X)=3×0.1=<span class="hl">0.3</span>　σ²=3×0.1×0.9=<span class="hl">0.27</span></div>
+    </div>
+    <div class="box">
+      <h3>形狀隨 p 改變（讀圖：p&lt;.5 右偏、p=.5 對稱、p&gt;.5 左偏）</h3>
+      <svg viewBox="0 0 360 120" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-width:360px;display:block;margin:.2rem auto;">
+        <!-- p<0.5 right skew -->
+        <g transform="translate(0,0)">
+          <line x1="15" y1="95" x2="115" y2="95" stroke="#334155" stroke-width="1.2"/>
+          <rect x="22" y="45" width="13" height="50" fill="#2563eb"/><rect x="38" y="35" width="13" height="60" fill="#2563eb"/>
+          <rect x="54" y="55" width="13" height="40" fill="#2563eb"/><rect x="70" y="72" width="13" height="23" fill="#2563eb"/>
+          <rect x="86" y="84" width="13" height="11" fill="#2563eb"/>
+          <text x="60" y="112" text-anchor="middle" font-size="9" fill="#64748b">p&lt;0.5 右偏</text>
+        </g>
+        <g transform="translate(122,0)">
+          <line x1="15" y1="95" x2="115" y2="95" stroke="#334155" stroke-width="1.2"/>
+          <rect x="22" y="72" width="13" height="23" fill="#16a34a"/><rect x="38" y="50" width="13" height="45" fill="#16a34a"/>
+          <rect x="54" y="38" width="13" height="57" fill="#16a34a"/><rect x="70" y="50" width="13" height="45" fill="#16a34a"/>
+          <rect x="86" y="72" width="13" height="23" fill="#16a34a"/>
+          <text x="60" y="112" text-anchor="middle" font-size="9" fill="#64748b">p=0.5 對稱</text>
+        </g>
+        <g transform="translate(244,0)">
+          <line x1="15" y1="95" x2="115" y2="95" stroke="#334155" stroke-width="1.2"/>
+          <rect x="22" y="84" width="13" height="11" fill="#7c3aed"/><rect x="38" y="72" width="13" height="23" fill="#7c3aed"/>
+          <rect x="54" y="55" width="13" height="40" fill="#7c3aed"/><rect x="70" y="35" width="13" height="60" fill="#7c3aed"/>
+          <rect x="86" y="45" width="13" height="50" fill="#7c3aed"/>
+          <text x="60" y="112" text-anchor="middle" font-size="9" fill="#64748b">p&gt;0.5 左偏</text>
+        </g>
+      </svg>
+    </div>
+  </div>
+  <div class="warn">⚠️ 眾數位置：若 (n+1)p 不是整數，最高的那格在 x = ⌊(n+1)p⌋；機率隨 x 先升後降。</div>
+</div>
+
+<!-- S20 布阿松 -->
+<div class="sec" id="s20">
+  <div class="sec-title">布阿松分配 Poisson Distribution（布阿松分配）<span class="page-badge">Week 2-22 ~ 2-23</span></div>
+  <div class="bnote"><b>用在哪：</b>固定時間/區域內某事件「<b>發生幾次</b>」，而且各區間獨立、平均率固定。例：一小時內幾班公車經過。參數：<span class="sym">λ</span>（平均發生次數）。</div>
+  <div class="box">
+    <h3>機率函數</h3>
+    <div class="lf" style="font-size:1.05rem;">
+      f(x) = <span class="lf-frac"><span class="lf-num">λˣ e<sup>−λ</sup></span><span class="lf-den">x!</span></span>　<span style="font-size:.82rem;color:#64748b;">x = 0,1,2,…　e ≈ 2.71828</span>
+    </div>
+    <div class="two" style="margin-top:.5rem;">
+      <div class="fml" style="font-size:.9rem;">μ = E(X) = <span class="hl">λ</span></div>
+      <div class="fml" style="font-size:.9rem;">σ² = Var(X) = <span class="hl">λ</span>　<small style="color:#64748b;">(平均=變異數，特色！)</small></div>
+    </div>
+  </div>
+  <div class="two">
+    <div class="box">
+      <h3>例：每 10 分鐘一班公車，下一小時少於 3 班的機率？</h3>
+      <div class="fml" style="font-size:.85rem;">λ = 60/10 = <span class="hl">6</span>（每小時）</div>
+      <div class="fml" style="font-size:.82rem;">P(X&lt;3)=f(0)+f(1)+f(2) = e⁻⁶(1+6+18) ≈ <span class="hl">0.0620</span></div>
+    </div>
+    <div class="box">
+      <span class="tag t-teal">二項 → 布阿松 的近似</span>
+      <h3 style="margin-top:.3rem;">n 很大、p 很小時</h3>
+      <p style="font-size:.82rem;color:#475569;">當 n→∞、p→0 而 np 維持定值，可用 <strong>λ = np</strong> 的布阿松來近似二項分配（算起來省力很多）。</p>
+    </div>
+  </div>
+</div>
+
+<!-- S21 超幾何 -->
+<div class="sec" id="s21">
+  <div class="sec-title">超幾何分配 Hypergeometric（超幾何分配）<span class="page-badge">Week 2-24 ~ 2-25</span></div>
+  <div class="bnote"><b>用在哪：</b>從 N 個有限母體中「<b>不放回</b>」抽 n 個，數成功幾個。因為不放回，每抽一次成功機率<b>會變</b>（試驗不獨立）。</div>
+  <div class="box">
+    <h3>機率函數</h3>
+    <div class="lf" style="font-size:1.05rem;">
+      f(x) =
+      <span class="lf-frac">
+        <span class="lf-num"><span style="font-size:1.2rem;">(</span><span class="lf-frac"><span class="lf-num" style="border:none;">r</span><span class="lf-den">x</span></span><span style="font-size:1.2rem;">)</span><span style="font-size:1.2rem;">(</span><span class="lf-frac"><span class="lf-num" style="border:none;">N−r</span><span class="lf-den">n−x</span></span><span style="font-size:1.2rem;">)</span></span>
+        <span class="lf-den"><span style="font-size:1.2rem;">(</span><span class="lf-frac"><span class="lf-num" style="border:none;">N</span><span class="lf-den">n</span></span><span style="font-size:1.2rem;">)</span></span>
+      </span>
+    </div>
+    <p style="font-size:.8rem;color:#475569;">N=母體總數，r=母體中成功個數，n=抽樣數，x=樣本中成功數。x = 0,1,…,min(n,r)。</p>
+    <div class="two" style="margin-top:.4rem;">
+      <div class="fml" style="font-size:.85rem;">μ = n·(r/N)</div>
+      <div class="fml" style="font-size:.82rem;">σ² = n·(r/N)·(1−r/N)·<span style="white-space:nowrap;">(N−n)/(N−1)</span></div>
+    </div>
+  </div>
+  <div class="two">
+    <div class="box">
+      <h3>例：52 張抽 5 張，3 紅 2 黑的機率（不放回）</h3>
+      <div class="fml" style="font-size:.82rem;">C(26,3)·C(26,2) / C(52,5) ≈ <span class="hl">0.3251</span></div>
+      <p style="font-size:.78rem;color:#64748b;">對照「放回」版本（二項）= C(5,3)·0.5⁵ = 0.3125，兩者略有差異。</p>
+    </div>
+    <div class="box">
+      <span class="tag t-teal">超幾何 → 二項 的近似</span>
+      <h3 style="margin-top:.3rem;">當 n ≪ N（抽很少）</h3>
+      <p style="font-size:.82rem;color:#475569;">母體夠大、抽得夠少時，放不放回差不多，可用 p = r/N 的二項近似。</p>
+    </div>
+  </div>
+</div>
+
+<!-- S22 幾何 -->
+<div class="sec" id="s22">
+  <div class="sec-title">幾何分配 Geometric Distribution（幾何分配）<span class="page-badge">Week 2-26 ~ 2-27</span></div>
+  <div class="bnote"><b>用在哪：</b>一直做獨立試驗，問「<b>第幾次才第一次成功</b>」。例：第幾次買樂透才第一次中。參數只有 <span class="sym">p</span>。</div>
+  <div class="two">
+    <div class="box">
+      <h3>機率函數</h3>
+      <div class="lf">f(x) = p(1−p)<sup>x−1</sup> = p·q<sup>x−1</sup></div>
+      <p style="font-size:.8rem;color:#475569;">x = 1,2,…：前 x−1 次都失敗、第 x 次成功。</p>
+      <div class="two" style="margin-top:.4rem;">
+        <div class="fml" style="font-size:.85rem;">μ = 1/p</div>
+        <div class="fml" style="font-size:.85rem;">σ² = (1−p)/p²</div>
+      </div>
+    </div>
+    <div class="box">
+      <h3>例：每次中獎率 0.02722，第 4 次才首次中？</h3>
+      <div class="fml" style="font-size:.82rem;">f(4)=0.02722×0.97278³ ≈ <span class="hl">0.025</span></div>
+      <div class="fml" style="font-size:.82rem;">平均要買 E(X)=1/0.02722 ≈ <span class="hl">36.7</span> 次</div>
+    </div>
+  </div>
+</div>
+
+<!-- S23 負二項 -->
+<div class="sec" id="s23">
+  <div class="sec-title">負二項（Pascal）分配 Negative Binomial（負二項分配）<span class="page-badge">Week 2-27 ~ 2-28</span></div>
+  <div class="bnote"><b>用在哪：</b>幾何分配的延伸 — 問「<b>第幾次才達到第 r 次成功</b>」。當 r=1 時就退化成幾何分配。</div>
+  <div class="two">
+    <div class="box">
+      <h3>機率函數</h3>
+      <div class="lf" style="font-size:1rem;">
+        f(x) = <span style="font-size:1.2rem;">(</span><span class="lf-frac"><span class="lf-num" style="border:none;">x−1</span><span class="lf-den">r−1</span></span><span style="font-size:1.2rem;">)</span> p<sup>r</sup>(1−p)<sup>x−r</sup>
+      </div>
+      <p style="font-size:.8rem;color:#475569;">x = r, r+1, …：第 x 次拿到第 r 次成功。</p>
+      <div class="two" style="margin-top:.4rem;">
+        <div class="fml" style="font-size:.85rem;">μ = r/p</div>
+        <div class="fml" style="font-size:.85rem;">σ² = r(1−p)/p²</div>
+      </div>
+    </div>
+    <div class="box">
+      <h3>直覺：把它拆成 r 段幾何</h3>
+      <p style="font-size:.82rem;color:#475569;">第 r 次成功 = 第 1 次成功 + 第 2 次… 共 r 段，每段都是幾何分配（平均 1/p），加起來平均就是 r/p。</p>
+      <div class="tip">💡 與二項關係：P(X≤k) ↔ 累積成功次數，兩者互為「看次數」與「看成功數」的不同角度。</div>
+    </div>
+  </div>
+</div>
+
+<!-- S24 多項式 -->
+<div class="sec" id="s24">
+  <div class="sec-title">多項式分配 Multinomial（多項式分配）<span class="page-badge">Week 2-28 · 補充</span></div>
+  <div class="bnote"><b>用在哪：</b>二項分配的「多類別」版 — 每次試驗有 <b>k 種</b>結果（不只成功/失敗），機率 p₁…p_k。問各類別各出現幾次。</div>
+  <div class="box">
+    <h3>機率函數</h3>
+    <div class="lf" style="font-size:1rem;">
+      f(x₁,…,x<sub>k</sub>) = <span style="font-size:1.2rem;">(</span><span class="lf-frac"><span class="lf-num" style="border:none;">n</span><span class="lf-den">x₁,…,x<sub>k</sub></span></span><span style="font-size:1.2rem;">)</span> p₁<sup>x₁</sup>·p₂<sup>x₂</sup>···p<sub>k</sub><sup>x<sub>k</sub></sup>
+    </div>
+    <p style="font-size:.8rem;color:#475569;">條件：Σxᵢ = n、Σpᵢ = 1、p 固定、放回抽樣。</p>
+    <div class="two" style="margin-top:.4rem;">
+      <div class="fml" style="font-size:.85rem;">每類期望 μ<sub>xᵢ</sub> = n·pᵢ</div>
+      <div class="fml" style="font-size:.85rem;">每類變異 σ²<sub>xᵢ</sub> = n·pᵢ(1−pᵢ)</div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════ 公式計算機 ══════════ -->
+<div class="part-header">
+  <h2>🧮 &nbsp;公式計算機</h2>
+  <p>點藍色符號可跳到對應輸入框；填好數字會即時顯示計算過程。每個欄位上方都有白話說明。</p>
+</div>
+
+<!-- C1 排列組合 -->
+<div class="sec" id="c1">
+  <div class="sec-title">排列・組合 Permutation / Combination<span class="page-badge">Week 2-3~4</span></div>
+  <div class="fc">
+    <div class="fc-head"><h3>P(N,n) 與 C(N,n)</h3></div>
+    <div class="fc-body">
+      <div class="lf">
+        <span class="pb" data-tip="排列：在意順序" style="cursor:default">P</span> =
+        <span class="lf-frac"><span class="lf-num">N!</span><span class="lf-den">(N−n)!</span></span>
+        &nbsp;&nbsp;&nbsp;
+        <span class="pb" data-tip="組合：不管順序" style="cursor:default">C</span> =
+        <span class="lf-frac"><span class="lf-num">N!</span><span class="lf-den">n!(N−n)!</span></span>
+      </div>
+      <div class="bnote">💡 <b>初學者說明：</b><b>N</b>＝總共有幾個東西可選（整數）；<b>n</b>＝要取出幾個（整數，n ≤ N）。排列 P 算「有順序」的排法數；組合 C 算「不管順序」的選法數。</div>
+      <div class="lf-live" id="c1-live"><span class="lhint">← 填入 N 與 n 後自動計算</span></div>
+      <div class="pi-grid">
+        <div><div style="margin-bottom:.3rem;font-size:.82rem;font-weight:600;color:#374151;"><span class="pi-sym" onclick="focusParam('c1-N')">N</span> 總數</div>
+          <input class="pi-inp" type="number" id="c1-N" placeholder="例：5" min="0" step="1" oninput="liveC1()"></div>
+        <div><div style="margin-bottom:.3rem;font-size:.82rem;font-weight:600;color:#374151;"><span class="pi-sym" onclick="focusParam('c1-n')">n</span> 取出</div>
+          <input class="pi-inp" type="number" id="c1-n" placeholder="例：2" min="0" step="1" oninput="liveC1()"></div>
+      </div>
+      <div class="calc-err" id="c1-err">請輸入非負整數，且 n ≤ N。</div>
+    </div>
+  </div>
+</div>
+
+<!-- C2 加法法則 -->
+<div class="sec" id="c2">
+  <div class="sec-title">加法法則 P(A∪B)<span class="page-badge">Week 2-8</span></div>
+  <div class="fc">
+    <div class="fc-head"><h3>Addition Law</h3></div>
+    <div class="fc-body">
+      <div class="lf">
+        <span class="pb" style="cursor:default">P(A∪B)</span> =
+        <span class="pb" data-tip="P(A)" onclick="focusParam('c2-a')">P(A)</span> +
+        <span class="pb" data-tip="P(B)" onclick="focusParam('c2-b')">P(B)</span> −
+        <span class="pb" data-tip="P(A∩B)" onclick="focusParam('c2-ab')">P(A∩B)</span>
+      </div>
+      <div class="bnote">💡 <b>初學者說明：</b>三個欄位都填「機率」，介於 0~1。<b>P(A∩B)</b>＝A 和 B 同時發生的機率；若兩事件互斥就填 0。</div>
+      <div class="lf-live" id="c2-live"><span class="lhint">← 填入三個機率後自動計算</span></div>
+      <div class="pi-grid">
+        <div><div style="margin-bottom:.3rem;font-size:.82rem;font-weight:600;color:#374151;"><span class="pi-sym" onclick="focusParam('c2-a')">P(A)</span></div>
+          <input class="pi-inp" type="number" id="c2-a" placeholder="例：0.7" min="0" max="1" step="any" oninput="liveC2()"></div>
+        <div><div style="margin-bottom:.3rem;font-size:.82rem;font-weight:600;color:#374151;"><span class="pi-sym" onclick="focusParam('c2-b')">P(B)</span></div>
+          <input class="pi-inp" type="number" id="c2-b" placeholder="例：0.48" min="0" max="1" step="any" oninput="liveC2()"></div>
+        <div><div style="margin-bottom:.3rem;font-size:.82rem;font-weight:600;color:#374151;"><span class="pi-sym" onclick="focusParam('c2-ab')">P(A∩B)</span></div>
+          <input class="pi-inp" type="number" id="c2-ab" placeholder="例：0.36" min="0" max="1" step="any" oninput="liveC2()"></div>
+      </div>
+      <div class="calc-err" id="c2-err">機率需介於 0 與 1。</div>
+    </div>
+  </div>
+</div>
+
+<!-- C3 條件機率 -->
+<div class="sec" id="c3">
+  <div class="sec-title">條件機率 P(A|B)<span class="page-badge">Week 2-9</span></div>
+  <div class="fc">
+    <div class="fc-head"><h3>Conditional Probability</h3></div>
+    <div class="fc-body">
+      <div class="lf">
+        <span class="pb" style="cursor:default">P(A|B)</span> =
+        <span class="lf-frac">
+          <span class="lf-num"><span class="pb" data-tip="P(A∩B)：兩者同時" onclick="focusParam('c3-ab')">P(A∩B)</span></span>
+          <span class="lf-den"><span class="pb" data-tip="P(B)：條件" onclick="focusParam('c3-b')">P(B)</span></span>
+        </span>
+      </div>
+      <div class="bnote">💡 <b>初學者說明：</b><b>P(A∩B)</b>＝A、B 同時發生的機率；<b>P(B)</b>＝已知條件 B 的機率（必須 &gt; 0）。結果是「已知 B 後 A 的機率」。</div>
+      <div class="lf-live" id="c3-live"><span class="lhint">← 填入兩個機率後自動計算</span></div>
+      <div class="pi-grid">
+        <div><div style="margin-bottom:.3rem;font-size:.82rem;font-weight:600;color:#374151;"><span class="pi-sym" onclick="focusParam('c3-ab')">P(A∩B)</span></div>
+          <input class="pi-inp" type="number" id="c3-ab" placeholder="例：0.36" min="0" max="1" step="any" oninput="liveC3()"></div>
+        <div><div style="margin-bottom:.3rem;font-size:.82rem;font-weight:600;color:#374151;"><span class="pi-sym" onclick="focusParam('c3-b')">P(B)</span></div>
+          <input class="pi-inp" type="number" id="c3-b" placeholder="例：0.7" min="0" max="1" step="any" oninput="liveC3()"></div>
+      </div>
+      <div class="calc-err" id="c3-err">P(B) 必須大於 0。</div>
+    </div>
+  </div>
+</div>
+
+<!-- C4 貝氏 -->
+<div class="sec" id="c4">
+  <div class="sec-title">貝氏定理（兩事件）Bayes<span class="page-badge">Week 2-13</span></div>
+  <div class="fc">
+    <div class="fc-head"><h3>P(A₁|B) 與 P(A₂|B)</h3></div>
+    <div class="fc-body">
+      <div class="lf" style="font-size:.95rem;">
+        P(A₁|B) =
+        <span class="lf-frac">
+          <span class="lf-num">P(A₁)·P(B|A₁)</span>
+          <span class="lf-den">P(A₁)P(B|A₁) + P(A₂)P(B|A₂)</span>
+        </span>
+      </div>
+      <div class="bnote">💡 <b>初學者說明：</b><b>P(A₁), P(A₂)</b>＝兩條互斥路徑的事前機率（兩者通常加起來=1）；<b>P(B|A₁), P(B|A₂)</b>＝各路徑下看到證據 B 的機率。全部填 0~1。</div>
+      <div class="lf-live" id="c4-live"><span class="lhint">← 填入四個機率後自動計算</span></div>
+      <div class="pi-grid">
+        <div><div style="margin-bottom:.3rem;font-size:.82rem;font-weight:600;color:#374151;"><span class="pi-sym" onclick="focusParam('c4-a1')">P(A₁)</span></div>
+          <input class="pi-inp" type="number" id="c4-a1" placeholder="例：0.7" min="0" max="1" step="any" oninput="liveC4()"></div>
+        <div><div style="margin-bottom:.3rem;font-size:.82rem;font-weight:600;color:#374151;"><span class="pi-sym" onclick="focusParam('c4-ba1')">P(B|A₁)</span></div>
+          <input class="pi-inp" type="number" id="c4-ba1" placeholder="例：0.2" min="0" max="1" step="any" oninput="liveC4()"></div>
+        <div><div style="margin-bottom:.3rem;font-size:.82rem;font-weight:600;color:#374151;"><span class="pi-sym" onclick="focusParam('c4-a2')">P(A₂)</span></div>
+          <input class="pi-inp" type="number" id="c4-a2" placeholder="例：0.3" min="0" max="1" step="any" oninput="liveC4()"></div>
+        <div><div style="margin-bottom:.3rem;font-size:.82rem;font-weight:600;color:#374151;"><span class="pi-sym" onclick="focusParam('c4-ba2')">P(B|A₂)</span></div>
+          <input class="pi-inp" type="number" id="c4-ba2" placeholder="例：0.9" min="0" max="1" step="any" oninput="liveC4()"></div>
+      </div>
+      <div class="calc-err" id="c4-err">機率需介於 0~1，且分母不可為 0。</div>
+    </div>
+  </div>
+</div>
+
+<!-- C5 期望值變異數 -->
+<div class="sec" id="c5">
+  <div class="sec-title">期望值・變異數（離散）<span class="page-badge">Week 2-16</span></div>
+  <div class="fc">
+    <div class="fc-head"><h3>E(X), Var(X), σ</h3></div>
+    <div class="fc-body">
+      <div class="lf" style="font-size:.95rem;">E(X)=Σx·f(x)　　Var(X)=Σx²·f(x) − [E(X)]²</div>
+      <div class="bnote">💡 <b>初學者說明：</b>輸入「<b>x 值</b>」與「<b>對應機率 f(x)</b>」兩列，每列用逗號或空白分開、數量要一樣。機率加起來應≈1（會自動檢查）。</div>
+      <div class="lf-live" id="c5-live"><span class="lhint">← 填入兩列後自動計算</span></div>
+      <div class="pi-grid" style="grid-template-columns:1fr;">
+        <div><div style="margin-bottom:.3rem;font-size:.82rem;font-weight:600;color:#374151;"><span class="pi-sym" onclick="focusParam('c5-x')">x</span> 數值（逗號分隔）</div>
+          <textarea class="pi-inp" id="c5-x" placeholder="例：0, 1, 2, 3, 4" oninput="liveC5()"></textarea></div>
+        <div><div style="margin-bottom:.3rem;font-size:.82rem;font-weight:600;color:#374151;"><span class="pi-sym" onclick="focusParam('c5-f')">f(x)</span> 機率（逗號分隔）</div>
+          <textarea class="pi-inp" id="c5-f" placeholder="例：0.40, 0.25, 0.20, 0.05, 0.10" oninput="liveC5()"></textarea></div>
+      </div>
+      <div class="calc-err" id="c5-err">兩列數量需相同，且機率總和需接近 1。</div>
+    </div>
+  </div>
+</div>
+
+<!-- C6 二項 -->
+<div class="sec" id="c6">
+  <div class="sec-title">二項式分配 Binomial<span class="page-badge">Week 2-19</span></div>
+  <div class="fc">
+    <div class="fc-head"><h3>f(x), E(X), Var(X)</h3></div>
+    <div class="fc-body">
+      <div class="lf">f(x) = C(n,x)·pˣ·(1−p)<sup>n−x</sup></div>
+      <div class="bnote">💡 <b>初學者說明：</b><b>n</b>＝試驗次數（整數）；<b>p</b>＝單次成功機率（0~1）；<b>x</b>＝想算的成功次數（整數，0≤x≤n）。</div>
+      <div class="lf-live" id="c6-live"><span class="lhint">← 填入 n、p、x 後自動計算</span></div>
+      <div class="pi-grid">
+        <div><div style="margin-bottom:.3rem;font-size:.82rem;font-weight:600;color:#374151;"><span class="pi-sym" onclick="focusParam('c6-n')">n</span> 次數</div>
+          <input class="pi-inp" type="number" id="c6-n" placeholder="例：3" min="0" step="1" oninput="liveC6()"></div>
+        <div><div style="margin-bottom:.3rem;font-size:.82rem;font-weight:600;color:#374151;"><span class="pi-sym" onclick="focusParam('c6-p')">p</span> 成功率</div>
+          <input class="pi-inp" type="number" id="c6-p" placeholder="例：0.1" min="0" max="1" step="any" oninput="liveC6()"></div>
+        <div><div style="margin-bottom:.3rem;font-size:.82rem;font-weight:600;color:#374151;"><span class="pi-sym" onclick="focusParam('c6-x')">x</span> 成功數</div>
+          <input class="pi-inp" type="number" id="c6-x" placeholder="例：1" min="0" step="1" oninput="liveC6()"></div>
+      </div>
+      <div class="calc-err" id="c6-err">請確認 n、x 為整數，0≤p≤1，0≤x≤n。</div>
+    </div>
+  </div>
+</div>
+
+<!-- C7 布阿松 -->
+<div class="sec" id="c7">
+  <div class="sec-title">布阿松分配 Poisson<span class="page-badge">Week 2-22</span></div>
+  <div class="fc">
+    <div class="fc-head"><h3>f(x), E(X)=Var(X)=λ</h3></div>
+    <div class="fc-body">
+      <div class="lf">f(x) = <span class="lf-frac"><span class="lf-num">λˣ·e<sup>−λ</sup></span><span class="lf-den">x!</span></span></div>
+      <div class="bnote">💡 <b>初學者說明：</b><b>λ</b>（lambda）＝該區間的平均發生次數（&gt;0，可小數）；<b>x</b>＝想算發生幾次（非負整數）。</div>
+      <div class="lf-live" id="c7-live"><span class="lhint">← 填入 λ 與 x 後自動計算</span></div>
+      <div class="pi-grid">
+        <div><div style="margin-bottom:.3rem;font-size:.82rem;font-weight:600;color:#374151;"><span class="pi-sym" onclick="focusParam('c7-l')">λ</span> 平均次數</div>
+          <input class="pi-inp" type="number" id="c7-l" placeholder="例：6" min="0" step="any" oninput="liveC7()"></div>
+        <div><div style="margin-bottom:.3rem;font-size:.82rem;font-weight:600;color:#374151;"><span class="pi-sym" onclick="focusParam('c7-x')">x</span> 發生數</div>
+          <input class="pi-inp" type="number" id="c7-x" placeholder="例：2" min="0" step="1" oninput="liveC7()"></div>
+      </div>
+      <div class="calc-err" id="c7-err">λ 需 &gt; 0，x 需為非負整數。</div>
+    </div>
+  </div>
+</div>
+
+<!-- C8 超幾何 -->
+<div class="sec" id="c8">
+  <div class="sec-title">超幾何分配 Hypergeometric<span class="page-badge">Week 2-24</span></div>
+  <div class="fc">
+    <div class="fc-head"><h3>f(x), E(X)</h3></div>
+    <div class="fc-body">
+      <div class="lf" style="font-size:.95rem;">f(x) = C(r,x)·C(N−r, n−x) / C(N,n)</div>
+      <div class="bnote">💡 <b>初學者說明：</b><b>N</b>＝母體總數；<b>r</b>＝母體中「成功」個數；<b>n</b>＝抽出幾個（不放回）；<b>x</b>＝樣本中成功幾個。全部為整數。</div>
+      <div class="lf-live" id="c8-live"><span class="lhint">← 填入 N、r、n、x 後自動計算</span></div>
+      <div class="pi-grid">
+        <div><div style="margin-bottom:.3rem;font-size:.82rem;font-weight:600;color:#374151;"><span class="pi-sym" onclick="focusParam('c8-N')">N</span> 母體</div>
+          <input class="pi-inp" type="number" id="c8-N" placeholder="例：52" min="0" step="1" oninput="liveC8()"></div>
+        <div><div style="margin-bottom:.3rem;font-size:.82rem;font-weight:600;color:#374151;"><span class="pi-sym" onclick="focusParam('c8-r')">r</span> 成功總數</div>
+          <input class="pi-inp" type="number" id="c8-r" placeholder="例：26" min="0" step="1" oninput="liveC8()"></div>
+        <div><div style="margin-bottom:.3rem;font-size:.82rem;font-weight:600;color:#374151;"><span class="pi-sym" onclick="focusParam('c8-n')">n</span> 抽樣數</div>
+          <input class="pi-inp" type="number" id="c8-n" placeholder="例：5" min="0" step="1" oninput="liveC8()"></div>
+        <div><div style="margin-bottom:.3rem;font-size:.82rem;font-weight:600;color:#374151;"><span class="pi-sym" onclick="focusParam('c8-x')">x</span> 樣本成功</div>
+          <input class="pi-inp" type="number" id="c8-x" placeholder="例：3" min="0" step="1" oninput="liveC8()"></div>
+      </div>
+      <div class="calc-err" id="c8-err">需整數且 x≤r、n−x≤N−r、n≤N。</div>
+    </div>
+  </div>
+</div>
+
+<!-- C9 幾何 -->
+<div class="sec" id="c9">
+  <div class="sec-title">幾何分配 Geometric<span class="page-badge">Week 2-26</span></div>
+  <div class="fc">
+    <div class="fc-head"><h3>f(x), E(X)=1/p</h3></div>
+    <div class="fc-body">
+      <div class="lf">f(x) = p·(1−p)<sup>x−1</sup></div>
+      <div class="bnote">💡 <b>初學者說明：</b><b>p</b>＝單次成功機率（0~1）；<b>x</b>＝第幾次「首次成功」（正整數，x≥1）。</div>
+      <div class="lf-live" id="c9-live"><span class="lhint">← 填入 p 與 x 後自動計算</span></div>
+      <div class="pi-grid">
+        <div><div style="margin-bottom:.3rem;font-size:.82rem;font-weight:600;color:#374151;"><span class="pi-sym" onclick="focusParam('c9-p')">p</span> 成功率</div>
+          <input class="pi-inp" type="number" id="c9-p" placeholder="例：0.02722" min="0" max="1" step="any" oninput="liveC9()"></div>
+        <div><div style="margin-bottom:.3rem;font-size:.82rem;font-weight:600;color:#374151;"><span class="pi-sym" onclick="focusParam('c9-x')">x</span> 首次成功在第幾次</div>
+          <input class="pi-inp" type="number" id="c9-x" placeholder="例：4" min="1" step="1" oninput="liveC9()"></div>
+      </div>
+      <div class="calc-err" id="c9-err">0&lt;p≤1，x 需為 ≥1 的整數。</div>
+    </div>
+  </div>
+</div>
+
+</main>
+
+<script>
+// ════════════ 共用工具 ════════════
+function r(n,d=4){ if(!isFinite(n))return n; return Math.round(n*Math.pow(10,d))/Math.pow(10,d); }
+function parseData(str){
+  return str.split(/[,\s，;:]+/).map(s=>s.trim()).filter(s=>s!=='').map(Number).filter(n=>!isNaN(n));
+}
+function fact(n){ if(n<0)return NaN; let f=1; for(let i=2;i<=n;i++) f*=i; return f; }
+function nPr(N,n){ if(n>N||n<0)return NaN; let p=1; for(let i=0;i<n;i++) p*=(N-i); return p; }
+function nCr(N,n){ if(n>N||n<0)return NaN; n=Math.min(n,N-n); let c=1; for(let i=0;i<n;i++){ c=c*(N-i)/(i+1);} return Math.round(c); }
+function setLive(id,html){ document.getElementById(id+'-live').innerHTML=html; }
+function hint(id,msg){ setLive(id,'<span class="lhint">'+(msg||'← 填入數值後自動計算')+'</span>'); }
+function liveErr(id,msg){ document.getElementById(id+'-err').classList.add('show'); document.getElementById(id+'-err').textContent=msg; setLive(id,'<span class="lhint">'+msg+'</span>'); }
+function clearErr(id){ document.getElementById(id+'-err').classList.remove('show'); }
+function focusParam(id){ const el=document.getElementById(id); if(!el)return; el.focus(); el.classList.add('lit'); setTimeout(()=>el.classList.remove('lit'),1500); }
+
+// C1 排列組合
+function liveC1(){
+  clearErr('c1');
+  const Nv=document.getElementById('c1-N').value, nv=document.getElementById('c1-n').value;
+  if(Nv===''||nv===''){hint('c1','← 填入 N 與 n 後自動計算');return;}
+  const N=+Nv, n=+nv;
+  if(!Number.isInteger(N)||!Number.isInteger(n)||N<0||n<0||n>N){liveErr('c1','請輸入非負整數，且 n ≤ N');return;}
+  const P=nPr(N,n), C=nCr(N,n);
+  setLive('c1',`P(${N},${n}) = ${N}!/(${N}−${n})! = <span class="la">${P.toLocaleString()}</span> &nbsp;&nbsp; C(${N},${n}) = P ÷ ${n}! = <span class="la">${C.toLocaleString()}</span>`);
+}
+// C2 加法法則
+function liveC2(){
+  clearErr('c2');
+  const av=document.getElementById('c2-a').value, bv=document.getElementById('c2-b').value, abv=document.getElementById('c2-ab').value;
+  if(av===''||bv===''||abv===''){hint('c2','← 填入三個機率後自動計算');return;}
+  const a=+av,b=+bv,ab=+abv;
+  if([a,b,ab].some(v=>v<0||v>1)){liveErr('c2','每個機率需介於 0 與 1');return;}
+  const u=r(a+b-ab,6);
+  setLive('c2',`P(A∪B) = <span class="lv">${a} + ${b} − ${ab}</span> = <span class="la">${u}</span>`);
+}
+// C3 條件機率
+function liveC3(){
+  clearErr('c3');
+  const abv=document.getElementById('c3-ab').value, bv=document.getElementById('c3-b').value;
+  if(abv===''||bv===''){hint('c3','← 填入兩個機率後自動計算');return;}
+  const ab=+abv,b=+bv;
+  if(b<=0){liveErr('c3','P(B) 必須大於 0');return;}
+  if(ab<0||ab>1||b>1){liveErr('c3','機率需介於 0~1');return;}
+  setLive('c3',`P(A|B) = <span class="lv">${ab} ÷ ${b}</span> = <span class="la">${r(ab/b,4)}</span>`);
+}
+// C4 貝氏
+function liveC4(){
+  clearErr('c4');
+  const ids=['c4-a1','c4-ba1','c4-a2','c4-ba2'].map(i=>document.getElementById(i).value);
+  if(ids.some(v=>v==='')){hint('c4','← 填入四個機率後自動計算');return;}
+  const [a1,ba1,a2,ba2]=ids.map(Number);
+  if([a1,ba1,a2,ba2].some(v=>v<0||v>1)){liveErr('c4','機率需介於 0~1');return;}
+  const num1=a1*ba1, num2=a2*ba2, denom=num1+num2;
+  if(denom<=0){liveErr('c4','分母 P(B) 不可為 0');return;}
+  setLive('c4',`P(B)=${r(num1,4)}+${r(num2,4)}=<span class="lv">${r(denom,4)}</span> → P(A₁|B)=<span class="la">${r(num1/denom,4)}</span> &nbsp; P(A₂|B)=<span class="la">${r(num2/denom,4)}</span>`);
+}
+// C5 期望值變異數
+function liveC5(){
+  clearErr('c5');
+  const xs=parseData(document.getElementById('c5-x').value);
+  const fs=parseData(document.getElementById('c5-f').value);
+  if(xs.length<1||fs.length<1){hint('c5','← 填入兩列後自動計算');return;}
+  if(xs.length!==fs.length){liveErr('c5','x 與 f(x) 數量需相同');return;}
+  const sumf=fs.reduce((a,b)=>a+b,0);
+  if(Math.abs(sumf-1)>0.02){liveErr('c5','機率總和需接近 1（目前 '+r(sumf,4)+'）');return;}
+  let ex=0, ex2=0;
+  for(let i=0;i<xs.length;i++){ ex+=xs[i]*fs[i]; ex2+=xs[i]*xs[i]*fs[i]; }
+  const v=ex2-ex*ex, sd=Math.sqrt(Math.max(v,0));
+  setLive('c5',`E(X)=<span class="la">${r(ex,4)}</span> &nbsp; Σx²f=${r(ex2,4)} → Var(X)=${r(ex2,4)}−${r(ex*ex,4)}=<span class="la">${r(v,4)}</span> &nbsp; σ=<span class="la">${r(sd,4)}</span>`);
+}
+// C6 二項
+function liveC6(){
+  clearErr('c6');
+  const nv=document.getElementById('c6-n').value, pv=document.getElementById('c6-p').value, xv=document.getElementById('c6-x').value;
+  if(nv===''||pv===''||xv===''){hint('c6','← 填入 n、p、x 後自動計算');return;}
+  const n=+nv,p=+pv,x=+xv;
+  if(!Number.isInteger(n)||!Number.isInteger(x)||p<0||p>1||x<0||x>n||n<0){liveErr('c6','確認 n,x 為整數，0≤p≤1，0≤x≤n');return;}
+  const f=nCr(n,x)*Math.pow(p,x)*Math.pow(1-p,n-x);
+  setLive('c6',`f(${x})=C(${n},${x})·${p}^${x}·${r(1-p,4)}^${n-x}=<span class="la">${r(f,5)}</span> &nbsp; E(X)=np=<span class="la">${r(n*p,4)}</span> &nbsp; Var=npq=<span class="la">${r(n*p*(1-p),4)}</span>`);
+}
+// C7 布阿松
+function liveC7(){
+  clearErr('c7');
+  const lv=document.getElementById('c7-l').value, xv=document.getElementById('c7-x').value;
+  if(lv===''||xv===''){hint('c7','← 填入 λ 與 x 後自動計算');return;}
+  const l=+lv,x=+xv;
+  if(l<=0||!Number.isInteger(x)||x<0){liveErr('c7','λ 需 >0，x 需為非負整數');return;}
+  const f=Math.pow(l,x)*Math.exp(-l)/fact(x);
+  setLive('c7',`f(${x})=${l}^${x}·e^−${l} ÷ ${x}! =<span class="la">${r(f,5)}</span> &nbsp; E(X)=Var(X)=λ=<span class="la">${l}</span>`);
+}
+// C8 超幾何
+function liveC8(){
+  clearErr('c8');
+  const Nv=document.getElementById('c8-N').value, rv=document.getElementById('c8-r').value, nv=document.getElementById('c8-n').value, xv=document.getElementById('c8-x').value;
+  if(Nv===''||rv===''||nv===''||xv===''){hint('c8','← 填入 N、r、n、x 後自動計算');return;}
+  const N=+Nv,rr=+rv,n=+nv,x=+xv;
+  if(![N,rr,n,x].every(Number.isInteger)||N<0||rr<0||n<0||x<0||x>rr||x>n||n-x>N-rr||n>N){liveErr('c8','確認整數且 x≤r、x≤n、n−x≤N−r、n≤N');return;}
+  const f=nCr(rr,x)*nCr(N-rr,n-x)/nCr(N,n);
+  setLive('c8',`f(${x})=C(${rr},${x})·C(${N-rr},${n-x}) ÷ C(${N},${n}) =<span class="la">${r(f,5)}</span> &nbsp; E(X)=n·r/N=<span class="la">${r(n*rr/N,4)}</span>`);
+}
+// C9 幾何
+function liveC9(){
+  clearErr('c9');
+  const pv=document.getElementById('c9-p').value, xv=document.getElementById('c9-x').value;
+  if(pv===''||xv===''){hint('c9','← 填入 p 與 x 後自動計算');return;}
+  const p=+pv,x=+xv;
+  if(p<=0||p>1||!Number.isInteger(x)||x<1){liveErr('c9','0<p≤1，x 需為 ≥1 整數');return;}
+  const f=p*Math.pow(1-p,x-1);
+  setLive('c9',`f(${x})=${p}·${r(1-p,4)}^${x-1}=<span class="la">${r(f,5)}</span> &nbsp; E(X)=1/p=<span class="la">${r(1/p,4)}</span> &nbsp; Var=(1−p)/p²=<span class="la">${r((1-p)/(p*p),4)}</span>`);
+}
+
+// ── scroll spy ──
+const links=document.querySelectorAll('#sidenav a');
+const sections=[...links].map(a=>document.querySelector(a.getAttribute('href')));
+window.addEventListener('scroll',()=>{
+  let cur=0;
+  sections.forEach((s,i)=>{ if(s && window.scrollY>=s.offsetTop-130) cur=i; });
+  links.forEach(l=>l.classList.remove('active'));
+  if(links[cur]) links[cur].classList.add('active');
+},{passive:true});
+</script>
+</body>
+</html>

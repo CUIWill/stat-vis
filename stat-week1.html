@@ -242,6 +242,7 @@ textarea.pi-inp{resize:vertical;font-family:'Courier New',monospace;font-size:.8
 <nav id="sidenav">
   <div style="padding:.5rem 1rem .8rem;border-bottom:1px solid #334155;">
     <div style="color:white;font-weight:700;font-size:.9rem;">📊 統計學 Week 1</div>
+    <div style="color:#4ade80;font-size:.7rem;margin-top:.3rem;">✅ 已整合課堂逐字稿（0624）</div>
   </div>
 
   <h2>PART 1 · 導論</h2>
@@ -455,6 +456,7 @@ textarea.pi-inp{resize:vertical;font-family:'Courier New',monospace;font-size:.8
 <div class="sec" id="s4">
   <div class="sec-title">資料的三大重要特徵<span class="page-badge">Week 1-5 / 1-15 / 1-19</span></div>
   <div class="warn">📌 這三個特徵貫穿整份講義，老師在第 5、15、19 頁反覆強調。</div>
+  <div class="warn">⚠️ 考點預警（老師課堂特別強調）：任何一筆資料或變數，<strong>只要掌握「中心點、散布狀況、形狀」三特徵，整個資料形態就大致清楚</strong>——這是必考核心，務必牢記。</div>
 
   <div class="cards" style="margin-top:.8rem;">
     <div class="card c-orange">
@@ -473,6 +475,8 @@ textarea.pi-inp{resize:vertical;font-family:'Courier New',monospace;font-size:.8
       <p>分佈左偏、對稱還是右偏？<br><br>→ <strong>偏態 Skewness</strong></p>
     </div>
   </div>
+
+  <div class="tip">💡 老師的白話與例子：<br>• <strong>中心點</strong>——「<strong>不一定等於平均值</strong>」。像問班上同學年齡大概幾歲、某支股票（如信驊、大立光）股價大概落在多少。<br>• <strong>散布狀況</strong>——中心點一樣，散布可能差很多：兩支均價都 200 元的股票，有的幾乎不漲跌（牛皮股），有的上下震盪很大。<br>• <strong>形狀</strong>——品管（品質管制）通常只看前兩個特徵；但做市場調查時，形狀就非常重要。</div>
 
   <!-- Interactive chart -->
   <div class="box" style="margin-top:.85rem;">
@@ -524,6 +528,12 @@ textarea.pi-inp{resize:vertical;font-family:'Courier New',monospace;font-size:.8
       <div style="background:#f8fafc;border-radius:7px;padding:.65rem;">🔍 滿足好奇心</div>
     </div>
   </div>
+
+  <div class="box">
+    <span class="tag t-teal">🔖 真實案例（課堂）</span>
+    <h3>實務上為什麼要收集資料？</h3>
+    <p style="font-size:.82rem;color:#475569;line-height:1.8;">寫論文需要資料佐證、公司想比較同業年終獎金以了解自身績效、服務業想知道顧客平均等候時間以利管理、或在不同方案間做決策。更進階的目的是找出<strong>變數之間的關係</strong>（例如「雞蛋與膽固醇」的關聯）——但這門課要先學會描述<strong>單一變數</strong>的形態，才能進一步談變數間的關係。</p>
+  </div>
 </div>
 
 <!-- S5 資料類型 -->
@@ -571,6 +581,9 @@ textarea.pi-inp{resize:vertical;font-family:'Courier New',monospace;font-size:.8
       例：某縣市過去36個月建照數。</p>
     </div>
   </div>
+
+  <div class="tip">💡 老師補充：定性資料也有「程度」之別——滿意度（優/良/中/可/劣）內部<strong>有高低順序</strong>；但像不同百貨公司的名稱，則<strong>完全沒有大小關係</strong>，純粹是分類。</div>
+  <div class="tip">💡 名詞對照：整份收集到的資料叫<strong>資料集（Dataset）</strong>，裡面每一筆叫<strong>資料（Data）</strong>；橫斷面＝同一時間點（如問卷），時間序列＝隨時間連續收集。</div>
 </div>
 
 <!-- S6 資料來源 -->
@@ -635,6 +648,21 @@ textarea.pi-inp{resize:vertical;font-family:'Courier New',monospace;font-size:.8
       </tbody>
     </table>
   </div>
+
+  <div class="box">
+    <span class="tag t-green">🔖 課堂重點故事</span>
+    <h3>德爾菲法 Delphi Method — 群眾收斂出真實答案</h3>
+    <p style="font-size:.83rem;color:#475569;line-height:1.85;">一種<strong>收斂意見</strong>的調查法。例如某產品不知如何定價：請一群人各自提出心中價格，統計出<strong>平均值（中心點）</strong>與<strong>標準差（散布狀況）</strong>後公布給大家，再進行第二、第三輪。沒概念的人會參考平均值修正自己的估計，有專業的人則會堅持己見；多次收斂後，最終平均值往往非常接近真實合理價格。</p>
+    <div class="tip">💡 老師說他多次在班上實驗預測「平均成績」，效果都非常準——這正是「三大特徵（中心點＋散布）」的實際應用。</div>
+  </div>
+
+  <div class="warn">⚠️ 蒐集資料時務必注意<strong>抽樣誤差（Sampling Error）</strong>：抽樣對象是否能代表母體？樣本不具代表性，結論就會偏掉。</div>
+
+  <div class="box">
+    <span class="tag t-blue">✍️ 學術寫作小撇步</span>
+    <h3>論文常用「被動語態」</h3>
+    <p style="font-size:.82rem;color:#475569;line-height:1.8;">學術寫作要客觀嚴謹，通常<strong>避免主動語態</strong>（如「我做了什麼」），改用<strong>被動式</strong>描述研究過程，例如「The data was collected…」，把焦點放在研究對象與過程、降低主觀色彩。</p>
+  </div>
 </div>
 
 <!-- S7 描述統計 vs 推論統計 -->
@@ -655,6 +683,7 @@ textarea.pi-inp{resize:vertical;font-family:'Courier New',monospace;font-size:.8
       → 是描述統計之後的進階工具。</p>
     </div>
   </div>
+  <div class="tip">💡 老師的簡報原則：<strong>「圖勝於表，表勝於文字」</strong>。描述統計的目的就是把龐雜資料用圖表或數字呈現，讓人一看就懂；報告時盡量用視覺化圖表搭配關鍵字（Keyword）。</div>
 </div>
 
 <!-- ══════════════════════════════════════
@@ -722,7 +751,7 @@ textarea.pi-inp{resize:vertical;font-family:'Courier New',monospace;font-size:.8
           <text x="24" y="52"  text-anchor="end">8</text>
         </g>
       </svg>
-      <div class="tip" style="font-size:.78rem;">各類別之間<strong>留有空隙</strong>，強調每類是獨立的。</div>
+      <div class="tip" style="font-size:.78rem;">各類別之間<strong>留有空隙、彼此分開不重疊</strong>，代表定性類別之間是<strong>不連續</strong>的（與直方圖最大差異）。</div>
     </div>
     <div class="box">
       <h3>🥧 圓餅圖 Pie Chart</h3>
@@ -757,6 +786,30 @@ textarea.pi-inp{resize:vertical;font-family:'Courier New',monospace;font-size:.8
       </svg>
       <div class="tip" style="font-size:.78rem;">某類 25% → 佔 0.25 × 360° = <strong>90°</strong>。</div>
     </div>
+  </div>
+
+  <div class="box">
+    <span class="tag t-orange">🔖 課堂補充方法</span>
+    <h3>📊 柏拉圖 Pareto Chart — 80/20 法則</h3>
+    <p style="font-size:.82rem;color:#475569;line-height:1.7;margin-bottom:.6rem;">概念：<strong>80% 的問題往往來自 20% 的原因</strong>。X 軸放定性類別（如各種瑕疵名稱），Y 軸為發生次數或損失金額；長條<strong>由高到低（左→右）排列</strong>，常再加一條<strong>累積曲線</strong>，一眼看出該優先解決哪幾項。</p>
+    <svg viewBox="0 0 300 170" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-width:300px;display:block;margin:.2rem auto;">
+      <line x1="35" y1="15" x2="35" y2="140" stroke="#cbd5e1" stroke-width="1.5"/>
+      <line x1="35" y1="140" x2="285" y2="140" stroke="#cbd5e1" stroke-width="1.5"/>
+      <!-- descending bars: 40,28,15,10,7 (max40->110px) -->
+      <rect x="45"  y="30"  width="34" height="110" fill="#3b82f6"/>
+      <rect x="89"  y="63"  width="34" height="77"  fill="#3b82f6"/>
+      <rect x="133" y="99"  width="34" height="41"  fill="#3b82f6"/>
+      <rect x="177" y="113" width="34" height="27"  fill="#3b82f6"/>
+      <rect x="221" y="121" width="34" height="19"  fill="#3b82f6"/>
+      <!-- cumulative line: 40,68,83,93,100 (% of 100, y=140-pct*1.2) -->
+      <polyline points="62,92 106,58.4 150,40.4 194,28.4 238,20" fill="none" stroke="#f59e0b" stroke-width="2.2"/>
+      <g fill="#f59e0b"><circle cx="62" cy="92" r="3"/><circle cx="106" cy="58.4" r="3"/><circle cx="150" cy="40.4" r="3"/><circle cx="194" cy="28.4" r="3"/><circle cx="238" cy="20" r="3"/></g>
+      <g font-size="8" fill="#64748b" text-anchor="middle">
+        <text x="62" y="152">瑕疵A</text><text x="106" y="152">B</text><text x="150" y="152">C</text><text x="194" y="152">D</text><text x="238" y="152">E</text>
+      </g>
+      <text x="250" y="30" font-size="8" fill="#f59e0b" font-weight="700">累積%</text>
+    </svg>
+    <div class="tip" style="font-size:.78rem;">💡 讀圖方法：藍色長條看「各原因大小」，橙色累積線看「前幾項就涵蓋了多少比例」——前 1~2 項通常就佔 80%。</div>
   </div>
 </div>
 
@@ -822,7 +875,8 @@ textarea.pi-inp{resize:vertical;font-family:'Courier New',monospace;font-size:.8
           <text x="231.5" y="100">5</text>
         </g>
       </svg>
-      <div class="tip" style="font-size:.78rem;">與長條圖的差別：各矩形<strong>緊鄰無空隙</strong>（強調連續性）。</div>
+      <div class="tip" style="font-size:.78rem;">與長條圖的差別：因數字具<strong>連續性</strong>，各矩形<strong>緊鄰、連在一起、無空隙</strong>。</div>
+      <div class="warn" style="font-size:.78rem;">⚠️ 老師提醒分組原則：最低與最高組別要涵蓋資料的最小與最大值；每組寬度相等；組數適中（約 <strong>7~10 組</strong>，依資料量）。分得<strong>太細會讓圖形變平坦，看不出「形狀」</strong>。</div>
     </div>
     <div class="box">
       <h3>📈 累積次數曲線 Ogive</h3>
@@ -859,6 +913,7 @@ textarea.pi-inp{resize:vertical;font-family:'Courier New',monospace;font-size:.8
       <div class="tip" style="font-size:.78rem;">顯示「≤ 某值」的累積比例，可快速查詢百分位數。</div>
     </div>
   </div>
+  <div class="tip">💡 名詞補充：<strong>累積機率（Cumulative Probability）</strong>＝把「低於特定數值」的機率或百分比逐步相加起來的值——就是上面 Ogive 曲線在算的東西。畫定量圖前通常要先<strong>排序（Sorting）</strong>找出範圍再分組。</div>
 </div>
 
 <!-- S10 枝葉圖 -->
@@ -881,7 +936,9 @@ textarea.pi-inp{resize:vertical;font-family:'Courier New',monospace;font-size:.8
       <span style="color:#fbbf24;font-weight:700;">10</span> │ 1 4 5 5 9
     </div>
     <div class="tip">💡 可同時看出集中在 70 元區間（葉最多），且整體稍微右偏（高費用仍有幾個值）。</div>
+    <div class="tip">💡 老師強調枝葉法的最大優勢：它不只能顯示<strong>形狀、中心點、散布</strong>，<strong>還完整保留了「原始資料」的具體數值</strong>，比直方圖更能看見細節。</div>
   </div>
+  <div class="warn">⚠️ 考點整理（老師課堂提示）：<br>① 三大核心特徵（中心點、散布、形狀）務必牢記。<br>② 比較題：直方圖 vs 長條圖在 X 軸定義有何不同？為何長條圖有間隙、直方圖沒有？<br>③ 應用題：給一組未排序數值，先<strong>排序</strong>求<strong>中位數</strong>，或用<strong>枝葉法</strong>畫出來判斷偏態（形狀）。<br>④ 名詞解釋：德爾菲法的執行步驟與背後機制。</div>
 </div>
 
 <!-- S11 交叉分析 & 散佈圖 -->

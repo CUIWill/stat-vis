@@ -1,0 +1,939 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>經濟學 Week 2 · 廠商行為與市場結構</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'Segoe UI','Microsoft JhengHei',sans-serif;background:#f1f5f9;color:#1e293b;display:flex;min-height:100vh;}
+
+/* ── Side nav ── */
+#sidenav{width:215px;min-width:215px;background:#0a1f2e;position:fixed;top:0;left:0;height:100vh;overflow-y:auto;z-index:200;padding:1rem 0;font-size:.78rem;}
+#sidenav::-webkit-scrollbar{width:5px;}
+#sidenav::-webkit-scrollbar-thumb{background:#1e3a5f;border-radius:3px;}
+#sidenav h2{color:#7dd3fc;font-size:.66rem;letter-spacing:.07em;text-transform:uppercase;padding:.6rem 1rem .25rem;margin-top:.4rem;}
+#sidenav a{display:flex;align-items:center;justify-content:space-between;gap:.3rem;color:#cbd5e1;padding:.36rem 1rem;text-decoration:none;border-left:3px solid transparent;transition:all .15s;line-height:1.35;}
+#sidenav a:hover{color:white;background:rgba(255,255,255,.06);}
+#sidenav a.active{color:#38bdf8;border-left-color:#38bdf8;background:rgba(56,189,248,.08);}
+#sidenav .pg{color:#64748b;font-size:.65rem;background:#0e2a3d;padding:.05rem .35rem;border-radius:99px;white-space:nowrap;}
+
+/* ── Main ── */
+#main{margin-left:215px;width:100%;max-width:1215px;padding:1.8rem 2.2rem 4rem;}
+
+/* Part headers */
+.part-header{background:linear-gradient(135deg,#0c4a6e,#0369a1);color:white;border-radius:14px;padding:1.1rem 1.6rem;margin:2.4rem 0 1.3rem;}
+.part-header h2{font-size:1.15rem;margin:0;}
+.part-header p{font-size:.82rem;opacity:.88;margin-top:.25rem;}
+
+/* Section */
+.sec{background:white;border-radius:12px;padding:1.2rem 1.4rem;margin-bottom:1.3rem;box-shadow:0 1px 6px rgba(0,0,0,.07);border:1px solid #e2e8f0;}
+.sec-title{display:flex;align-items:center;gap:.7rem;flex-wrap:wrap;font-size:1.02rem;font-weight:700;color:#0c4a6e;margin-bottom:.9rem;padding-bottom:.4rem;border-bottom:2px solid #bae6fd;}
+.page-badge{background:#e0f2fe;color:#0369a1;font-size:.7rem;font-weight:600;padding:.2rem .55rem;border-radius:99px;white-space:nowrap;}
+
+/* Cards */
+.cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:.75rem;margin-bottom:.4rem;}
+.card{border-radius:10px;padding:.9rem 1rem;font-size:.83rem;line-height:1.6;border:1px solid transparent;}
+.card h3{font-size:.88rem;margin-bottom:.35rem;color:#1e293b;}
+.card p{font-size:.82rem;color:#475569;line-height:1.6;}
+.c-blue{background:#eff6ff;border-color:#bfdbfe;} .c-green{background:#ecfdf5;border-color:#a7f3d0;}
+.c-orange{background:#fff7ed;border-color:#fed7aa;} .c-purple{background:#f5f3ff;border-color:#ddd6fe;}
+.c-red{background:#fff1f2;border-color:#fecdd3;} .c-teal{background:#f0fdfa;border-color:#99f6e4;}
+.c-yellow{background:#fefce8;border-color:#fde68a;}
+
+/* Box */
+.box{background:#f8fafc;border:1px solid #e2e8f0;border-radius:10px;padding:.9rem 1.1rem;margin-bottom:.75rem;}
+.box h3{font-size:.88rem;color:#1e293b;margin-bottom:.55rem;}
+
+/* Tag */
+.tag{display:inline-block;font-size:.68rem;font-weight:700;padding:.1rem .5rem;border-radius:99px;margin-bottom:.35rem;}
+.t-blue{background:#dbeafe;color:#1d4ed8;} .t-green{background:#dcfce7;color:#166534;}
+.t-orange{background:#ffedd5;color:#9a3412;} .t-purple{background:#ede9fe;color:#5b21b6;}
+.t-red{background:#fee2e2;color:#991b1b;} .t-teal{background:#ccfbf1;color:#115e59;}
+
+/* Table */
+.tbl{width:100%;border-collapse:collapse;font-size:.83rem;}
+.tbl th{background:#0c4a6e;color:white;padding:.45rem .75rem;text-align:left;}
+.tbl td{padding:.42rem .75rem;border-bottom:1px solid #e2e8f0;}
+.tbl tr:nth-child(even) td{background:#f8fafc;}
+
+/* Inline formula */
+.fml{background:#0f172a;color:#e2e8f0;border-radius:8px;padding:.65rem 1.05rem;font-family:'Times New Roman',serif;font-size:1rem;margin:.45rem 0;line-height:1.95;}
+.hl{color:#fbbf24;font-weight:700;}
+
+/* Tip / warn / case */
+.tip{background:#f0fdf4;border-left:4px solid #22c55e;border-radius:0 8px 8px 0;padding:.65rem .9rem;font-size:.82rem;color:#166534;margin-top:.65rem;line-height:1.75;}
+.warn{background:#fffbeb;border-left:4px solid #f59e0b;border-radius:0 8px 8px 0;padding:.65rem .9rem;font-size:.82rem;color:#92400e;margin-top:.65rem;line-height:1.75;}
+.case{background:#f0f9ff;border-left:4px solid #0ea5e9;border-radius:0 8px 8px 0;padding:.65rem .9rem;font-size:.82rem;color:#0c4a6e;margin-top:.65rem;line-height:1.75;}
+
+/* grids */
+.two{display:grid;grid-template-columns:1fr 1fr;gap:.8rem;}
+.three{display:grid;grid-template-columns:1fr 1fr 1fr;gap:.75rem;}
+@media(max-width:780px){.two,.three{grid-template-columns:1fr;} #sidenav{display:none;} #main{margin-left:0;}}
+
+/* Flow */
+.flow{display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:.3rem;margin:.8rem 0;}
+.fb{background:white;border:2px solid #bae6fd;border-radius:8px;padding:.5rem .85rem;font-size:.82rem;text-align:center;min-width:90px;box-shadow:0 1px 5px rgba(0,0,0,.06);}
+.fa{font-size:1.2rem;color:#0369a1;}
+
+.diagram-wrap{overflow-x:auto;margin:.5rem 0;}
+
+/* Formula Card */
+.fc{background:white;border-radius:12px;overflow:hidden;box-shadow:0 2px 10px rgba(0,0,0,.08);margin-bottom:1.2rem;border:1.5px solid #e2e8f0;}
+.fc-head{background:linear-gradient(135deg,#0c4a6e,#0369a1);color:white;padding:.7rem 1.1rem;}
+.fc-head h3{font-size:.95rem;margin:0;}
+.fc-body{padding:1.1rem 1.2rem;}
+
+/* lecture formula box */
+.lf{background:#d1fae5;border:1px solid #6ee7b7;border-radius:8px;padding:.85rem 1.2rem;display:inline-flex;align-items:center;gap:.35rem;font-family:'Times New Roman','Palatino Linotype',serif;font-size:1.1rem;flex-wrap:wrap;margin-bottom:1rem;}
+.lf-eq{color:#374151;}
+.lf-frac{display:inline-flex;flex-direction:column;align-items:center;vertical-align:middle;margin:0 .1rem;}
+.lf-num{border-bottom:1.8px solid #1e293b;padding:1px 4px 2px;text-align:center;white-space:nowrap;}
+.lf-den{padding:2px 4px 0;text-align:center;white-space:nowrap;}
+
+/* Param badge */
+.pb{display:inline-block;cursor:pointer;background:#0369a1;color:white;font-family:'Times New Roman',serif;font-size:1rem;font-weight:700;padding:.05rem .45rem;border-radius:4px;vertical-align:middle;transition:background .15s,transform .1s;position:relative;}
+.pb:hover{background:#0284c7;transform:scale(1.08);}
+.pb.active{background:#f59e0b;color:#1e293b;}
+.pb[data-tip]:hover::after{content:attr(data-tip);position:absolute;bottom:120%;left:50%;transform:translateX(-50%);background:#0f172a;color:white;padding:3px 8px;border-radius:5px;font-size:.68rem;font-family:'Segoe UI',sans-serif;font-weight:400;white-space:nowrap;pointer-events:none;z-index:99;}
+
+/* live bar */
+.lf-live{background:#f0fdf4;border:1.5px solid #86efac;border-radius:8px;padding:.65rem 1rem;font-family:'Times New Roman',serif;font-size:1.05rem;min-height:2.8rem;display:flex;align-items:center;gap:.3rem;flex-wrap:wrap;margin-bottom:.9rem;line-height:1.8;}
+.lf-live .lv{color:#0369a1;font-weight:700;}
+.lf-live .la{color:#065f46;font-weight:700;font-size:1.2rem;background:#bbf7d0;padding:.05rem .4rem;border-radius:4px;}
+.lf-live .lhint{color:#94a3b8;font-family:'Segoe UI',sans-serif;font-size:.8rem;font-style:italic;}
+
+/* param input */
+.pi-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:.75rem;margin:.5rem 0 .9rem;}
+.pi-inp{border:1.5px solid #cbd5e1;border-radius:7px;padding:.4rem .7rem;font-size:.87rem;outline:none;width:100%;box-sizing:border-box;transition:border .15s,box-shadow .15s;background:white;}
+.pi-inp:focus{border-color:#0369a1;box-shadow:0 0 0 2px rgba(3,105,161,.15);}
+.pi-inp.lit{border-color:#f59e0b;box-shadow:0 0 0 2px rgba(245,158,11,.18);}
+.pi-sym{background:#0369a1;color:white;font-family:'Times New Roman',serif;font-size:.88rem;font-weight:700;padding:.1rem .45rem;border-radius:4px;cursor:pointer;user-select:none;transition:background .12s;}
+.pi-sym:hover{background:#0284c7;}
+.pi-lab{margin-bottom:.3rem;font-size:.82rem;font-weight:600;color:#374151;}
+
+/* beginner note */
+.bnote{background:#eff6ff;border:1px dashed #7dd3fc;border-radius:8px;padding:.7rem .95rem;font-size:.8rem;color:#0c4a6e;line-height:1.7;margin-bottom:.9rem;}
+.bnote b{color:#0c4a6e;}
+
+.calc-err{background:#fff1f2;border:1px solid #fca5a5;border-radius:7px;padding:.55rem .85rem;font-size:.82rem;color:#991b1b;display:none;margin-top:.5rem;}
+.calc-err.show{display:block;}
+mark{padding:.05rem .3rem;border-radius:4px;}
+.sym{background:#dbeafe;color:#0369a1;padding:.05rem .4rem;border-radius:4px;font-family:'Times New Roman',serif;}
+sub{font-size:.62em;} sup{font-size:.62em;}
+.legend{display:flex;flex-wrap:wrap;gap:.5rem 1rem;font-size:.74rem;color:#475569;margin-top:.4rem;}
+.legend span{display:inline-flex;align-items:center;gap:.25rem;}
+.legend i{width:18px;height:3px;border-radius:2px;display:inline-block;}
+</style>
+</head>
+<body>
+
+<nav id="sidenav">
+  <div style="padding:.5rem 1rem .6rem;border-bottom:1px solid #1e3a5f;">
+    <div style="color:white;font-weight:700;font-size:.9rem;">📈 經濟學 Week 2</div>
+    <div style="color:#64748b;font-size:.7rem;margin-top:.2rem;">廠商行為與市場結構</div>
+  </div>
+  <div style="color:#64748b;font-size:.7rem;padding:.4rem 1rem;">📖 第一版（上課後更新）</div>
+
+  <h2>PART 1 · 廠商行為</h2>
+  <a href="#s1">三大函數 Review <span class="pg">p.11~12</span></a>
+  <a href="#s2">利潤極大化 MR=MC <span class="pg">p.13~15</span></a>
+
+  <h2>PART 2 · 完全競爭市場</h2>
+  <a href="#s3">三項基本假設 <span class="pg">p.17~18</span></a>
+  <a href="#s4">價格接受者 <span class="pg">p.19~20</span></a>
+  <a href="#s5">利潤與損失 <span class="pg">p.21~22</span></a>
+  <a href="#s6">關廠決策 <span class="pg">p.25</span></a>
+  <a href="#s7">長期均衡 <span class="pg">p.26~30</span></a>
+  <a href="#s8">經濟租 <span class="pg">p.31~32</span></a>
+
+  <h2>PART 3 · 獨占市場</h2>
+  <a href="#s9">獨占與收益 <span class="pg">p.40~43</span></a>
+  <a href="#s10">產出決定 <span class="pg">p.44~46</span></a>
+  <a href="#s11">訂價法則 <span class="pg">p.47~53</span></a>
+  <a href="#s12">衡量獨占力 <span class="pg">p.54~57</span></a>
+  <a href="#s13">差別訂價 <span class="pg">p.58~60</span></a>
+
+  <h2>PART 4 · 獨占性競爭</h2>
+  <a href="#s14">構成與均衡 <span class="pg">p.62~64</span></a>
+
+  <h2>PART 5 · 寡占與賽局</h2>
+  <a href="#s15">寡占與 Nash 均衡 <span class="pg">p.67~68</span></a>
+  <a href="#s16">Cournot 模型 <span class="pg">p.69~70</span></a>
+  <a href="#s17">Stackelberg・Bertrand <span class="pg">p.71~74</span></a>
+  <a href="#s18">囚犯的困境 <span class="pg">p.75~80</span></a>
+  <a href="#s19">價格領導・優勢廠商 <span class="pg">p.87~89</span></a>
+  <a href="#s20">卡特爾 OPEC <span class="pg">p.90~95</span></a>
+
+  <h2>🧮 公式計算機</h2>
+  <a href="#c1">利潤極大化</a>
+  <a href="#c2">獨占訂價法則</a>
+  <a href="#c3">Lerner 獨占力</a>
+  <a href="#c4">需求彈性</a>
+</nav>
+
+<main id="main">
+<!-- ══════════ PART 1 ══════════ -->
+<div class="part-header" style="background:linear-gradient(135deg,#0f4c75,#1b6ca8);">
+  <h2>PART 1 &nbsp;·&nbsp; 廠商行為與利潤極大化</h2>
+  <p>廠商怎麼決定生產多少？核心一句話：當「多賺的」等於「多花的」時，利潤最大 —— MR = MC。</p>
+</div>
+
+<!-- S1 三大函數 -->
+<div class="sec" id="s1">
+  <div class="sec-title">Review：成本、收益、利潤函數<span class="page-badge">p.11~12</span></div>
+  <div class="bnote"><b>白話：</b>廠商把投入（勞力 L、資本 K）變成產出 q。下面三個「函數」都是把產量 q 當輸入，吐出對應的金額。</div>
+  <div class="three">
+    <div class="card c-blue"><span class="tag t-blue">Cost</span><h3>成本函數 C(q)</h3><p>生產 q 單位<strong>必須付出</strong>的成本。</p></div>
+    <div class="card c-green"><span class="tag t-green">Revenue</span><h3>收益函數 R(q)</h3><p>賣出 q 單位<strong>收進來</strong>的錢 = 價格 × 數量。</p></div>
+    <div class="card c-orange"><span class="tag t-orange">Profit</span><h3>利潤函數 π(q)</h3><p>π(q) = R(q) − C(q)，<strong>收入扣成本</strong>剩下的。</p></div>
+  </div>
+  <div class="box" style="margin-top:.6rem;">
+    <h3>生產函數 q = f(L, K)</h3>
+    <p style="font-size:.82rem;color:#475569;">代表「投入某組合的勞力 L 與資本 K，最多能生產的產量 q」。是上面三函數的起點。</p>
+  </div>
+</div>
+
+<!-- S2 利潤極大化 -->
+<div class="sec" id="s2">
+  <div class="sec-title">利潤極大化：MR = MC<span class="page-badge">p.13~15</span></div>
+  <div class="bnote"><b>關鍵直覺：</b>多生產一單位，會多賺「<b>邊際收益 MR</b>」、多花「<b>邊際成本 MC</b>」。只要 MR &gt; MC 就值得多做；直到 MR = MC 時，利潤推到最高，不能再增加。</div>
+  <div class="two">
+    <div class="box">
+      <h3>數學推導</h3>
+      <div class="fml" style="font-size:.95rem;">π = R − C<br>Δπ/Δq = ΔR/Δq − ΔC/Δq = 0<br>= MR − MC = 0　→　<span class="hl">MR = MC</span></div>
+      <div class="tip">💡 邊際 = 「曲線的斜率」。利潤極大發生在「收益曲線斜率 = 成本曲線斜率」，也就是兩條線最平行、差距 AB 最大的地方。</div>
+    </div>
+    <div class="box">
+      <h3>讀圖方法：R(q) 與 C(q) 差距最大處</h3>
+      <svg viewBox="0 0 320 220" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-width:320px;display:block;margin:.2rem auto;">
+        <line x1="45" y1="190" x2="305" y2="190" stroke="#334155" stroke-width="1.5"/>
+        <line x1="45" y1="20" x2="45" y2="190" stroke="#334155" stroke-width="1.5"/>
+        <text x="300" y="205" font-size="9" fill="#64748b">產量 q</text>
+        <text x="20" y="28" font-size="9" fill="#64748b">$</text>
+        <!-- C(q) cost curve (cubic, S-shaped rising) -->
+        <path d="M 45 175 C 110 150, 150 95, 305 35" fill="none" stroke="#dc2626" stroke-width="2.2"/>
+        <text x="250" y="55" font-size="10" fill="#dc2626" font-weight="700">C(q)</text>
+        <!-- R(q) revenue curve (cubic, concave) -->
+        <path d="M 45 190 C 130 70, 200 55, 305 80" fill="none" stroke="#16a34a" stroke-width="2.2"/>
+        <text x="150" y="60" font-size="10" fill="#16a34a" font-weight="700">R(q)</text>
+        <!-- max gap AB at q* ~ x=170 -->
+        <line x1="170" y1="78" x2="170" y2="128" stroke="#0369a1" stroke-width="2" stroke-dasharray="3 2"/>
+        <circle cx="170" cy="78" r="3" fill="#16a34a"/><text x="176" y="76" font-size="9" fill="#16a34a">A</text>
+        <circle cx="170" cy="128" r="3" fill="#dc2626"/><text x="176" y="138" font-size="9" fill="#dc2626">B</text>
+        <line x1="170" y1="190" x2="170" y2="195" stroke="#334155"/><text x="167" y="207" font-size="9" fill="#0369a1" font-weight="700">q*</text>
+      </svg>
+      <p style="font-size:.76rem;color:#64748b;text-align:center;">q* 處 R 與 C 的垂直差距 AB（利潤）最大。</p>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════ PART 2 ══════════ -->
+<div class="part-header" style="background:linear-gradient(135deg,#134e4a,#0f766e);">
+  <h2>PART 2 &nbsp;·&nbsp; 完全競爭市場</h2>
+  <p>最「理想」的市場：廠商多到沒人能左右價格。每家都是「價格接受者」，長期下利潤會被競爭磨成零。</p>
+</div>
+
+<!-- S3 三假設 -->
+<div class="sec" id="s3">
+  <div class="sec-title">完全競爭的三項基本假設<span class="page-badge">p.17~18</span></div>
+  <div class="three">
+    <div class="card c-blue"><span class="tag t-blue">① 價格接受者</span><h3>Price Taker</h3><p>廠商超多，每家只佔產業一小塊，對市場價格<strong>沒有影響力</strong>，只能接受既定價格。</p></div>
+    <div class="card c-green"><span class="tag t-green">② 產品同質</span><h3>Homogeneity</h3><p>各家產品<strong>完全可替代</strong>。誰敢漲價就會流失幾乎全部客人。</p></div>
+    <div class="card c-orange"><span class="tag t-orange">③ 自由進出</span><h3>Free Entry/Exit</h3><p>有利可圖就進來、虧錢就離開，<strong>沒有額外成本</strong>。這對「有效競爭」很關鍵。</p></div>
+  </div>
+  <div class="case">🔖 真實案例（講義影片）：麥當勞「展店比關店多、汰弱換強」、新光三越中山店熄燈 —— 都反映自由進出下，獲利者擴張、虧損者退出。</div>
+</div>
+
+<!-- S4 價格接受者 -->
+<div class="sec" id="s4">
+  <div class="sec-title">價格接受者：水平的需求曲線<span class="page-badge">p.19~20</span></div>
+  <div class="bnote"><b>核心：</b>整個<b>產業</b>的需求是向下斜的；但<b>單一廠商</b>看到的需求是一條<b>水平線</b>（在市場價格上要多少有多少）。因此 <span class="sym">MR = P = AR</span>。</div>
+  <div class="two">
+    <div class="box">
+      <h3>單一廠商：水平需求 d</h3>
+      <svg viewBox="0 0 280 200" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-width:280px;display:block;margin:.2rem auto;">
+        <line x1="45" y1="175" x2="265" y2="175" stroke="#334155" stroke-width="1.5"/>
+        <line x1="45" y1="20" x2="45" y2="175" stroke="#334155" stroke-width="1.5"/>
+        <line x1="45" y1="85" x2="255" y2="85" stroke="#0369a1" stroke-width="2.5"/>
+        <text x="258" y="80" font-size="10" fill="#0369a1" font-weight="700">d = MR = P = AR</text>
+        <text x="20" y="89" font-size="10" fill="#0369a1" font-weight="700">$4</text>
+        <text x="255" y="190" font-size="9" fill="#64748b">產量</text>
+      </svg>
+      <p style="font-size:.76rem;color:#64748b;text-align:center;">不管產出多少，每單位都賣 $4。</p>
+    </div>
+    <div class="box">
+      <h3>產業：向下斜的需求 D</h3>
+      <svg viewBox="0 0 280 200" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-width:280px;display:block;margin:.2rem auto;">
+        <line x1="45" y1="175" x2="265" y2="175" stroke="#334155" stroke-width="1.5"/>
+        <line x1="45" y1="20" x2="45" y2="175" stroke="#334155" stroke-width="1.5"/>
+        <path d="M 55 35 C 95 95, 160 150, 255 168" fill="none" stroke="#dc2626" stroke-width="2.4"/>
+        <text x="230" y="150" font-size="10" fill="#dc2626" font-weight="700">D</text>
+        <text x="255" y="190" font-size="9" fill="#64748b">產量</text>
+      </svg>
+      <p style="font-size:.76rem;color:#64748b;text-align:center;">整體市場價格由供需共同決定。</p>
+    </div>
+  </div>
+  <div class="fml">利潤極大產量條件：MC(q) = MR = P = AR</div>
+</div>
+
+<!-- S5 利潤與損失 -->
+<div class="sec" id="s5">
+  <div class="sec-title">結果：利潤為正 vs 遭受損失<span class="page-badge">p.21~22</span></div>
+  <div class="two">
+    <div class="box">
+      <h3>讀圖方法：P &gt; ATC → 有利潤（綠色面積）</h3>
+      <svg viewBox="0 0 320 230" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-width:320px;display:block;margin:.2rem auto;">
+        <line x1="45" y1="195" x2="305" y2="195" stroke="#334155" stroke-width="1.5"/>
+        <line x1="45" y1="18" x2="45" y2="195" stroke="#334155" stroke-width="1.5"/>
+        <!-- profit rectangle P..ATC, 0..q* -->
+        <rect x="45" y="70" width="180" height="48" fill="#22c55e" fill-opacity="0.18"/>
+        <!-- price line P=MR -->
+        <line x1="45" y1="70" x2="290" y2="70" stroke="#0369a1" stroke-width="2.3"/>
+        <text x="255" y="64" font-size="9.5" fill="#0369a1" font-weight="700">P=MR=AR</text>
+        <!-- ATC U-shape (cubic) -->
+        <path d="M 60 90 C 110 160, 190 150, 295 80" fill="none" stroke="#9333ea" stroke-width="2.2"/>
+        <text x="285" y="95" font-size="10" fill="#9333ea" font-weight="700">ATC</text>
+        <!-- AVC U-shape lower -->
+        <path d="M 62 130 C 110 185, 195 178, 295 120" fill="none" stroke="#0891b2" stroke-width="1.8"/>
+        <text x="285" y="132" font-size="9" fill="#0891b2" font-weight="700">AVC</text>
+        <!-- MC rising (cubic) -->
+        <path d="M 70 188 C 150 182, 195 150, 250 40" fill="none" stroke="#dc2626" stroke-width="2.2"/>
+        <text x="252" y="50" font-size="10" fill="#dc2626" font-weight="700">MC</text>
+        <!-- q* where MC meets price -->
+        <line x1="225" y1="70" x2="225" y2="195" stroke="#334155" stroke-width="1" stroke-dasharray="3 2"/>
+        <circle cx="225" cy="70" r="3.5" fill="#0369a1"/>
+        <text x="221" y="208" font-size="9" fill="#0369a1" font-weight="700">q*</text>
+        <text x="120" y="98" font-size="9.5" fill="#15803d" font-weight="700">利潤 = (P−AC)×q*</text>
+      </svg>
+    </div>
+    <div class="box">
+      <h3>讀圖方法：P &lt; ATC → 損失（紅色面積）</h3>
+      <svg viewBox="0 0 320 230" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-width:320px;display:block;margin:.2rem auto;">
+        <line x1="45" y1="195" x2="305" y2="195" stroke="#334155" stroke-width="1.5"/>
+        <line x1="45" y1="18" x2="45" y2="195" stroke="#334155" stroke-width="1.5"/>
+        <rect x="45" y="120" width="175" height="40" fill="#ef4444" fill-opacity="0.16"/>
+        <line x1="45" y1="120" x2="290" y2="120" stroke="#0369a1" stroke-width="2.3"/>
+        <text x="255" y="114" font-size="9.5" fill="#0369a1" font-weight="700">P=MR</text>
+        <path d="M 60 70 C 110 150, 190 140, 295 60" fill="none" stroke="#9333ea" stroke-width="2.2"/>
+        <text x="285" y="74" font-size="10" fill="#9333ea" font-weight="700">ATC</text>
+        <path d="M 62 130 C 110 180, 195 172, 295 115" fill="none" stroke="#0891b2" stroke-width="1.8"/>
+        <text x="283" y="128" font-size="9" fill="#0891b2" font-weight="700">AVC</text>
+        <path d="M 70 188 C 150 180, 195 150, 245 45" fill="none" stroke="#dc2626" stroke-width="2.2"/>
+        <text x="247" y="55" font-size="10" fill="#dc2626" font-weight="700">MC</text>
+        <line x1="220" y1="120" x2="220" y2="195" stroke="#334155" stroke-width="1" stroke-dasharray="3 2"/>
+        <circle cx="220" cy="120" r="3.5" fill="#0369a1"/>
+        <text x="216" y="208" font-size="9" fill="#0369a1" font-weight="700">q*</text>
+        <text x="110" y="146" font-size="9.5" fill="#b91c1c" font-weight="700">損失 = (P−AC)×q*</text>
+      </svg>
+    </div>
+  </div>
+  <div class="tip">💡 不論賺或賠，<strong>產量都選 MC=MR 那一點</strong>。差別只在那一點的 P 與 ATC 誰高：P 高就賺、ATC 高就賠。</div>
+</div>
+
+<!-- S6 關廠決策 -->
+<div class="sec" id="s6">
+  <div class="sec-title">短期產量選擇：何時該關廠？<span class="page-badge">p.25</span></div>
+  <div class="bnote"><b>白話：</b>短期有「固定成本」（租金等）跑不掉。關鍵看價格 P 能不能至少蓋住「<b>變動成本 AVC</b>」。蓋得住就先撐著，蓋不住不如關門。</div>
+  <div class="three">
+    <div class="card c-green"><h3>P &gt; ATC</h3><p>收入蓋過全部成本 → <strong>有獲利</strong>，繼續生產。</p></div>
+    <div class="card c-yellow"><h3>AVC &lt; P &lt; ATC</h3><p>蓋得住變動成本＋一部分固定成本 → <strong>短期繼續生產</strong>（關廠反而虧更多固定成本）。</p></div>
+    <div class="card c-red"><h3>P &lt; AVC</h3><p>連變動成本都蓋不住 → <strong>應該關廠</strong>，止血。</p></div>
+  </div>
+  <div class="warn">⚠️ 關廠點（shutdown point）＝ AVC 的最低點。價格跌破它，每多做一單位都在加深虧損。</div>
+</div>
+
+<!-- S7 長期均衡 -->
+<div class="sec" id="s7">
+  <div class="sec-title">長期均衡：利潤被磨成零<span class="page-badge">p.26~30</span></div>
+  <div class="two">
+    <div class="box">
+      <h3>調整機制（自由進出的力量）</h3>
+      <div class="flow">
+        <div class="fb" style="background:#ecfdf5;">正利潤<br><small style="color:#64748b;">吸引新廠商</small></div>
+        <div class="fa">→</div>
+        <div class="fb" style="background:#eff6ff;">供給增加<br><small style="color:#64748b;">價格下跌</small></div>
+        <div class="fa">→</div>
+        <div class="fb" style="background:#fefce8;font-weight:700;">利潤 = 0</div>
+      </div>
+      <div class="flow">
+        <div class="fb" style="background:#fff1f2;">虧損<br><small style="color:#64748b;">廠商離開</small></div>
+        <div class="fa">→</div>
+        <div class="fb" style="background:#eff6ff;">供給減少<br><small style="color:#64748b;">價格上升</small></div>
+        <div class="fa">→</div>
+        <div class="fb" style="background:#fefce8;font-weight:700;">利潤 = 0</div>
+      </div>
+    </div>
+    <div class="box">
+      <h3>長期競爭均衡的三條件</h3>
+      <p style="font-size:.82rem;color:#475569;line-height:1.95;">① 所有廠商都已達<strong>利潤極大</strong>（MR=MC）。<br>② 沒有廠商想進或出 —— 因為大家都賺<strong>零經濟利潤</strong>。<br>③ 價格使<strong>供給量 = 需求量</strong>（市場結清）。</p>
+      <div class="tip">💡 「零經濟利潤」不是沒賺錢，而是剛好賺到「正常報酬」，沒有超額。</div>
+    </div>
+  </div>
+</div>
+
+<!-- S8 經濟租 -->
+<div class="sec" id="s8">
+  <div class="sec-title">沒有利潤，廠商為何還留著？——經濟租<span class="page-badge">p.31~32</span></div>
+  <div class="bnote"><b>經濟租 economic rent：</b>廠商為取得某項投入，<b>願意付</b>的金額 與 <b>最少必須付</b> 的差額。即使長期利潤是零，<b>經濟租仍可能是正的</b>。</div>
+  <div class="box">
+    <p style="font-size:.82rem;color:#475569;line-height:1.8;">當某項投入是<strong>固定/稀有</strong>的（例如黃金地段、獨家牌照），擁有它的廠商會賺取經濟租。這解釋了：為什麼有些市場看起來有獲利機會，新廠商卻進不來 —— 因為關鍵投入被綁死了。結果是：少數廠商賺經濟租，但所有廠商的「經濟利潤」仍是零。</p>
+  </div>
+</div>
+
+<!-- ══════════ PART 3 ══════════ -->
+<div class="part-header" style="background:linear-gradient(135deg,#4c1d95,#6d28d9);">
+  <h2>PART 3 &nbsp;·&nbsp; 獨占市場</h2>
+  <p>市場上只有「一家」。獨占者能影響價格，但仍受市場需求曲線限制 —— 要賣更多，就得降價。</p>
+</div>
+
+<!-- S9 獨占與收益 -->
+<div class="sec" id="s9">
+  <div class="sec-title">獨占、平均收入與邊際收入<span class="page-badge">p.40~43</span></div>
+  <div class="bnote"><b>白話：</b>獨占者就是整個市場。它面對的需求曲線<b>就是</b>它的平均收入 AR。但因為需求向下斜，<b>多賣一單位要降價</b>，所以 <span class="sym">MR &lt; AR（需求）</span>，而且 MR 掉得更快。</div>
+  <div class="two">
+    <div class="box">
+      <h3>讀圖方法：MR 永遠在需求(AR)線下方</h3>
+      <svg viewBox="0 0 300 210" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-width:300px;display:block;margin:.2rem auto;">
+        <line x1="45" y1="180" x2="285" y2="180" stroke="#334155" stroke-width="1.5"/>
+        <line x1="45" y1="18" x2="45" y2="180" stroke="#334155" stroke-width="1.5"/>
+        <text x="20" y="26" font-size="9" fill="#64748b">$/Q</text>
+        <!-- demand AR (cubic, gentle down) -->
+        <path d="M 50 35 C 110 80, 180 125, 270 165" fill="none" stroke="#dc2626" stroke-width="2.3"/>
+        <text x="235" y="150" font-size="10" fill="#dc2626" font-weight="700">AR(需求)</text>
+        <!-- MR steeper below -->
+        <path d="M 50 35 C 95 95, 140 150, 165 180" fill="none" stroke="#2563eb" stroke-width="2.1"/>
+        <text x="120" y="135" font-size="10" fill="#2563eb" font-weight="700">MR</text>
+        <text x="255" y="195" font-size="9" fill="#64748b">產量</text>
+      </svg>
+      <p style="font-size:.76rem;color:#64748b;text-align:center;">兩線同起點，MR 斜率約為需求的兩倍陡。</p>
+    </div>
+    <div class="box">
+      <h3>為什麼 MR &lt; P？</h3>
+      <div class="fml" style="font-size:.92rem;">多賣 1 單位的收入變化：<br>= <span class="hl">P</span>（新增那單位賣的錢）<br>− <span class="hl">Q·(ΔP/ΔQ)</span>（為了賣它，<br>　全部既有單位被迫降價的損失）</div>
+      <div class="case">🔖 真實案例（講義影片）：輝達 AI 晶片被形容為「新黃金與石油」、近乎獨占 AI 市場 —— 但 Google TPU 的逆襲提醒我們：高利潤會招來挑戰者。</div>
+    </div>
+  </div>
+</div>
+
+<!-- S10 產出決定 -->
+<div class="sec" id="s10">
+  <div class="sec-title">獨占廠商的產出決定<span class="page-badge">p.44~46</span></div>
+  <div class="box">
+    <h3>讀圖方法：先在 MR=MC 定產量 Q*，再回到需求線抬到價格 P</h3>
+    <div class="diagram-wrap">
+    <svg viewBox="0 0 360 240" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-width:360px;display:block;margin:.2rem auto;">
+      <line x1="50" y1="205" x2="345" y2="205" stroke="#334155" stroke-width="1.5"/>
+      <line x1="50" y1="18" x2="50" y2="205" stroke="#334155" stroke-width="1.5"/>
+      <text x="22" y="26" font-size="9" fill="#64748b">$/Q</text>
+      <!-- demand AR -->
+      <path d="M 55 35 C 130 90, 220 150, 335 195" fill="none" stroke="#dc2626" stroke-width="2.3"/>
+      <text x="300" y="180" font-size="10" fill="#dc2626" font-weight="700">AR=D</text>
+      <!-- MR -->
+      <path d="M 55 35 C 110 105, 165 165, 200 205" fill="none" stroke="#2563eb" stroke-width="2"/>
+      <text x="175" y="150" font-size="10" fill="#2563eb" font-weight="700">MR</text>
+      <!-- MC rising cubic -->
+      <path d="M 60 195 C 150 188, 195 165, 255 70" fill="none" stroke="#16a34a" stroke-width="2.2"/>
+      <text x="255" y="78" font-size="10" fill="#16a34a" font-weight="700">MC</text>
+      <!-- AC U-shape -->
+      <path d="M 65 150 C 130 188, 210 180, 320 130" fill="none" stroke="#9333ea" stroke-width="2"/>
+      <text x="312" y="142" font-size="9" fill="#9333ea" font-weight="700">AC</text>
+      <!-- Q* where MR=MC at x~150 -->
+      <line x1="150" y1="115" x2="150" y2="205" stroke="#334155" stroke-width="1" stroke-dasharray="3 2"/>
+      <circle cx="150" cy="115" r="3.5" fill="#16a34a"/>
+      <text x="143" y="218" font-size="9" fill="#0c4a6e" font-weight="700">Q*</text>
+      <!-- up to demand: P at x=150 on AR ~ y=72 -->
+      <line x1="50" y1="72" x2="150" y2="72" stroke="#0369a1" stroke-width="1.4" stroke-dasharray="3 2"/>
+      <circle cx="150" cy="72" r="3.5" fill="#0369a1"/>
+      <text x="24" y="76" font-size="9" fill="#0369a1" font-weight="700">P</text>
+      <!-- AC at Q*: ~ y=128 -->
+      <line x1="50" y1="128" x2="150" y2="128" stroke="#9333ea" stroke-width="1.2" stroke-dasharray="2 2"/>
+      <text x="20" y="132" font-size="9" fill="#9333ea">AC</text>
+      <!-- profit rectangle P..AC over 0..Q* -->
+      <rect x="50" y="72" width="100" height="56" fill="#7c3aed" fill-opacity="0.14"/>
+      <text x="60" y="100" font-size="9.5" fill="#5b21b6" font-weight="700">利潤=(P−AC)·Q*</text>
+    </svg>
+    </div>
+    <div class="warn">⚠️ 與完全競爭最大不同：獨占的 <strong>P &gt; MC</strong>（價格高於邊際成本），且產量比完全競爭少。這是獨占「無謂損失」的來源。</div>
+  </div>
+  <div class="box">
+    <h3>數值例（p.46）</h3>
+    <div class="fml">P = $30，AC = $15，Q* = 10　→　利潤 =(30−15)×10 = <span class="hl">$150</span></div>
+  </div>
+</div>
+
+<!-- S11 訂價法則 -->
+<div class="sec" id="s11">
+  <div class="sec-title">訂價法則：加成定價 Markup<span class="page-badge">p.47~53</span></div>
+  <div class="bnote"><b>白話：</b>把 MR=MC 用「需求彈性 E_d」改寫，得到獨占者的訂價公式。彈性越大（顧客越敏感），能加的價差越小。</div>
+  <div class="two">
+    <div class="box">
+      <h3>推導</h3>
+      <div class="fml" style="font-size:.9rem;">MR = P(1 + 1/E_d) = MC<br>→ (P − MC)/P = −1/E_d<br>→ <span class="hl">P = MC / (1 + 1/E_d)</span></div>
+      <p style="font-size:.78rem;color:#64748b;">E_d 是該廠商面對的需求彈性（負值）。</p>
+    </div>
+    <div class="box">
+      <h3>需求彈性的意義</h3>
+      <p style="font-size:.82rem;color:#475569;line-height:1.8;">彈性 = 需求量變動% ÷ 價格變動%。<br>例：價格變 1%、需求量變 1.5% → 彈性 1.5。<br>｜E_d｜&gt; 1 稱「<strong>有彈性</strong>」（敏感）；｜E_d｜&lt; 1 稱「<strong>無彈性</strong>」（不敏感）。</p>
+    </div>
+  </div>
+  <div class="box">
+    <h3>讀圖方法：需求愈有彈性，價差 (P−MC) 愈小</h3>
+    <div class="two">
+      <svg viewBox="0 0 250 175" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-width:250px;display:block;margin:0 auto;">
+        <line x1="40" y1="150" x2="240" y2="150" stroke="#334155" stroke-width="1.4"/>
+        <line x1="40" y1="15" x2="40" y2="150" stroke="#334155" stroke-width="1.4"/>
+        <path d="M 48 25 C 90 65, 150 115, 235 140" fill="none" stroke="#dc2626" stroke-width="2"/>
+        <text x="200" y="125" font-size="9" fill="#dc2626" font-weight="700">D=AR</text>
+        <line x1="40" y1="60" x2="170" y2="60" stroke="#0369a1" stroke-width="1.6" stroke-dasharray="3 2"/>
+        <text x="20" y="64" font-size="9" fill="#0369a1" font-weight="700">P*</text>
+        <line x1="40" y1="110" x2="170" y2="110" stroke="#16a34a" stroke-width="1.6" stroke-dasharray="3 2"/>
+        <text x="18" y="114" font-size="8.5" fill="#16a34a">MC</text>
+        <text x="95" y="100" font-size="8.5" fill="#5b21b6" font-weight="700">大價差</text>
+        <text x="80" y="168" font-size="9" fill="#64748b">較無彈性</text>
+      </svg>
+      <svg viewBox="0 0 250 175" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-width:250px;display:block;margin:0 auto;">
+        <line x1="40" y1="150" x2="240" y2="150" stroke="#334155" stroke-width="1.4"/>
+        <line x1="40" y1="15" x2="40" y2="150" stroke="#334155" stroke-width="1.4"/>
+        <path d="M 48 60 C 110 90, 190 120, 235 132" fill="none" stroke="#dc2626" stroke-width="2"/>
+        <text x="195" y="118" font-size="9" fill="#dc2626" font-weight="700">D=AR</text>
+        <line x1="40" y1="92" x2="170" y2="92" stroke="#0369a1" stroke-width="1.6" stroke-dasharray="3 2"/>
+        <text x="20" y="96" font-size="9" fill="#0369a1" font-weight="700">P*</text>
+        <line x1="40" y1="110" x2="170" y2="110" stroke="#16a34a" stroke-width="1.6" stroke-dasharray="3 2"/>
+        <text x="18" y="114" font-size="8.5" fill="#16a34a">MC</text>
+        <text x="95" y="106" font-size="8.5" fill="#5b21b6" font-weight="700">小價差</text>
+        <text x="80" y="168" font-size="9" fill="#64748b">較有彈性</text>
+      </svg>
+    </div>
+  </div>
+</div>
+
+<!-- S12 衡量獨占力 -->
+<div class="sec" id="s12">
+  <div class="sec-title">衡量獨占力：Lerner 指數<span class="page-badge">p.54~57</span></div>
+  <div class="two">
+    <div class="box">
+      <h3>Lerner Index</h3>
+      <div class="lf">L = <span class="lf-frac"><span class="lf-num">P − MC</span><span class="lf-den">P</span></span> = −<span class="lf-frac"><span class="lf-num">1</span><span class="lf-den">E_d</span></span></div>
+      <p style="font-size:.8rem;color:#475569;">介於 0 與 1：完全競爭 P=MC → L=0；L 越大獨占程度越高。</p>
+      <div class="warn">⚠️ 獨占力大 ≠ 利潤一定高。利潤還要看「平均成本相對價格」；A 廠商獨占力較大，但若 AC 高，利潤可能比 B 低。</div>
+    </div>
+    <div class="box">
+      <h3>獨占力的三個來源</h3>
+      <p style="font-size:.82rem;color:#475569;line-height:1.95;">① <strong>需求彈性</strong>（越無彈性越有力）<br>② 市場中<strong>廠商數目</strong>（越少越有力）<br>③ 廠商間的<strong>互動關係</strong>（是否勾結競爭）</p>
+      <h3 style="margin-top:.6rem;">如何創造獨占？</h3>
+      <p style="font-size:.8rem;color:#475569;line-height:1.8;">自然獨占、握有關鍵生產要素、獨特技術/配方、法令保障、特殊時空環境。</p>
+    </div>
+  </div>
+  <div class="case">🔖 真實案例（講義影片）：蘇伊士運河（地理獨占）、中國限制鎵/鍺出口（握有關鍵要素）、美國壓制中國半導體（法令/政策）—— 都是獨占力來源的現實版。</div>
+</div>
+
+<!-- S13 差別訂價 -->
+<div class="sec" id="s13">
+  <div class="sec-title">差別訂價 Price Discrimination<span class="page-badge">p.58~60</span></div>
+  <div class="bnote"><b>白話：</b>同一種商品，對不同人收<b>不同價格</b>，藉此榨取更多利潤（例：學生票、早鳥票、量大折扣）。</div>
+  <div class="box">
+    <h3>實施差別訂價的四個條件</h3>
+    <p style="font-size:.82rem;color:#475569;line-height:1.95;">① 面對<strong>負斜率</strong>的需求曲線（有訂價能力）。<br>② 能<strong>區別</strong>不同市場的消費者（誰願付高價、誰只付低價）。<br>③ 能<strong>防止套利</strong>（arbitrage）—— 低價買的人不能轉賣給高價市場。<br>④ 有能力<strong>阻止商品在市場間流動</strong>。</p>
+  </div>
+  <div class="three">
+    <div class="card c-blue"><h3>依「身份」</h3><p>學生 / 老人 / 會員不同價。</p></div>
+    <div class="card c-green"><h3>依「數量」</h3><p>買越多單價越低（量販）。</p></div>
+    <div class="card c-orange"><h3>混合型</h3><p>依對象＋時間＋數量綜合（如機票）。</p></div>
+  </div>
+</div>
+
+<!-- ══════════ PART 4 ══════════ -->
+<div class="part-header" style="background:linear-gradient(135deg,#7c2d12,#c2410c);">
+  <h2>PART 4 &nbsp;·&nbsp; 獨占性競爭</h2>
+  <p>介於完全競爭與獨占之間：很多廠商，但賣「有點不一樣」的產品（品牌差異）。短期能賺，長期又回到零利潤。</p>
+</div>
+
+<!-- S14 獨占性競爭 -->
+<div class="sec" id="s14">
+  <div class="sec-title">獨占性競爭的構成與均衡<span class="page-badge">p.62~64</span></div>
+  <div class="two">
+    <div class="card c-blue"><span class="tag t-blue">特性 ①</span><h3>異質但高度替代</h3><p>產品<strong>有差異</strong>（品牌、配方），但彼此可高度替代（交叉彈性大但非無限大）。例：香皂、洗髮精、感冒藥。</p></div>
+    <div class="card c-green"><span class="tag t-green">特性 ②</span><h3>自由進出</h3><p>用自家品牌進入相對容易，虧損就離開。</p></div>
+  </div>
+  <div class="two" style="margin-top:.4rem;">
+    <div class="box">
+      <h3>短期：可能有利潤（P &gt; AC）</h3>
+      <svg viewBox="0 0 280 200" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-width:280px;display:block;margin:.2rem auto;">
+        <line x1="42" y1="172" x2="270" y2="172" stroke="#334155" stroke-width="1.4"/>
+        <line x1="42" y1="16" x2="42" y2="172" stroke="#334155" stroke-width="1.4"/>
+        <path d="M 48 40 C 110 90, 180 135, 262 160" fill="none" stroke="#dc2626" stroke-width="2"/>
+        <text x="232" y="148" font-size="9" fill="#dc2626" font-weight="700">D_SR</text>
+        <path d="M 48 40 C 95 100, 140 150, 165 172" fill="none" stroke="#2563eb" stroke-width="1.8"/>
+        <text x="120" y="140" font-size="9" fill="#2563eb" font-weight="700">MR</text>
+        <path d="M 55 130 C 110 170, 185 162, 258 120" fill="none" stroke="#9333ea" stroke-width="1.8"/>
+        <text x="248" y="132" font-size="8.5" fill="#9333ea" font-weight="700">AC</text>
+        <path d="M 60 165 C 130 160, 165 135, 210 60" fill="none" stroke="#16a34a" stroke-width="1.8"/>
+        <text x="205" y="68" font-size="8.5" fill="#16a34a" font-weight="700">MC</text>
+        <line x1="42" y1="78" x2="135" y2="78" stroke="#0369a1" stroke-width="1.4" stroke-dasharray="3 2"/>
+        <text x="22" y="82" font-size="9" fill="#0369a1" font-weight="700">P_SR</text>
+        <rect x="42" y="78" width="93" height="40" fill="#22c55e" fill-opacity="0.15"/>
+      </svg>
+    </div>
+    <div class="box">
+      <h3>長期：新品牌湧入 → 利潤=0（D 與 AC 相切）</h3>
+      <svg viewBox="0 0 280 200" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-width:280px;display:block;margin:.2rem auto;">
+        <line x1="42" y1="172" x2="270" y2="172" stroke="#334155" stroke-width="1.4"/>
+        <line x1="42" y1="16" x2="42" y2="172" stroke="#334155" stroke-width="1.4"/>
+        <path d="M 48 55 C 110 100, 180 140, 262 162" fill="none" stroke="#dc2626" stroke-width="2"/>
+        <text x="232" y="150" font-size="9" fill="#dc2626" font-weight="700">D_LR</text>
+        <path d="M 48 55 C 92 110, 135 155, 160 172" fill="none" stroke="#2563eb" stroke-width="1.8"/>
+        <text x="118" y="148" font-size="9" fill="#2563eb" font-weight="700">MR</text>
+        <path d="M 55 120 C 110 165, 185 158, 258 112" fill="none" stroke="#9333ea" stroke-width="1.8"/>
+        <text x="248" y="124" font-size="8.5" fill="#9333ea" font-weight="700">AC</text>
+        <path d="M 60 165 C 130 160, 165 130, 205 55" fill="none" stroke="#16a34a" stroke-width="1.8"/>
+        <text x="200" y="63" font-size="8.5" fill="#16a34a" font-weight="700">MC</text>
+        <line x1="42" y1="100" x2="120" y2="100" stroke="#0369a1" stroke-width="1.4" stroke-dasharray="3 2"/>
+        <text x="22" y="104" font-size="9" fill="#0369a1" font-weight="700">P_LR</text>
+        <circle cx="120" cy="100" r="3.5" fill="#9333ea"/>
+        <text x="126" y="96" font-size="8" fill="#9333ea">相切</text>
+      </svg>
+    </div>
+  </div>
+  <div class="warn">⚠️ 與完全競爭比：長期都是零利潤，但獨占性競爭的均衡 <strong>P &gt; MC</strong> 且產能未充分利用 → 產生「<strong>無謂損失</strong>」，這是品牌多樣性的代價。</div>
+</div>
+
+<!-- ══════════ PART 5 ══════════ -->
+<div class="part-header" style="background:linear-gradient(135deg,#064e3b,#065f46);">
+  <h2>PART 5 &nbsp;·&nbsp; 寡占與賽局理論</h2>
+  <p>市場由「少數幾家」主導。每家做決策時都要猜對手會怎麼反應 —— 這就需要賽局理論與 Nash 均衡。</p>
+</div>
+
+<!-- S15 寡占與Nash -->
+<div class="sec" id="s15">
+  <div class="sec-title">寡占與 Nash 均衡<span class="page-badge">p.67~68</span></div>
+  <div class="bnote"><b>寡占 Oligopoly：</b>大部分或全部產量由<b>幾家廠商</b>生產，產品可同質或異質。常因<b>進入障礙</b>（barriers to entry）讓新廠商難以進入，使既有廠商長期賺取可觀利潤。例：汽車、鋼鐵、石化、電腦業。</div>
+  <div class="box">
+    <h3>Nash 均衡（核心觀念，整個 PART 5 都用到）</h3>
+    <p style="font-size:.85rem;color:#475569;line-height:1.8;">每個廠商在<strong>已知競爭對手的行為下</strong>，都已做出對自己最好的選擇 —— 沒有人想單方面改變策略。這是一個「不合作」的均衡。</p>
+  </div>
+</div>
+
+<!-- S16 Cournot -->
+<div class="sec" id="s16">
+  <div class="sec-title">Cournot 模型：選「數量」競爭<span class="page-badge">p.69~70</span></div>
+  <div class="bnote"><b>白話：</b>兩家廠商（雙占）生產同質產品，<b>同時</b>決定各自產量，並把對手的產量視為固定。每家的最適產量隨對手產量變化 → 畫出「<b>反應曲線</b>」。</div>
+  <div class="two">
+    <div class="box">
+      <h3>讀圖方法：兩條反應曲線的交點＝Cournot 均衡</h3>
+      <svg viewBox="0 0 260 240" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-width:260px;display:block;margin:.2rem auto;">
+        <line x1="40" y1="205" x2="248" y2="205" stroke="#334155" stroke-width="1.4"/>
+        <line x1="40" y1="15" x2="40" y2="205" stroke="#334155" stroke-width="1.4"/>
+        <text x="22" y="24" font-size="9" fill="#64748b">Q₁</text>
+        <text x="238" y="220" font-size="9" fill="#64748b">Q₂</text>
+        <!-- firm2 reaction curve (cubic) -->
+        <path d="M 55 35 C 110 90, 160 140, 215 175" fill="none" stroke="#2563eb" stroke-width="2"/>
+        <text x="150" y="120" font-size="8.5" fill="#2563eb" font-weight="700">廠商2反應曲線</text>
+        <!-- firm1 reaction curve -->
+        <path d="M 60 185 C 110 130, 150 95, 205 45" fill="none" stroke="#dc2626" stroke-width="2"/>
+        <text x="95" y="170" font-size="8.5" fill="#dc2626" font-weight="700">廠商1反應曲線</text>
+        <!-- Cournot equilibrium at intersection ~ (128,118) -->
+        <circle cx="128" cy="118" r="4" fill="#065f46"/>
+        <text x="134" y="115" font-size="8.5" fill="#065f46" font-weight="700">Cournot 均衡</text>
+        <!-- collusion point lower-left -->
+        <circle cx="95" cy="150" r="3.5" fill="#9333ea"/>
+        <text x="100" y="160" font-size="8" fill="#9333ea">勾結均衡</text>
+      </svg>
+    </div>
+    <div class="box">
+      <h3>三種結果的優劣（對廠商而言）</h3>
+      <div class="flow" style="flex-direction:column;align-items:stretch;gap:.3rem;">
+        <div class="fb" style="background:#f0fdf4;text-align:left;">🥇 <strong>勾結</strong>（聯手限產抬價，利潤最高）</div>
+        <div class="fb" style="background:#fefce8;text-align:left;">🥈 <strong>Cournot 均衡</strong>（各自為政，中間）</div>
+        <div class="fb" style="background:#fff1f2;text-align:left;">🥉 <strong>競爭均衡</strong>（P=MC，利潤=0，最差）</div>
+      </div>
+      <p style="font-size:.78rem;color:#64748b;margin-top:.4rem;">問題是：勾結最好，但每家都有偷偷增產的誘因 → 見囚犯困境。</p>
+    </div>
+  </div>
+</div>
+
+<!-- S17 Stackelberg Bertrand -->
+<div class="sec" id="s17">
+  <div class="sec-title">Stackelberg 與 Bertrand 模型<span class="page-badge">p.71~74</span></div>
+  <div class="two">
+    <div class="box">
+      <span class="tag t-purple">Stackelberg</span>
+      <h3 style="margin-top:.3rem;">先行動者的優勢</h3>
+      <p style="font-size:.82rem;color:#475569;line-height:1.8;">一家廠商<strong>先設定產出</strong>。先宣布會造成「既成事實」：我的產量很大，對手只能視為已知、被迫設定較小產出。→ <strong>先行動有策略上的優勢</strong>。</p>
+    </div>
+    <div class="box">
+      <span class="tag t-blue">Bertrand</span>
+      <h3 style="margin-top:.3rem;">選「價格」競爭（同質產品）</h3>
+      <p style="font-size:.82rem;color:#475569;line-height:1.8;">廠商改為<strong>選價格</strong>而非數量。同質產品下，Nash 均衡是兩家都把價格殺到 <strong>P = MC</strong>，雙方賺<strong>零利潤</strong>。</p>
+      <div class="warn">⚠️ 批評：同質產品用「數量競爭」其實更自然；且相同價格下市占如何分配未定。但它點出：寡占結果取決於廠商選什麼「策略變數」。</div>
+    </div>
+  </div>
+  <div class="box">
+    <h3>異質產品的價格競爭（更貼近現實）</h3>
+    <p style="font-size:.82rem;color:#475569;line-height:1.8;">真實寡占多有產品差異，市占還取決於設計、性能、耐久度。因此廠商<strong>選價格競爭很自然</strong>。兩家的反應曲線交點即價格的 Nash 均衡（例：均衡價 $4、各賺 $12）。</p>
+  </div>
+</div>
+
+<!-- S18 囚犯困境 -->
+<div class="sec" id="s18">
+  <div class="sec-title">競爭與勾結：囚犯的困境<span class="page-badge">p.75~80</span></div>
+  <div class="bnote"><b>白話：</b>兩個共犯被分開偵訊。對兩人「整體」最好的是都不承認；但各自都有「招供」的誘因，結果雙雙招供、一起吃虧。寡占廠商削價競爭的處境一模一樣。</div>
+  <div class="two">
+    <div class="box">
+      <h3>囚犯困境報酬矩陣（數字=刑期，越小越好）</h3>
+      <table class="tbl" style="text-align:center;">
+        <tr><th></th><th>B 承認</th><th>B 不承認</th></tr>
+        <tr><th>A 承認</th><td style="background:#fee2e2;">−5, −5</td><td>−1, −10</td></tr>
+        <tr><th>A 不承認</th><td>−10, −1</td><td style="background:#dcfce7;">−2, −2</td></tr>
+      </table>
+      <p style="font-size:.78rem;color:#64748b;margin-top:.4rem;">Nash 均衡＝（承認, 承認）=（−5,−5）紅格；但雙方若能守口（−2,−2）綠格更好 → 困境所在。</p>
+    </div>
+    <div class="box">
+      <h3>🔖 真實版：P&G vs 聯合利華/花王 訂價（利潤 千元/月）</h3>
+      <table class="tbl" style="text-align:center;">
+        <tr><th></th><th>對手收 $1.40</th><th>對手收 $1.50</th></tr>
+        <tr><th>P&G 收 $1.40</th><td style="background:#fee2e2;">$12, $12</td><td>$29, $11</td></tr>
+        <tr><th>P&G 收 $1.50</th><td>$3, $21</td><td style="background:#dcfce7;">$20, $20</td></tr>
+      </table>
+      <p style="font-size:.78rem;color:#64748b;margin-top:.4rem;">都定低價（$1.40）是 Nash 均衡，各賺 $12；但都定高價可各賺 $20 —— 卻互不信任而做不到。</p>
+    </div>
+  </div>
+  <div class="tip">💡 重點：每家都有「削價」的誘因，且都知道對方也有 —— 因為<strong>無法信任對方真的會維持高價</strong>，所以勾結很脆弱。</div>
+</div>
+
+<!-- S19 價格領導 優勢廠商 -->
+<div class="sec" id="s19">
+  <div class="sec-title">價格訊號、價格領導與優勢廠商<span class="page-badge">p.87~89</span></div>
+  <div class="two">
+    <div class="box">
+      <span class="tag t-teal">價格領導 Price Leadership</span>
+      <h3 style="margin-top:.3rem;">不用對話也能默契調價</h3>
+      <p style="font-size:.82rem;color:#475569;line-height:1.8;">私下勾結的最大障礙是「無法溝通該訂多少」。解法：一家廠商<strong>經常性宣布調價</strong>（價格訊號），其他廠商<strong>跟隨</strong> → 這家就是「價格領導者」，其餘是跟隨者。</p>
+      <div class="case">🔖 真實案例（講義影片）：中鋼定期公布「盤價」，下游與同業跟進 —— 典型的價格領導。</div>
+    </div>
+    <div class="box">
+      <h3>優勢廠商模型 Dominant Firm</h3>
+      <svg viewBox="0 0 250 195" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-width:250px;display:block;margin:.2rem auto;">
+        <line x1="40" y1="165" x2="240" y2="165" stroke="#334155" stroke-width="1.4"/>
+        <line x1="40" y1="14" x2="40" y2="165" stroke="#334155" stroke-width="1.4"/>
+        <!-- market demand D -->
+        <path d="M 46 25 C 100 70, 170 120, 235 150" fill="none" stroke="#dc2626" stroke-width="1.9"/>
+        <text x="210" y="138" font-size="8.5" fill="#dc2626" font-weight="700">D</text>
+        <!-- dominant firm demand D_D below -->
+        <path d="M 46 60 C 90 95, 140 130, 180 160" fill="none" stroke="#2563eb" stroke-width="1.9"/>
+        <text x="150" y="135" font-size="8.5" fill="#2563eb" font-weight="700">D_D</text>
+        <!-- MR_D -->
+        <path d="M 46 60 C 80 100, 110 135, 130 162" fill="none" stroke="#7c3aed" stroke-width="1.6"/>
+        <text x="92" y="125" font-size="8" fill="#7c3aed" font-weight="700">MR_D</text>
+        <!-- MC -->
+        <path d="M 50 150 C 100 145, 130 120, 160 70" fill="none" stroke="#16a34a" stroke-width="1.8"/>
+        <text x="158" y="78" font-size="8.5" fill="#16a34a" font-weight="700">MC</text>
+        <line x1="40" y1="98" x2="150" y2="98" stroke="#0c4a6e" stroke-width="1.3" stroke-dasharray="3 2"/>
+        <text x="22" y="102" font-size="9" fill="#0c4a6e" font-weight="700">P*</text>
+      </svg>
+      <p style="font-size:.76rem;color:#64748b;">大廠的需求 D_D = 市場需求 D − 小廠供給。大廠在 MR_D=MC 定產量、設 P*；小廠視 P* 為已知生產。</p>
+    </div>
+  </div>
+</div>
+
+<!-- S20 卡特爾 -->
+<div class="sec" id="s20">
+  <div class="sec-title">卡特爾 Cartel：OPEC 與 CIPEC<span class="page-badge">p.90~95</span></div>
+  <div class="bnote"><b>卡特爾：</b>生產者們<b>明確協議</b>合作，共同設定價格與產量（像一個大獨占）。不需所有生產者加入；只要參與者夠多、且<b>市場需求很無彈性</b>，就能把價格抬得遠高於競爭水準。</div>
+  <div class="two">
+    <div class="box">
+      <h3>OPEC 石油卡特爾（需求無彈性 → 獨占力大）</h3>
+      <svg viewBox="0 0 250 195" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-width:250px;display:block;margin:.2rem auto;">
+        <line x1="40" y1="165" x2="240" y2="165" stroke="#334155" stroke-width="1.4"/>
+        <line x1="40" y1="14" x2="40" y2="165" stroke="#334155" stroke-width="1.4"/>
+        <!-- OPEC demand D_OPEC steep (inelastic) -->
+        <path d="M 70 25 C 90 70, 110 120, 130 160" fill="none" stroke="#dc2626" stroke-width="2"/>
+        <text x="132" y="150" font-size="8" fill="#dc2626" font-weight="700">D_OPEC</text>
+        <!-- MR_OPEC -->
+        <path d="M 70 25 C 82 70, 92 110, 100 150" fill="none" stroke="#7c3aed" stroke-width="1.6"/>
+        <text x="60" y="120" font-size="8" fill="#7c3aed" font-weight="700">MR</text>
+        <!-- MC -->
+        <path d="M 50 150 C 90 145, 120 120, 150 80" fill="none" stroke="#16a34a" stroke-width="1.8"/>
+        <text x="150" y="88" font-size="8.5" fill="#16a34a" font-weight="700">MC</text>
+        <line x1="40" y1="60" x2="110" y2="60" stroke="#0c4a6e" stroke-width="1.3" stroke-dasharray="3 2"/>
+        <text x="22" y="64" font-size="9" fill="#0c4a6e" font-weight="700">P*</text>
+        <text x="120" y="40" font-size="8" fill="#64748b">陡=無彈性</text>
+      </svg>
+      <div class="case">🔖 真實案例（講義影片）：OPEC+ 減產推升油價，小摩估布油攀百美元 —— 卡特爾限產抬價的現實展現。</div>
+    </div>
+    <div class="box">
+      <h3>CIPEC 銅卡特爾（需求有彈性 → 獨占力小）</h3>
+      <svg viewBox="0 0 250 195" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-width:250px;display:block;margin:.2rem auto;">
+        <line x1="40" y1="165" x2="240" y2="165" stroke="#334155" stroke-width="1.4"/>
+        <line x1="40" y1="14" x2="40" y2="165" stroke="#334155" stroke-width="1.4"/>
+        <!-- CIPEC demand flat (elastic) -->
+        <path d="M 50 50 C 110 80, 175 110, 235 130" fill="none" stroke="#dc2626" stroke-width="2"/>
+        <text x="200" y="118" font-size="8" fill="#dc2626" font-weight="700">D_CIPEC</text>
+        <path d="M 50 50 C 95 90, 140 120, 165 150" fill="none" stroke="#7c3aed" stroke-width="1.6"/>
+        <text x="120" y="118" font-size="8" fill="#7c3aed" font-weight="700">MR</text>
+        <path d="M 50 145 C 100 140, 130 120, 160 85" fill="none" stroke="#16a34a" stroke-width="1.8"/>
+        <text x="158" y="93" font-size="8.5" fill="#16a34a" font-weight="700">MC</text>
+        <line x1="40" y1="92" x2="130" y2="92" stroke="#0c4a6e" stroke-width="1.3" stroke-dasharray="3 2"/>
+        <text x="22" y="96" font-size="9" fill="#0c4a6e" font-weight="700">P*</text>
+        <text x="120" y="42" font-size="8" fill="#64748b">平=有彈性</text>
+      </svg>
+      <p style="font-size:.78rem;color:#64748b;">總需求與競爭供給都有彈性 → CIPEC 獨占力小，P* 接近競爭價格 P_C。</p>
+    </div>
+  </div>
+  <div class="tip">💡 對比結論：卡特爾要成功抬價，關鍵是「市場需求<strong>無彈性</strong>」＋「夠多生產者守協議」。石油（必需品、難替代）符合，銅（替代性高）就不太行。</div>
+</div>
+
+<!-- ══════════ 公式計算機 ══════════ -->
+<div class="part-header" style="background:linear-gradient(135deg,#0c4a6e,#0369a1);">
+  <h2>🧮 &nbsp;公式計算機</h2>
+  <p>點藍色符號可跳到對應輸入框；填好數字會即時顯示計算過程。每個欄位上方都有白話說明。</p>
+</div>
+
+<!-- C1 利潤極大化 -->
+<div class="sec" id="c1">
+  <div class="sec-title">利潤極大化：利潤 = (P − AC) × Q<span class="page-badge">p.21,46</span></div>
+  <div class="fc">
+    <div class="fc-head"><h3>產出選 MR=MC，利潤 =(P−AC)·Q</h3></div>
+    <div class="fc-body">
+      <div class="lf">π = (<span class="pb" data-tip="P：售價" onclick="focusParam('c1-p')">P</span> − <span class="pb" data-tip="AC：平均成本(ATC)" onclick="focusParam('c1-ac')">AC</span>) × <span class="pb" data-tip="Q：產量" onclick="focusParam('c1-q')">Q</span></div>
+      <div class="bnote">💡 <b>初學者說明：</b><b>P</b>＝每單位售價；<b>AC</b>＝每單位平均成本（ATC）；<b>Q</b>＝產量（在 MR=MC 處決定）。P&gt;AC 為利潤、P&lt;AC 為損失。單位：金額/數量。</div>
+      <div class="lf-live" id="c1-live"><span class="lhint">← 填入 P、AC、Q 後自動計算</span></div>
+      <div class="pi-grid">
+        <div><div class="pi-lab"><span class="pi-sym" onclick="focusParam('c1-p')">P</span> 售價</div>
+          <input class="pi-inp" type="number" id="c1-p" placeholder="例：30" step="any" oninput="liveC1()"></div>
+        <div><div class="pi-lab"><span class="pi-sym" onclick="focusParam('c1-ac')">AC</span> 平均成本</div>
+          <input class="pi-inp" type="number" id="c1-ac" placeholder="例：15" step="any" oninput="liveC1()"></div>
+        <div><div class="pi-lab"><span class="pi-sym" onclick="focusParam('c1-q')">Q</span> 產量</div>
+          <input class="pi-inp" type="number" id="c1-q" placeholder="例：10" step="any" oninput="liveC1()"></div>
+      </div>
+      <div class="calc-err" id="c1-err">請輸入有效數字。</div>
+    </div>
+  </div>
+</div>
+
+<!-- C2 獨占訂價 -->
+<div class="sec" id="c2">
+  <div class="sec-title">獨占訂價法則：P = MC / (1 + 1/E_d)<span class="page-badge">p.51~53</span></div>
+  <div class="fc">
+    <div class="fc-head"><h3>Markup Pricing Rule</h3></div>
+    <div class="fc-body">
+      <div class="lf">P = <span class="lf-frac"><span class="lf-num"><span class="pb" data-tip="MC：邊際成本" onclick="focusParam('c2-mc')">MC</span></span><span class="lf-den">1 + 1/<span class="pb" data-tip="E_d：需求彈性(負值)" onclick="focusParam('c2-ed')">E_d</span></span></span></div>
+      <div class="bnote">💡 <b>初學者說明：</b><b>MC</b>＝邊際成本（&gt;0）；<b>E_d</b>＝該廠商面對的需求彈性，請填<b>負值</b>（如 −2 代表有彈性）。需 E_d &lt; −1 才有意義（有彈性段）。加成率 (P−MC)/P = −1/E_d。</div>
+      <div class="lf-live" id="c2-live"><span class="lhint">← 填入 MC 與 E_d 後自動計算</span></div>
+      <div class="pi-grid">
+        <div><div class="pi-lab"><span class="pi-sym" onclick="focusParam('c2-mc')">MC</span> 邊際成本</div>
+          <input class="pi-inp" type="number" id="c2-mc" placeholder="例：15" step="any" oninput="liveC2()"></div>
+        <div><div class="pi-lab"><span class="pi-sym" onclick="focusParam('c2-ed')">E_d</span> 需求彈性(負)</div>
+          <input class="pi-inp" type="number" id="c2-ed" placeholder="例：-2" step="any" oninput="liveC2()"></div>
+      </div>
+      <div class="calc-err" id="c2-err">MC 需 &gt;0；E_d 需 &lt; −1（有彈性）。</div>
+    </div>
+  </div>
+</div>
+
+<!-- C3 Lerner -->
+<div class="sec" id="c3">
+  <div class="sec-title">Lerner 獨占力指數：L = (P − MC) / P<span class="page-badge">p.54</span></div>
+  <div class="fc">
+    <div class="fc-head"><h3>Lerner Index of Monopoly Power</h3></div>
+    <div class="fc-body">
+      <div class="lf">L = <span class="lf-frac"><span class="lf-num"><span class="pb" data-tip="P：售價" onclick="focusParam('c3-p')">P</span> − <span class="pb" data-tip="MC：邊際成本" onclick="focusParam('c3-mc')">MC</span></span><span class="lf-den"><span class="pb" data-tip="P：售價" onclick="focusParam('c3-p')">P</span></span></span></div>
+      <div class="bnote">💡 <b>初學者說明：</b><b>P</b>＝售價、<b>MC</b>＝邊際成本（皆 &gt;0）。L 介於 0~1：完全競爭 P=MC → L=0；L 越大獨占程度越高。同時 L = −1/E_d。</div>
+      <div class="lf-live" id="c3-live"><span class="lhint">← 填入 P 與 MC 後自動計算</span></div>
+      <div class="pi-grid">
+        <div><div class="pi-lab"><span class="pi-sym" onclick="focusParam('c3-p')">P</span> 售價</div>
+          <input class="pi-inp" type="number" id="c3-p" placeholder="例：30" step="any" oninput="liveC3()"></div>
+        <div><div class="pi-lab"><span class="pi-sym" onclick="focusParam('c3-mc')">MC</span> 邊際成本</div>
+          <input class="pi-inp" type="number" id="c3-mc" placeholder="例：15" step="any" oninput="liveC3()"></div>
+      </div>
+      <div class="calc-err" id="c3-err">P 需 &gt;0 且 MC ≤ P。</div>
+    </div>
+  </div>
+</div>
+
+<!-- C4 需求彈性 -->
+<div class="sec" id="c4">
+  <div class="sec-title">需求彈性 E_d = %ΔQ / %ΔP<span class="page-badge">p.50</span></div>
+  <div class="fc">
+    <div class="fc-head"><h3>Price Elasticity of Demand</h3></div>
+    <div class="fc-body">
+      <div class="lf">E_d = <span class="lf-frac"><span class="lf-num">需求量變動 %（<span class="pb" data-tip="%ΔQ" onclick="focusParam('c4-dq')">%ΔQ</span>）</span><span class="lf-den">價格變動 %（<span class="pb" data-tip="%ΔP" onclick="focusParam('c4-dp')">%ΔP</span>）</span></span></div>
+      <div class="bnote">💡 <b>初學者說明：</b><b>%ΔQ</b>＝需求量變動百分比；<b>%ΔP</b>＝價格變動百分比（兩者填數字，如 −1.5 與 1 代表漲價1%、需求量減1.5%）。｜E_d｜&gt;1 有彈性、&lt;1 無彈性。</div>
+      <div class="lf-live" id="c4-live"><span class="lhint">← 填入兩個百分比後自動計算</span></div>
+      <div class="pi-grid">
+        <div><div class="pi-lab"><span class="pi-sym" onclick="focusParam('c4-dq')">%ΔQ</span> 需求量變動%</div>
+          <input class="pi-inp" type="number" id="c4-dq" placeholder="例：-1.5" step="any" oninput="liveC4()"></div>
+        <div><div class="pi-lab"><span class="pi-sym" onclick="focusParam('c4-dp')">%ΔP</span> 價格變動%</div>
+          <input class="pi-inp" type="number" id="c4-dp" placeholder="例：1" step="any" oninput="liveC4()"></div>
+      </div>
+      <div class="calc-err" id="c4-err">%ΔP 不可為 0。</div>
+    </div>
+  </div>
+</div>
+
+</main>
+
+<script>
+function r(n,d=4){ if(!isFinite(n))return n; return Math.round(n*Math.pow(10,d))/Math.pow(10,d); }
+function setLive(id,html){ document.getElementById(id+'-live').innerHTML=html; }
+function hint(id,msg){ setLive(id,'<span class="lhint">'+(msg||'← 填入數值後自動計算')+'</span>'); }
+function liveErr(id,msg){ document.getElementById(id+'-err').classList.add('show'); document.getElementById(id+'-err').textContent=msg; setLive(id,'<span class="lhint">'+msg+'</span>'); }
+function clearErr(id){ document.getElementById(id+'-err').classList.remove('show'); }
+function focusParam(id){ const el=document.getElementById(id); if(!el)return; el.focus(); el.classList.add('lit'); setTimeout(()=>el.classList.remove('lit'),1500); }
+
+// C1 利潤
+function liveC1(){
+  clearErr('c1');
+  const pv=document.getElementById('c1-p').value, av=document.getElementById('c1-ac').value, qv=document.getElementById('c1-q').value;
+  if(pv===''||av===''||qv===''){hint('c1','← 填入 P、AC、Q 後自動計算');return;}
+  const p=+pv,a=+av,q=+qv;
+  if([p,a,q].some(v=>isNaN(v))){liveErr('c1','請輸入有效數字');return;}
+  const profit=(p-a)*q;
+  const tag=profit>0?'（利潤）':profit<0?'（損失）':'（損益兩平）';
+  setLive('c1',`π = (<span class="lv">${p} − ${a}</span>) × ${q} = <span class="lv">${r(p-a,4)}</span> × ${q} = <span class="la">${r(profit,4)}</span> ${tag}`);
+}
+// C2 獨占訂價
+function liveC2(){
+  clearErr('c2');
+  const mv=document.getElementById('c2-mc').value, ev=document.getElementById('c2-ed').value;
+  if(mv===''||ev===''){hint('c2','← 填入 MC 與 E_d 後自動計算');return;}
+  const mc=+mv,ed=+ev;
+  if(mc<=0){liveErr('c2','MC 需 > 0');return;}
+  if(ed>=-1){liveErr('c2','E_d 需 < −1（有彈性段才有意義）');return;}
+  const denom=1+1/ed, P=mc/denom, markup=-1/ed;
+  setLive('c2',`P = ${mc} ÷ (1 + 1/${ed}) = ${mc} ÷ <span class="lv">${r(denom,4)}</span> = <span class="la">${r(P,4)}</span> &nbsp; 加成率=<span class="la">${r(markup*100,2)}%</span>`);
+}
+// C3 Lerner
+function liveC3(){
+  clearErr('c3');
+  const pv=document.getElementById('c3-p').value, mv=document.getElementById('c3-mc').value;
+  if(pv===''||mv===''){hint('c3','← 填入 P 與 MC 後自動計算');return;}
+  const p=+pv,mc=+mv;
+  if(p<=0){liveErr('c3','P 需 > 0');return;}
+  if(mc>p){liveErr('c3','MC 不應大於 P');return;}
+  const L=(p-mc)/p;
+  setLive('c3',`L = (<span class="lv">${p} − ${mc}</span>) ÷ ${p} = <span class="lv">${r(p-mc,4)}</span> ÷ ${p} = <span class="la">${r(L,4)}</span>`);
+}
+// C4 需求彈性
+function liveC4(){
+  clearErr('c4');
+  const qv=document.getElementById('c4-dq').value, pv=document.getElementById('c4-dp').value;
+  if(qv===''||pv===''){hint('c4','← 填入兩個百分比後自動計算');return;}
+  const dq=+qv,dp=+pv;
+  if(dp===0){liveErr('c4','%ΔP 不可為 0');return;}
+  const ed=dq/dp, mag=Math.abs(ed);
+  const tag=mag>1?'有彈性':mag<1?'無彈性':'單位彈性';
+  setLive('c4',`E_d = <span class="lv">${dq} ÷ ${dp}</span> = <span class="la">${r(ed,4)}</span> &nbsp;（|E_d|=${r(mag,4)} → ${tag}）`);
+}
+
+const links=document.querySelectorAll('#sidenav a');
+const sections=[...links].map(a=>document.querySelector(a.getAttribute('href')));
+window.addEventListener('scroll',()=>{
+  let cur=0;
+  sections.forEach((s,i)=>{ if(s && window.scrollY>=s.offsetTop-130) cur=i; });
+  links.forEach(l=>l.classList.remove('active'));
+  if(links[cur]) links[cur].classList.add('active');
+},{passive:true});
+</script>
+</body>
+</html>

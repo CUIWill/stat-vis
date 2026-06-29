@@ -329,9 +329,9 @@ sub{font-size:.6em;}
         <circle cx="120" cy="40" r="4" fill="#2563eb"/><text x="112" y="36" text-anchor="end" font-size="9" fill="#1d4ed8">漲10</text>
         <circle cx="120" cy="190" r="4" fill="#ef4444"/><text x="112" y="186" text-anchor="end" font-size="9" fill="#b91c1c">跌20</text>
         <text x="236" y="25" font-size="9" fill="#065f46">(10,8) 賺$18k</text>
-        <text x="236" y="65" font-size="9" fill="#065f46">(10,2) 賺$8k</text>
-        <text x="236" y="171" font-size="9" fill="#b91c1c">(20,8) 賠$12k</text>
-        <text x="236" y="211" font-size="9" fill="#b91c1c">(20,2) 賠$22k</text>
+        <text x="236" y="65" font-size="9" fill="#065f46">(10,−2) 賺$8k</text>
+        <text x="236" y="171" font-size="9" fill="#b91c1c">(−20,8) 賠$12k</text>
+        <text x="236" y="211" font-size="9" fill="#b91c1c">(−20,−2) 賠$22k</text>
         <text x="180" y="120" text-anchor="middle" font-size="9" fill="#64748b">…(中間分支略)…</text>
       </svg>
     </div>
@@ -433,13 +433,13 @@ sub{font-size:.6em;}
     <table class="tbl">
       <tr><th>結果 (Markley, Collins)</th><th>淨損益</th><th>機率</th></tr>
       <tr><td>(10, 8)</td><td>賺 $18,000</td><td>0.20</td></tr>
-      <tr><td>(10, 2)</td><td>賺 $8,000</td><td>0.08</td></tr>
+      <tr><td>(10, −2)</td><td>賺 $8,000</td><td>0.08</td></tr>
       <tr><td>(5, 8)</td><td>賺 $13,000</td><td>0.16</td></tr>
-      <tr><td>(5, 2)</td><td>賺 $3,000</td><td>0.26</td></tr>
+      <tr><td>(5, −2)</td><td>賺 $3,000</td><td>0.26</td></tr>
       <tr><td>(0, 8)</td><td>賺 $8,000</td><td>0.10</td></tr>
-      <tr><td>(0, 2)</td><td>賠 $2,000</td><td>0.12</td></tr>
-      <tr><td>(20, 8)</td><td>賠 $12,000</td><td>0.02</td></tr>
-      <tr><td>(20, 2)</td><td>賠 $22,000</td><td>0.06</td></tr>
+      <tr><td>(0, −2)</td><td>賠 $2,000</td><td>0.12</td></tr>
+      <tr><td>(−20, 8)</td><td>賠 $12,000</td><td>0.02</td></tr>
+      <tr><td>(−20, −2)</td><td>賠 $22,000</td><td>0.06</td></tr>
     </table>
     <p style="font-size:.78rem;color:#64748b;margin-top:.4rem;">註：括號數字是兩股票的損益（千元），8 種結果機率加總 = 1.00。</p>
   </div>
@@ -458,12 +458,12 @@ sub{font-size:.6em;}
   <div class="two">
     <div class="box">
       <span class="tag t-blue">事件 M：Markley 獲利</span>
-      <div class="fml">M = {(10,8),(10,2),(5,8),(5,2)}</div>
+      <div class="fml">M = {(10,8),(10,−2),(5,8),(5,−2)}</div>
       <div class="fml">P(M) = 0.20+0.08+0.16+0.26 = <span class="hl">0.70</span></div>
     </div>
     <div class="box">
       <span class="tag t-green">事件 C：Collins 獲利</span>
-      <div class="fml">C = {(10,8),(5,8),(0,8),(20,8)}</div>
+      <div class="fml">C = {(10,8),(5,8),(0,8),(−20,8)}</div>
       <div class="fml">P(C) = 0.20+0.16+0.10+0.02 = <span class="hl">0.48</span></div>
     </div>
   </div>

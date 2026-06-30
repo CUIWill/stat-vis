@@ -124,6 +124,7 @@ sub{font-size:.62em;} sup{font-size:.62em;}
 .legend{display:flex;flex-wrap:wrap;gap:.5rem 1rem;font-size:.74rem;color:#475569;margin-top:.4rem;}
 .legend span{display:inline-flex;align-items:center;gap:.25rem;}
 .legend i{width:18px;height:3px;border-radius:2px;display:inline-block;}
+abbr[title]{text-decoration:underline dotted #0ea5e9;text-underline-offset:2px;cursor:help;}
 </style>
 </head>
 <body>
@@ -192,24 +193,7 @@ sub{font-size:.62em;} sup{font-size:.62em;}
     <h3>生產函數 q = f(L, K)</h3>
     <p style="font-size:.82rem;color:#475569;">代表「投入某組合的勞力 L 與資本 K，最多能生產的產量 q」。是上面三函數的起點。</p>
   </div>
-  <div class="box">
-    <h3>📑 名詞縮寫對照（成本與收益）</h3>
-    <p style="font-size:.8rem;color:#64748b;margin-bottom:.5rem;">規則：<b>A</b>=Average 平均、<b>M</b>=Marginal 邊際、<b>T</b>=Total 總。下面這些縮寫接下來的圖都會用到。</p>
-    <div class="three" style="gap:.5rem;">
-      <div class="box" style="margin-bottom:0;"><b>TC</b>　總成本<br><small style="color:#64748b;">Total Cost＝TFC＋TVC</small></div>
-      <div class="box" style="margin-bottom:0;"><b>TFC / FC</b>　總固定成本<br><small style="color:#64748b;">不隨產量變（租金等）</small></div>
-      <div class="box" style="margin-bottom:0;"><b>TVC / VC</b>　總變動成本<br><small style="color:#64748b;">隨產量變（原料等）</small></div>
-      <div class="box" style="margin-bottom:0;"><b>ATC / AC</b>　平均總成本<br><small style="color:#64748b;">＝TC ÷ q</small></div>
-      <div class="box" style="margin-bottom:0;"><b>AFC</b>　平均固定成本<br><small style="color:#64748b;">＝TFC ÷ q</small></div>
-      <div class="box" style="margin-bottom:0;"><b>AVC</b>　平均變動成本<br><small style="color:#64748b;">＝TVC ÷ q</small></div>
-      <div class="box" style="margin-bottom:0;"><b>MC</b>　邊際成本<br><small style="color:#64748b;">多產 1 單位增加的成本</small></div>
-      <div class="box" style="margin-bottom:0;"><b>TR</b>　總收益<br><small style="color:#64748b;">＝P × q</small></div>
-      <div class="box" style="margin-bottom:0;"><b>AR</b>　平均收益<br><small style="color:#64748b;">＝TR ÷ q ＝ P 價格</small></div>
-      <div class="box" style="margin-bottom:0;"><b>MR</b>　邊際收益<br><small style="color:#64748b;">多賣 1 單位增加的收益</small></div>
-      <div class="box" style="margin-bottom:0;"><b>π</b>　利潤<br><small style="color:#64748b;">＝TR − TC</small></div>
-      <div class="box" style="margin-bottom:0;"><b>q*</b>　最適產量<br><small style="color:#64748b;">利潤極大的產量</small></div>
-    </div>
-  </div>
+  <div class="bnote" style="background:#eff6ff;border-color:#bfdbfe;">💡 內文中有 <abbr title="範例">虛線底線</abbr> 的英文縮寫，把滑鼠移上去（手機長按）就會顯示中文意思。規則：<b>A</b>=平均、<b>M</b>=邊際、<b>T</b>=總、<b>S</b>=短期、<b>L</b>=長期。</div>
 </div>
 
 <!-- S2 利潤極大化 -->
@@ -355,19 +339,7 @@ sub{font-size:.62em;} sup{font-size:.62em;}
       <div class="tip">💡 「零經濟利潤」不是沒賺錢，而是剛好賺到「正常報酬」，沒有超額。</div>
     </div>
   </div>
-  <div class="box">
-    <h3>📑 名詞縮寫對照（長期 vs 短期成本）</h3>
-    <p style="font-size:.8rem;color:#64748b;margin-bottom:.5rem;">長期＝所有投入都可調整。規則：<b>S</b>=Short-run 短期、<b>L</b>=Long-run 長期。</p>
-    <div class="three" style="gap:.5rem;">
-      <div class="box" style="margin-bottom:0;"><b>SAC / SRAC</b>　短期平均成本<br><small style="color:#64748b;">至少一種投入固定</small></div>
-      <div class="box" style="margin-bottom:0;"><b>SMC</b>　短期邊際成本</div>
-      <div class="box" style="margin-bottom:0;"><b>LAC / LRAC</b>　長期平均成本<br><small style="color:#64748b;">所有投入皆可變；是各條 SAC 的下包絡線</small></div>
-      <div class="box" style="margin-bottom:0;"><b>LMC</b>　長期邊際成本</div>
-      <div class="box" style="margin-bottom:0;"><b>LTC</b>　長期總成本</div>
-      <div class="box" style="margin-bottom:0;"><b>MES</b>　最小效率規模<br><small style="color:#64748b;">LAC 達最低的最小產量</small></div>
-    </div>
-    <div class="tip">💡 長期均衡時：<b>P = LAC 最低點</b>，且 <b>P = MR = LMC = SMC = SAC = LAC</b> 全部相等（零經濟利潤）。</div>
-  </div>
+  <div class="tip">💡 長期均衡時：<b>P = LAC 最低點</b>，且 <b>P = MR = LMC = SMC = SAC = LAC</b> 全部相等（零經濟利潤）。</div>
 </div>
 
 <!-- S8 經濟租 -->
@@ -932,6 +904,49 @@ window.addEventListener('scroll',()=>{
   links.forEach(l=>l.classList.remove('active'));
   if(links[cur]) links[cur].classList.add('active');
 },{passive:true});
+</script>
+<script>
+/* 自動為內文縮寫加上 title 提示（虛線底線）。長詞優先比對，避免 AC 蓋過 ATC。 */
+(function(){
+  var defs = {
+    "LRAC":"長期平均成本 Long-run Average Cost","LAC":"長期平均成本 Long-run Average Cost",
+    "LMC":"長期邊際成本 Long-run Marginal Cost","LTC":"長期總成本 Long-run Total Cost",
+    "SRAC":"短期平均成本 Short-run Average Cost","SAC":"短期平均成本 Short-run Average Cost",
+    "SMC":"短期邊際成本 Short-run Marginal Cost","MES":"最小效率規模 Minimum Efficient Scale",
+    "ATC":"平均總成本 Average Total Cost＝TC÷q","AFC":"平均固定成本 Average Fixed Cost＝TFC÷q",
+    "AVC":"平均變動成本 Average Variable Cost＝TVC÷q","TFC":"總固定成本 Total Fixed Cost",
+    "TVC":"總變動成本 Total Variable Cost","TC":"總成本 Total Cost＝TFC＋TVC",
+    "FC":"固定成本 Fixed Cost","VC":"變動成本 Variable Cost",
+    "MC":"邊際成本 Marginal Cost（多產1單位的成本）","MR":"邊際收益 Marginal Revenue（多賣1單位的收益）",
+    "TR":"總收益 Total Revenue＝P×q","AR":"平均收益 Average Revenue＝TR÷q＝P",
+    "AC":"平均成本 Average Cost＝TC÷q"
+  };
+  var keys = Object.keys(defs).sort(function(a,b){return b.length-a.length;});
+  var re = new RegExp("(?<![A-Za-z])(" + keys.join("|") + ")(?![A-Za-z])","g");
+  var main = document.getElementById("main");
+  if(!main) return;
+  var skip = {ABBR:1,SCRIPT:1,STYLE:1,A:1,H3:1};
+  var walker = document.createTreeWalker(main, NodeFilter.SHOW_TEXT, null);
+  var nodes = [];
+  while(walker.nextNode()){
+    var n = walker.currentNode;
+    re.lastIndex = 0;
+    if(n.nodeValue && re.test(n.nodeValue) && !(n.parentNode && skip[n.parentNode.nodeName])) nodes.push(n);
+  }
+  nodes.forEach(function(n){
+    re.lastIndex = 0;
+    var frag = document.createDocumentFragment(), last = 0, m, s = n.nodeValue;
+    while((m = re.exec(s))){
+      if(m.index > last) frag.appendChild(document.createTextNode(s.slice(last, m.index)));
+      var ab = document.createElement("abbr");
+      ab.title = defs[m[1]]; ab.textContent = m[1];
+      frag.appendChild(ab);
+      last = m.index + m[1].length;
+    }
+    if(last < s.length) frag.appendChild(document.createTextNode(s.slice(last)));
+    n.parentNode.replaceChild(frag, n);
+  });
+})();
 </script>
 </body>
 </html>

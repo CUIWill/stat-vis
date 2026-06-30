@@ -283,50 +283,16 @@ sub{font-size:.62em;} sup{font-size:.62em;}
   <div class="sec-title">結果：利潤為正 vs 遭受損失<span class="page-badge">p.21~22</span></div>
   <div class="two">
     <div class="box">
-      <h3>讀圖方法：P &gt; ATC → 有利潤（綠色面積）</h3>
-      <svg viewBox="0 0 320 230" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-width:320px;display:block;margin:.2rem auto;">
-        <line x1="45" y1="195" x2="305" y2="195" stroke="#334155" stroke-width="1.5"/>
-        <line x1="45" y1="18" x2="45" y2="195" stroke="#334155" stroke-width="1.5"/>
-        <!-- profit rectangle P..ATC, 0..q* -->
-        <rect x="45" y="70" width="180" height="48" fill="#22c55e" fill-opacity="0.18"/>
-        <!-- price line P=MR -->
-        <line x1="45" y1="70" x2="290" y2="70" stroke="#0369a1" stroke-width="2.3"/>
-        <text x="255" y="64" font-size="9.5" fill="#0369a1" font-weight="700">P=MR=AR</text>
-        <!-- ATC U-shape (cubic) -->
-        <path d="M 60 90 C 110 160, 190 150, 295 80" fill="none" stroke="#9333ea" stroke-width="2.2"/>
-        <text x="285" y="95" font-size="10" fill="#9333ea" font-weight="700">ATC</text>
-        <!-- AVC U-shape lower -->
-        <path d="M 62 130 C 110 185, 195 178, 295 120" fill="none" stroke="#0891b2" stroke-width="1.8"/>
-        <text x="285" y="132" font-size="9" fill="#0891b2" font-weight="700">AVC</text>
-        <!-- MC rising (cubic) -->
-        <path d="M 70 188 C 150 182, 195 150, 250 40" fill="none" stroke="#dc2626" stroke-width="2.2"/>
-        <text x="252" y="50" font-size="10" fill="#dc2626" font-weight="700">MC</text>
-        <!-- q* where MC meets price -->
-        <line x1="225" y1="70" x2="225" y2="195" stroke="#334155" stroke-width="1" stroke-dasharray="3 2"/>
-        <circle cx="225" cy="70" r="3.5" fill="#0369a1"/>
-        <text x="221" y="208" font-size="9" fill="#0369a1" font-weight="700">q*</text>
-        <text x="120" y="98" font-size="9.5" fill="#15803d" font-weight="700">利潤 = (P−AC)×q*</text>
-      </svg>
+      <h3>讀圖方法：P &gt; ATC → 有利潤（ABCD 面積）</h3>
+      <img src="img/pc-profit.png" alt="利潤為正的競爭性廠商：P=AR=MR 高於 ATC，總利潤為 ABCD 矩形面積"
+           style="width:100%;max-width:460px;display:block;margin:.2rem auto;border-radius:6px;">
+      <p style="font-size:.76rem;color:#64748b;text-align:center;">產量定在 MC=MR（q*）。價格 P 高於 ATC，每單位賺 A→B，乘上數量 = 總利潤 ABCD。</p>
     </div>
     <div class="box">
-      <h3>讀圖方法：P &lt; ATC → 損失（紅色面積）</h3>
-      <svg viewBox="0 0 320 230" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-width:320px;display:block;margin:.2rem auto;">
-        <line x1="45" y1="195" x2="305" y2="195" stroke="#334155" stroke-width="1.5"/>
-        <line x1="45" y1="18" x2="45" y2="195" stroke="#334155" stroke-width="1.5"/>
-        <rect x="45" y="120" width="175" height="40" fill="#ef4444" fill-opacity="0.16"/>
-        <line x1="45" y1="120" x2="290" y2="120" stroke="#0369a1" stroke-width="2.3"/>
-        <text x="255" y="114" font-size="9.5" fill="#0369a1" font-weight="700">P=MR</text>
-        <path d="M 60 70 C 110 150, 190 140, 295 60" fill="none" stroke="#9333ea" stroke-width="2.2"/>
-        <text x="285" y="74" font-size="10" fill="#9333ea" font-weight="700">ATC</text>
-        <path d="M 62 130 C 110 180, 195 172, 295 115" fill="none" stroke="#0891b2" stroke-width="1.8"/>
-        <text x="283" y="128" font-size="9" fill="#0891b2" font-weight="700">AVC</text>
-        <path d="M 70 188 C 150 180, 195 150, 245 45" fill="none" stroke="#dc2626" stroke-width="2.2"/>
-        <text x="247" y="55" font-size="10" fill="#dc2626" font-weight="700">MC</text>
-        <line x1="220" y1="120" x2="220" y2="195" stroke="#334155" stroke-width="1" stroke-dasharray="3 2"/>
-        <circle cx="220" cy="120" r="3.5" fill="#0369a1"/>
-        <text x="216" y="208" font-size="9" fill="#0369a1" font-weight="700">q*</text>
-        <text x="110" y="146" font-size="9.5" fill="#b91c1c" font-weight="700">損失 = (P−AC)×q*</text>
-      </svg>
+      <h3>讀圖方法：P &lt; ATC → 損失（ABCD 面積）</h3>
+      <img src="img/pc-loss.png" alt="遭受損失的競爭性廠商：P=MR 低於 ATC，損失為 ABCD 矩形面積"
+           style="width:100%;max-width:460px;display:block;margin:.2rem auto;border-radius:6px;">
+      <p style="font-size:.76rem;color:#64748b;text-align:center;">產量仍定在 MR=MC（q*）。但 P 低於 ATC，每單位虧 A→B，總損失 = ABCD。只要 P 仍高於 AVC（A 在 E 之上）就先撐著。</p>
     </div>
   </div>
   <div class="tip">💡 不論賺或賠，<strong>產量都選 MC=MR 那一點</strong>。差別只在那一點的 P 與 ATC 誰高：P 高就賺、ATC 高就賠。</div>

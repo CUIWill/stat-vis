@@ -206,24 +206,9 @@ sub{font-size:.62em;} sup{font-size:.62em;}
     </div>
     <div class="box">
       <h3>讀圖方法：R(q) 與 C(q) 差距最大處</h3>
-      <svg viewBox="0 0 320 220" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-width:320px;display:block;margin:.2rem auto;">
-        <line x1="45" y1="190" x2="305" y2="190" stroke="#334155" stroke-width="1.5"/>
-        <line x1="45" y1="20" x2="45" y2="190" stroke="#334155" stroke-width="1.5"/>
-        <text x="300" y="205" font-size="9" fill="#64748b">產量 q</text>
-        <text x="20" y="28" font-size="9" fill="#64748b">$</text>
-        <!-- C(q) cost curve (cubic, S-shaped rising) -->
-        <path d="M 45 175 C 110 150, 150 95, 305 35" fill="none" stroke="#dc2626" stroke-width="2.2"/>
-        <text x="250" y="55" font-size="10" fill="#dc2626" font-weight="700">C(q)</text>
-        <!-- R(q) revenue curve (cubic, concave) -->
-        <path d="M 45 190 C 130 70, 200 55, 305 80" fill="none" stroke="#16a34a" stroke-width="2.2"/>
-        <text x="150" y="60" font-size="10" fill="#16a34a" font-weight="700">R(q)</text>
-        <!-- max gap AB at q* ~ x=170 -->
-        <line x1="170" y1="78" x2="170" y2="128" stroke="#0369a1" stroke-width="2" stroke-dasharray="3 2"/>
-        <circle cx="170" cy="78" r="3" fill="#16a34a"/><text x="176" y="76" font-size="9" fill="#16a34a">A</text>
-        <circle cx="170" cy="128" r="3" fill="#dc2626"/><text x="176" y="138" font-size="9" fill="#dc2626">B</text>
-        <line x1="170" y1="190" x2="170" y2="195" stroke="#334155"/><text x="167" y="207" font-size="9" fill="#0369a1" font-weight="700">q*</text>
-      </svg>
-      <p style="font-size:.76rem;color:#64748b;text-align:center;">q* 處 R 與 C 的垂直差距 AB（利潤）最大。</p>
+      <img src="img/profit-max.png" alt="利潤極大化圖：成本 C(q)、收益 R(q)、利潤 π(q) 曲線，q* 處 AB 差額最大"
+           style="width:100%;max-width:560px;display:block;margin:.2rem auto;border-radius:6px;">
+      <p style="font-size:.76rem;color:#64748b;text-align:center;">q* 處 R 與 C 的垂直差距 AB（利潤）最大；此時收益曲線斜率＝成本曲線斜率（邊際收益＝邊際成本）。</p>
     </div>
   </div>
 </div>

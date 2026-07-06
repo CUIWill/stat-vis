@@ -180,7 +180,7 @@ sub{font-size:.6em;}
     <div style="color:white;font-weight:700;font-size:.9rem;">🎲 統計學 Week 2</div>
     <div style="color:#64748b;font-size:.7rem;margin-top:.2rem;">機率與離散分配</div>
   </div>
-  <div style="color:#64748b;font-size:.7rem;padding:.4rem 1rem;">📖 第一版（上課後更新）</div>
+  <div style="color:#64748b;font-size:.7rem;padding:.4rem 1rem;">✅ 已整合課堂逐字稿</div>
 
   <h2>PART 1 · 機率基礎</h2>
   <a href="#s1">機率導論 <span class="pg">2-1</span></a>
@@ -213,6 +213,9 @@ sub{font-size:.6em;}
   <a href="#s22">幾何分配 <span class="pg">2-26~27</span></a>
   <a href="#s23">負二項分配 <span class="pg">2-27~28</span></a>
   <a href="#s24">多項式分配 <span class="pg">2-28</span></a>
+
+  <h2>PART 5 · 決策思維延伸</h2>
+  <a href="#s25">作業研究・動態規劃 <span class="pg">補充</span></a>
 
   <h2>🧮 公式計算機</h2>
   <a href="#c1">排列・組合</a>
@@ -570,6 +573,12 @@ sub{font-size:.6em;}
     <div class="fml">P(C|M) = P(C∩M) / P(M) = 0.36 / 0.70 ≈ <span class="hl">0.51</span></div>
     <p style="font-size:.8rem;color:#64748b;">原本 P(C)=0.48；知道 M 獲利後升到 0.51 → 兩者略有正關聯。</p>
   </div>
+  <div class="box">
+    <span class="tag t-orange">🔖 真實案例</span>
+    <h3 style="margin-top:.3rem;">帶傘與下雨——新資訊如何改寫判斷</h3>
+    <p style="font-size:.82rem;color:#475569;">出門前沒看天氣時，帶傘的機率也許只是憑經驗的主觀判斷（例如 0.5）。但一旦觀察到「外面確實在下雨（新資訊 B）」，樣本空間立刻縮到「下雨」這個範圍，帶傘的機率被大幅上修。這就是條件機率的精神：<strong>新資訊介入，會讓原本的預期產生質變。</strong></p>
+    <div class="tip">💡 教授口訣：條件機率不是死公式，而是「<strong>拿到新情報後，把世界縮小、重新估算</strong>」的決策思維。P(A|B) 就是把整個樣本空間 S 縮成 B，再看 A 佔多少。</div>
+  </div>
 </div>
 
 <!-- S11 乘法法則 -->
@@ -600,6 +609,20 @@ sub{font-size:.6em;}
       <div class="warn">⚠️ 0.36 ≠ 0.336 → M 與 C <strong>不獨立</strong>（兩股票走勢有關聯）。</div>
     </div>
   </div>
+  <div class="warn">⚠️ <b>考試最愛陷阱：獨立 ≠ 互斥，且獨立「看圖看不出來」。</b>互斥是「視覺性質」——兩圓完全不重疊（交集=0）；獨立是「計算性質」——就算兩圓有交集，只要交集大小<strong>剛好等於兩者機率相乘</strong>，就是獨立。所以判斷獨立一定要<strong>算 P(A∩B) 是否等於 P(A)·P(B)</strong>，不能只憑圖形。</div>
+  <div class="two">
+    <div class="card c-red">
+      <span class="tag t-red">🔖 真實案例：不獨立（相依）</span>
+      <h3>宿舍室友同進退</h3>
+      <p>若室友習慣一起行動——一人翹課，全寢室都缺席——那麼「A 缺席」會大幅改變「B 缺席」的機率。這就是<strong>不獨立</strong>。</p>
+    </div>
+    <div class="card c-green">
+      <span class="tag t-green">🔖 真實案例：獨立</span>
+      <h3>連續丟骰子</h3>
+      <p>第一次丟出 1 點，完全不影響第二次丟出 1 點的機率。前後兩次互不干擾，是典型的<strong>獨立實驗</strong>。</p>
+    </div>
+  </div>
+  <div class="tip">💡 教授補充：許多科學研究「假設變數獨立」，目的是把複雜的聯合機率<strong>簡化成單一機率相乘</strong>，大幅降低計算難度。這是一種為了可算而做的實用簡化。</div>
 </div>
 
 <!-- S13 貝氏定理 -->
@@ -647,6 +670,73 @@ sub{font-size:.6em;}
       <div class="fml">P(A₂|B) = .27 / .41 ≈ <span class="hl">0.66</span></div>
     </div>
     <div class="tip">💡 經典應用「選擇題」：學生會的機率 p、用猜的 1−p、每題 m 個選項。答對的條件下「真的會」的機率 = p / [p + (1−p)/m] = mp / [1+(m−1)p]。</div>
+  </div>
+  <div class="box">
+    <span class="tag t-blue">🔖 課堂完整計算：五選一選擇題（m=5）</span>
+    <h3 style="margin-top:.3rem;">看到學生答對，他「真的懂」的機率是多少？</h3>
+    <table class="tbl">
+      <tr><th>狀態</th><th>事前機率</th><th>答對的條件機率</th><th>乘積</th></tr>
+      <tr><td>懂</td><td>P(懂)=0.7</td><td>P(答對|懂)=1</td><td>0.70</td></tr>
+      <tr><td>不懂（用猜）</td><td>P(不懂)=0.3</td><td>P(答對|不懂)=1/5=0.2</td><td>0.06</td></tr>
+      <tr><td colspan="3" style="text-align:right;font-weight:700;">總答對率 P(答對)=</td><td style="font-weight:700;">0.76</td></tr>
+    </table>
+    <div class="fml" style="margin-top:.5rem;">P(懂 | 答對) = 0.70 / 0.76 ≈ <span class="hl">0.92</span></div>
+    <div class="warn">⚠️ 進階：若加入「<strong>粗心 Carelessness</strong>」——會的人也可能答錯，例如 P(答錯|懂)=0.05，則 P(答對|懂) 降為 0.95，分子分母都要同步調整後重算。</div>
+  </div>
+  <div class="box">
+    <span class="tag t-orange">🔖 真實案例：品質管制 QC 的思維轉變</span>
+    <h3 style="margin-top:.3rem;">貝氏「滾動更新」vs 傳統頻率論</h3>
+    <div class="two">
+      <div>
+        <p style="font-size:.82rem;color:#475569;"><strong>傳統頻率論：</strong>要等樣本累積到一定規模（如 n=100）才能做一次推論，反應慢。</p>
+      </div>
+      <div>
+        <p style="font-size:.82rem;color:#475569;"><strong>貝氏滾動更新：</strong>先用專家主觀機率或歷史紀錄當事前（沒資訊就設 0.5），每檢驗一件（n=1）就即時更新一次。</p>
+      </div>
+    </div>
+    <div class="tip">💡 戰略價值：對產量低、檢驗成本又高的產品（大型機具、軍事航太），貝氏能在<strong>小樣本下</strong>就提供穩定的風險判斷，大幅縮短決策路徑。</div>
+  </div>
+</div>
+
+<!-- S25 決策思維延伸（逐字稿新增） -->
+<div class="sec" id="s25">
+  <div class="sec-title">延伸：從機率到決策——作業研究與動態規劃<span class="page-badge">課堂補充</span></div>
+  <div class="bnote"><b>為什麼放這裡：</b>教授把條件機率、貝氏的「滾動修正」精神，延伸到管理決策層面。這段 PDF 沒有，但點出了統計學真正的用途：<b>在資源限制下做出最好的選擇。</b></div>
+  <div class="cards">
+    <div class="card c-blue">
+      <span class="tag t-blue">作業研究 OR</span>
+      <h3>Operations Research</h3>
+      <p>統計延伸到管理端，目標是在資源限制下找「<strong>全域最佳解</strong>」。源於二戰——軍方計算深水炸彈投放密度、轟炸高度來提高命中機率，後來演變成今天的全球運籌與供應鏈優化。</p>
+    </div>
+    <div class="card c-green">
+      <span class="tag t-green">🔖 仿生演算法</span>
+      <h3>螞蟻演算法 Ant Colony</h3>
+      <p>螞蟻沿路排放<strong>費洛蒙</strong>標記路徑；走的螞蟻越多，濃度越高，群體最終收斂出最短路。這就是「<strong>多路徑探索後集中決策</strong>」的優化邏輯。</p>
+    </div>
+    <div class="card c-purple">
+      <span class="tag t-purple">動態規劃</span>
+      <h3>Dynamic Programming</h3>
+      <p>核心是「用過去的確定性，應對未來的不可知」。做法是<strong>逆向回推 Backward Induction</strong>——站在未來目標點，往回推每一步該具備什麼條件。</p>
+    </div>
+  </div>
+  <div class="box">
+    <h3>以終為始：把「被動要求」變成「主動選擇」</h3>
+    <div class="flow">
+      <div class="fb" style="background:#ecfdf5;font-weight:700;border-color:#22c55e;">未來目標<br><small style="color:#64748b;">如：兩年後畢業</small></div>
+      <div class="fa">←</div>
+      <div class="fb" style="background:#fffbeb;">前一步需具備？</div>
+      <div class="fa">←</div>
+      <div class="fb" style="background:#eff6ff;">此刻該做的決策</div>
+    </div>
+    <div class="tip">💡 教授哲學：先確定終點，再反推現在。這樣「修這門課」「這份工作」就從<strong>被動要求</strong>變成<strong>實現目標的主動選擇</strong>。</div>
+  </div>
+  <div class="warn">⚠️ <b>梯子要靠對牆：</b>作業研究裡「目標函數」設定至關重要。若目標設錯，再強的執行力也只是在優化錯的東西（掉進 Local Optima 局部最佳）。「努力」很重要，但<strong>梯子靠錯邊，爬得再快也到不了正確終點</strong>。先選對目標、確保一致，才是決策者的核心使命。</div>
+  <div class="box">
+    <h3>延伸思考（教授留的兩題）</h3>
+    <div class="two">
+      <div class="fml" style="font-size:.85rem;">① 完全沒有歷史數據時設事前 = 0.5。若初始判斷極端偏頗（如 0.01），在貝氏架構下大約需要多少新證據才能導正預期？</div>
+      <div class="fml" style="font-size:.85rem;">② 若終極目標是轉職到高階管理職，這門統計課的「戰略貢獻值」在你的全局目標函數中該如何加權？</div>
+    </div>
   </div>
 </div>
 
@@ -755,6 +845,7 @@ sub{font-size:.6em;}
       <div class="skb"><div style="font-size:1.5rem;">↔️</div><strong>散佈</strong><br><small style="color:#64748b;">Spread 多分散</small></div>
       <div class="skb"><div style="font-size:1.5rem;">🔔</div><strong>形狀</strong><br><small style="color:#64748b;">Shape 長什麼樣</small></div>
     </div>
+    <div class="tip">💡 教授的話：學統計不是為了背公式，而是建立一種「<strong>戰略眼光</strong>」。現實世界混亂又隨機，<strong>隨機變數 X 就是把這份混亂轉成數學模型的橋樑</strong>——定義了 X，就等於賦予數據「預測未來」的能力。</div>
   </div>
 </div>
 
@@ -793,6 +884,25 @@ sub{font-size:.6em;}
       <div class="fml" style="font-size:.85rem;">σ = √1.66 ≈ <span class="hl">1.29</span> 台</div>
     </div>
     <div class="tip">💡 快算版驗證：Σx²f(x)=3.1，μ²=1.2²=1.44 → Var = 3.1 − 1.44 = 1.66，和逐欄一致。</div>
+  </div>
+  <div class="two">
+    <div class="box">
+      <span class="tag t-green">💡 期望值口訣</span>
+      <h3 style="margin-top:.3rem;">「發生的值，乘上發生的機率，再加總」</h3>
+      <p style="font-size:.82rem;color:#475569;">μ = E(X) = Σ[x·P(x)]。電視案例算出 μ=1.2，代表<strong>長期而言平均每天賣 1.2 台</strong>——這就是決策者配置人力與庫存的科學依據，不是憑感覺。</p>
+    </div>
+    <div class="box">
+      <span class="tag t-orange">🔖 真實案例：正偏態的陷阱</span>
+      <h3 style="margin-top:.3rem;">為什麼「平均」常騙人</h3>
+      <p style="font-size:.82rem;color:#475569;">形狀若<strong>尾巴往右延伸＝正偏態</strong>。常見於獎金分配、不良率：少數極端大值（如百萬年終）會把平均值大幅拉高，讓「平均」偏離多數人的真實感受。看數據不能只看平均，要連形狀一起看。</p>
+    </div>
+  </div>
+  <div class="box">
+    <span class="tag t-purple">🔖 教授強調：重視「計算程序 Process」</span>
+    <h3 style="margin-top:.3rem;">為什麼變異數用推導式 Var(X)=E(X²)−[E(X)]²</h3>
+    <p style="font-size:.82rem;color:#475569;">理論定義是 Var(X)=E[(X−μ)²]，但實務上更常用「<strong>平方的期望值 − 期望值的平方</strong>」。原因是<strong>捨入誤差 Rounding Error</strong>：若先算出一個帶長小數的 μ，再逐項相減、平方、加總，每一步都在累積誤差。</p>
+    <div class="tip">💡 教授比喻：他一位普渡大學回來、曾任醫學研究主任的同學強調「早起吃藥的 Process 會影響療效」——同理，計算<strong>過程</strong>錯了，結果必偏。</div>
+    <div class="warn">⚠️ 延伸到 AI 倫理：若健保資料因「行政不給付」而排除了某些優良療法，AI 學到的就是「<strong>被閹割過的數據</strong>」。統計學家必須洞察<strong>數據產生的過程</strong>，而非盲從結果。</div>
   </div>
 </div>
 
@@ -849,6 +959,7 @@ sub{font-size:.6em;}
       <p style="font-size:.82rem;color:#475569;line-height:1.9;">① n 次重複試驗　② 每次只有兩種結果　③ 成功機率 p <strong>固定不變</strong>　④ 每次<strong>互相獨立</strong>。<br>→ 滿足這四點，就能用下面的二項式分配。</p>
     </div>
   </div>
+  <div class="tip">💡 教授軼事：「白努利家族」對數學與物理的貢獻，堪比<strong>巴哈家族之於音樂</strong>。你們搭飛機能上天，要感謝<strong>白努利定律（速度越快、壓力越小）</strong>。同一種洞察也用在統計——把複雜世界二分成「成功／失敗」，就是伯努利試驗的精神。</div>
 </div>
 
 <!-- S19 二項式 -->
@@ -902,6 +1013,13 @@ sub{font-size:.6em;}
     </div>
   </div>
   <div class="warn">⚠️ 眾數位置：若 (n+1)p 不是整數，最高的那格在 x = ⌊(n+1)p⌋；機率隨 x 先升後降。</div>
+  <div class="box">
+    <span class="tag t-orange">🔖 課堂案例：籃球罰球</span>
+    <h3 style="margin-top:.3rem;">命中率 p=0.6，投 n=5 次，進 4 球的機率</h3>
+    <div class="fml" style="font-size:.85rem;">不是 0.6⁴×0.4，而要乘上 <span class="hl">C(5,4)</span>——因為那 4 顆進球可能落在 5 次投籃的<strong>任何位置</strong>。</div>
+    <div class="fml" style="font-size:.85rem;">f(4)=C(5,4)·0.6⁴·0.4¹ = 5×0.1296×0.4 = <span class="hl">0.2592</span></div>
+    <div class="tip">💡 這正是「組合」的用途。而且當 n 越大，<strong>不管 p 是多少，二項分配都會趨向對稱、最終匯流成常態分配</strong>——這是下週中心極限定理的伏筆。</div>
+  </div>
 </div>
 
 <!-- S20 布阿松 -->
@@ -929,6 +1047,20 @@ sub{font-size:.6em;}
       <h3 style="margin-top:.3rem;">n 很大、p 很小時</h3>
       <p style="font-size:.82rem;color:#475569;">當 n→∞、p→0 而 np 維持定值，可用 <strong>λ = np</strong> 的布阿松來近似二項分配（算起來省力很多）。</p>
     </div>
+  </div>
+  <div class="box">
+    <span class="tag t-orange">🔖 真實案例：工業與社會觀測</span>
+    <div class="two">
+      <div>
+        <h3>工業管理</h3>
+        <p style="font-size:.82rem;color:#475569;">一片<strong>晶圓 Wafer</strong> 上的平均落塵數、一塊<strong>面板 Panel</strong> 上的平均亮點數——都是固定面積內的稀疏瑕疵，典型布阿松。</p>
+      </div>
+      <div>
+        <h3>單位變大、λ 跟著等比例放大</h3>
+        <p style="font-size:.82rem;color:#475569;">若每 10 分鐘平均一班公車（λ=1），把單位拉成一小時（6 倍），λ 就變 6。這也是本頁「少於 3 班」範例的由來。</p>
+      </div>
+    </div>
+    <div class="tip">💡 λ 夠大時，布阿松的形狀同樣趨向常態——再次印證「大樣本最終都導向統一的統計真理」（＝下週中心極限定理）。</div>
   </div>
 </div>
 
@@ -985,6 +1117,8 @@ sub{font-size:.6em;}
       <div class="fml" style="font-size:.82rem;">平均要買 E(X)=1/0.02722 ≈ <span class="hl">36.7</span> 次</div>
     </div>
   </div>
+  <div class="tip">💡 教授比喻「回不了家」：要求你丟骰子丟到 1 點才能回家，機率 1/6，<strong>平均要丟 6 次</strong>（E(X)=1/p=6）。</div>
+  <div class="warn">⚠️ 平均數的陷阱：那個「6 次」只是<strong>平均</strong>。在標準差的波動下，有人可能丟了 20 次還坐在教室裡——這種「<strong>長尾效應</strong>」正是風險管理焦慮的來源。管理上不能只看期望值，要同時評估極端長尾的風險。</div>
 </div>
 
 <!-- S23 負二項 -->

@@ -1,0 +1,1153 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>入門統計學 Week 3 · 連續分配與抽樣分配</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'Segoe UI','Microsoft JhengHei',sans-serif;background:#f1f5f9;color:#1e293b;display:flex;min-height:100vh;}
+
+/* ── Side nav ── */
+#sidenav{
+  width:210px;min-width:210px;background:#0f1e30;
+  position:fixed;top:0;left:0;height:100vh;overflow-y:auto;z-index:200;
+  padding:1rem 0;
+}
+#sidenav h2{color:#94a3b8;font-size:.72rem;letter-spacing:.08em;text-transform:uppercase;padding:.5rem 1rem .3rem;margin-top:.5rem;}
+#sidenav a{
+  display:block;color:#cbd5e1;font-size:.8rem;padding:.42rem 1rem;
+  text-decoration:none;border-left:3px solid transparent;transition:all .15s;
+  line-height:1.4;
+}
+#sidenav a:hover{color:white;background:rgba(255,255,255,.06);}
+#sidenav a.active{color:#38bdf8;border-left-color:#38bdf8;background:rgba(56,189,248,.08);}
+#sidenav .pg{color:#475569;font-size:.7rem;margin-left:.3rem;}
+
+/* ── Main ── */
+#main{margin-left:210px;width:100%;max-width:1210px;padding:2rem 2.4rem 4rem;}
+
+/* Part headers */
+.part-header{
+  background:linear-gradient(135deg,#1e3a5f,#2563eb);
+  color:white;border-radius:14px;padding:1.1rem 1.6rem;margin:2.5rem 0 1.4rem;
+}
+.part-header h2{font-size:1.15rem;margin:0;}
+.part-header p{font-size:.82rem;opacity:.85;margin-top:.25rem;}
+
+/* Section */
+.sec{margin-bottom:2.2rem;}
+.sec-title{
+  display:flex;align-items:center;gap:.7rem;flex-wrap:wrap;
+  font-size:1.05rem;font-weight:700;color:#1e3a5f;
+  margin-bottom:.9rem;padding-bottom:.35rem;
+  border-bottom:2px solid #bfdbfe;
+}
+.page-badge{
+  background:#e0f2fe;color:#0369a1;font-size:.7rem;
+  font-weight:600;padding:.2rem .55rem;border-radius:99px;white-space:nowrap;
+}
+
+/* Cards */
+.cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:.85rem;}
+.card{background:white;border-radius:10px;padding:1.1rem;box-shadow:0 1px 6px rgba(0,0,0,.08);border-top:4px solid;}
+.card.c-blue{border-color:#3b82f6;} .card.c-purple{border-color:#8b5cf6;}
+.card.c-green{border-color:#10b981;} .card.c-orange{border-color:#f59e0b;}
+.card.c-red{border-color:#ef4444;}   .card.c-teal{border-color:#0891b2;}
+.card.c-sky{border-color:#38bdf8;}
+.card h3{font-size:.92rem;margin-bottom:.38rem;}
+.card p{font-size:.82rem;color:#475569;line-height:1.65;}
+
+/* Box */
+.box{background:white;border-radius:10px;padding:1.3rem;box-shadow:0 1px 6px rgba(0,0,0,.08);margin-bottom:.9rem;}
+.box h3{font-size:.9rem;color:#334155;margin-bottom:.75rem;}
+
+/* Tag */
+.tag{display:inline-block;font-size:.7rem;font-weight:700;padding:.12rem .5rem;border-radius:6px;margin-bottom:.4rem;}
+.t-blue{background:#dbeafe;color:#1d4ed8;} .t-green{background:#d1fae5;color:#065f46;}
+.t-orange{background:#fef3c7;color:#92400e;} .t-purple{background:#ede9fe;color:#6d28d9;}
+.t-red{background:#fee2e2;color:#991b1b;} .t-teal{background:#cffafe;color:#155e75;}
+
+/* Table */
+.tbl{width:100%;border-collapse:collapse;font-size:.84rem;}
+.tbl th{background:#1e3a5f;color:white;padding:.5rem .8rem;text-align:left;}
+.tbl td{padding:.45rem .8rem;border-bottom:1px solid #e2e8f0;}
+.tbl tr:nth-child(even) td{background:#f8fafc;}
+
+/* Inline formula chip */
+.fml{background:#0f172a;color:#e2e8f0;border-radius:8px;padding:.7rem 1.1rem;
+  font-family:'Times New Roman',serif;font-size:1rem;margin:.45rem 0;line-height:1.95;}
+.hl{color:#fbbf24;font-weight:700;}
+
+/* Tip / warn */
+.tip{background:#f0fdf4;border-left:4px solid #22c55e;border-radius:8px;
+  padding:.7rem .9rem;font-size:.82rem;color:#166534;margin-top:.7rem;line-height:1.75;}
+.warn{background:#fffbeb;border-left:4px solid #f59e0b;border-radius:8px;
+  padding:.7rem .9rem;font-size:.82rem;color:#92400e;margin-top:.7rem;line-height:1.75;}
+
+/* Two col */
+.two{display:grid;grid-template-columns:1fr 1fr;gap:.85rem;}
+.three{display:grid;grid-template-columns:1fr 1fr 1fr;gap:.8rem;}
+@media(max-width:760px){.two,.three{grid-template-columns:1fr;} #sidenav{display:none;} #main{margin-left:0;}}
+
+/* Flow row */
+.flow{display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:0;margin:.9rem 0;}
+.fb{background:white;border:2px solid #c7d2fe;border-radius:8px;padding:.55rem .9rem;
+  font-size:.84rem;text-align:center;min-width:95px;box-shadow:0 1px 5px rgba(0,0,0,.06);}
+.fa{font-size:1.2rem;color:#2563eb;padding:0 .3rem;}
+
+/* ── Formula Card ── */
+.fc{background:white;border-radius:12px;overflow:hidden;box-shadow:0 2px 10px rgba(0,0,0,.08);margin-bottom:1.2rem;border:1.5px solid #e2e8f0;}
+.fc-head{background:linear-gradient(135deg,#1e3a5f,#2563eb);color:white;padding:.7rem 1.1rem;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:.4rem;}
+.fc-head h3{font-size:.95rem;margin:0;}
+.fc-body{padding:1.1rem 1.2rem;}
+
+/* Green lecture formula box */
+.lf{background:#d1fae5;border:1px solid #6ee7b7;border-radius:8px;padding:.85rem 1.2rem;display:inline-flex;align-items:center;gap:.35rem;font-family:'Times New Roman','Palatino Linotype',serif;font-size:1.1rem;flex-wrap:wrap;margin-bottom:1rem;}
+.lf-eq{color:#374151;}
+
+/* Fraction */
+.lf-frac{display:inline-flex;flex-direction:column;align-items:center;vertical-align:middle;margin:0 .1rem;}
+.lf-num{border-bottom:1.8px solid #1e293b;padding:1px 4px 2px;text-align:center;white-space:nowrap;}
+.lf-den{padding:2px 4px 0;text-align:center;white-space:nowrap;}
+
+/* Param badge */
+.pb{
+  display:inline-block;cursor:pointer;
+  background:#1e3a5f;color:white;
+  font-family:'Times New Roman',serif;font-size:1rem;font-weight:700;
+  padding:.05rem .45rem;border-radius:4px;vertical-align:middle;
+  transition:background .15s, transform .1s;position:relative;
+}
+.pb:hover{background:#2563eb;transform:scale(1.08);}
+.pb.active{background:#f59e0b;color:#1e293b;}
+.pb[data-tip]:hover::after{
+  content:attr(data-tip);
+  position:absolute;bottom:120%;left:50%;transform:translateX(-50%);
+  background:#0f172a;color:white;padding:3px 8px;border-radius:5px;
+  font-size:.68rem;font-family:'Segoe UI',sans-serif;font-weight:400;
+  white-space:nowrap;pointer-events:none;z-index:99;
+}
+
+/* Live substitution bar */
+.lf-live{
+  background:#f0fdf4;border:1.5px solid #86efac;border-radius:8px;
+  padding:.65rem 1rem;font-family:'Times New Roman',serif;font-size:1.05rem;
+  min-height:2.8rem;display:flex;align-items:center;gap:.3rem;flex-wrap:wrap;
+  margin-bottom:.9rem;line-height:1.8;
+}
+.lf-live .lv{color:#1d4ed8;font-weight:700;}
+.lf-live .la{color:#065f46;font-weight:700;font-size:1.2rem;background:#bbf7d0;padding:.05rem .4rem;border-radius:4px;}
+.lf-live .lhint{color:#94a3b8;font-family:'Segoe UI',sans-serif;font-size:.8rem;font-style:italic;}
+
+/* Param input grid */
+.pi-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(185px,1fr));gap:.75rem;margin:.5rem 0 .9rem;}
+.pi-inp{
+  border:1.5px solid #cbd5e1;border-radius:7px;padding:.4rem .7rem;
+  font-size:.87rem;outline:none;width:100%;box-sizing:border-box;
+  transition:border .15s,box-shadow .15s;background:white;
+}
+.pi-inp:focus{border-color:#2563eb;box-shadow:0 0 0 2px rgba(37,99,235,.15);}
+.pi-inp.lit{border-color:#f59e0b;box-shadow:0 0 0 2px rgba(245,158,11,.18);}
+textarea.pi-inp{resize:vertical;font-family:'Courier New',monospace;font-size:.85rem;line-height:1.6;min-height:4rem;}
+.pi-sym{
+  background:#1e3a5f;color:white;font-family:'Times New Roman',serif;
+  font-size:.88rem;font-weight:700;padding:.1rem .45rem;border-radius:4px;
+  cursor:pointer;user-select:none;transition:background .12s;
+}
+.pi-sym:hover{background:#2563eb;}
+
+/* Beginner note box */
+.bnote{background:#eff6ff;border:1px dashed #93c5fd;border-radius:8px;padding:.7rem .95rem;font-size:.8rem;color:#1e40af;line-height:1.7;margin-bottom:.9rem;}
+.bnote b{color:#1e3a5f;}
+
+.calc-err{background:#fff1f2;border:1px solid #fca5a5;border-radius:7px;padding:.55rem .85rem;font-size:.82rem;color:#991b1b;display:none;margin-top:.5rem;}
+.calc-err.show{display:block;}
+
+mark{padding:.05rem .3rem;border-radius:4px;}
+.sym{background:#dbeafe;color:#1e40af;padding:.05rem .4rem;border-radius:4px;font-family:'Times New Roman',serif;}
+sub{font-size:.6em;}
+.readguide{background:#f8fafc;border:1px solid #cbd5e1;border-radius:7px;padding:.5rem .8rem;font-size:.78rem;color:#475569;margin-top:.5rem;line-height:1.6;}
+</style>
+</head>
+<body>
+
+<!-- ── Side Navigation ── -->
+<nav id="sidenav">
+  <div style="padding:.5rem 1rem .6rem;border-bottom:1px solid #1e3a5f;">
+    <div style="color:white;font-weight:700;font-size:.9rem;">📈 統計學 Week 3</div>
+    <div style="color:#64748b;font-size:.7rem;margin-top:.2rem;">連續分配與抽樣分配</div>
+  </div>
+  <div style="color:#64748b;font-size:.7rem;padding:.4rem 1rem;">📖 第一版（上課後更新）</div>
+
+  <h2>PART 1 · 連續分配基礎</h2>
+  <a href="#s1">連續隨機變數 <span class="pg">3-1</span></a>
+  <a href="#s2">機率＝曲線下面積 <span class="pg">3-1</span></a>
+
+  <h2>PART 2 · 三大連續分配</h2>
+  <a href="#s3">均勻分配 <span class="pg">3-2</span></a>
+  <a href="#s4">均勻分配範例 <span class="pg">3-3</span></a>
+  <a href="#s5">常態分配 <span class="pg">3-4</span></a>
+  <a href="#s6">常態性質・參數 <span class="pg">3-5</span></a>
+  <a href="#s7">標準化與 Z 分數 <span class="pg">3-6</span></a>
+  <a href="#s8">經驗法則 68-95-99.7 <span class="pg">3-7</span></a>
+  <a href="#s9">常態分配範例 <span class="pg">3-9</span></a>
+  <a href="#s10">指數分配 <span class="pg">3-10</span></a>
+
+  <h2>PART 3 · 統計推論</h2>
+  <a href="#s11">統計推論詞彙 <span class="pg">3-11</span></a>
+  <a href="#s12">抽樣誤差・普查 <span class="pg">3-12</span></a>
+  <a href="#s13">點估計 <span class="pg">3-12~13</span></a>
+  <a href="#s14">抽樣分配是什麼 <span class="pg">3-13</span></a>
+
+  <h2>PART 4 · 抽樣分配</h2>
+  <a href="#s15">樣本平均數 X̄ <span class="pg">3-14</span></a>
+  <a href="#s16">中心極限定理 <span class="pg">3-15</span></a>
+  <a href="#s17">X̄ 抽樣分配範例 <span class="pg">3-16~17</span></a>
+  <a href="#s18">樣本比率 p̂ <span class="pg">3-17~18</span></a>
+  <a href="#s19">p̂ 抽樣分配範例 <span class="pg">3-19</span></a>
+  <a href="#s20">樣本變異數 S²・卡方 <span class="pg">3-20~21</span></a>
+  <a href="#s21">卡方分配範例 <span class="pg">3-23</span></a>
+
+  <h2>🧮 公式計算機</h2>
+  <a href="#c1">均勻分配</a>
+  <a href="#c2">常態標準化 Z</a>
+  <a href="#c3">指數分配</a>
+  <a href="#c4">X̄ 抽樣分配</a>
+  <a href="#c5">p̂ 抽樣分配</a>
+  <a href="#c6">卡方 S²</a>
+</nav>
+
+<!-- ── Main Content ── -->
+<main id="main">
+
+<!-- ══════════ PART 1 ══════════ -->
+<div class="part-header">
+  <h2>PART 1 &nbsp;·&nbsp; 連續機率分配基礎</h2>
+  <p>上週的隨機變數「數得出來」（離散）；本週的變數可以是區間內任何值（連續）。關鍵轉變：機率不再看「某個點」，而是看「曲線下的面積」。</p>
+</div>
+
+<!-- S1 連續隨機變數 -->
+<div class="sec" id="s1">
+  <div class="sec-title">連續隨機變數 Continuous Random Variable<span class="page-badge">Week 3-1</span></div>
+  <div class="bnote"><b>白話：</b>一個可以取「區間內任何值」的變數，例如時間、身高、重量。跟上週離散變數最大的不同：它的可能值<b>數不完</b>（兩個數字之間永遠還塞得下更多數字）。</div>
+  <div class="cards">
+    <div class="card c-blue">
+      <span class="tag t-blue">核心特性①</span>
+      <h3>取值連續</h3>
+      <p>可以是實數線上某個區間、或好幾個區間裡的<strong>任何值</strong>。例：等公車時間可以是 3.14159… 分鐘。</p>
+    </div>
+    <div class="card c-red">
+      <span class="tag t-red">核心特性②</span>
+      <h3>單點機率 = 0</h3>
+      <p>問「剛好等於某個值」的機率沒有意義，一律是 0。因為可能值有無限多個，分給任何單一點的機率都是 0。<br><span class="sym">P{X = x} = 0</span></p>
+    </div>
+    <div class="card c-green">
+      <span class="tag t-green">核心特性③</span>
+      <h3>只談機率密度</h3>
+      <p>給定一個值，我們只知道它的<strong>機率密度（probability density）</strong> f(x)，而不是機率本身。</p>
+    </div>
+  </div>
+  <div class="box" style="margin-top:.85rem;">
+    <h3>機率密度函數 f(x)（讀圖方法：高度＝密度，不是機率！）</h3>
+    <svg viewBox="0 0 620 200" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-width:620px;display:block;margin:.4rem auto;">
+      <line x1="40" y1="170" x2="600" y2="170" stroke="#334155" stroke-width="1.5"/>
+      <line x1="40" y1="170" x2="40" y2="25" stroke="#334155" stroke-width="1.5"/>
+      <text x="18" y="40" font-size="12" fill="#475569">f(x)</text>
+      <text x="595" y="188" font-size="12" fill="#475569">x</text>
+      <path d="M40,169.6 55,169.2 71,168.7 86,167.8 102,166.5 117,164.6 133,161.8 148,157.8 164,152.5 179,145.6 195,137 210,126.6 226,114.5 241,101 257,86.8 272,72.4 288,58.9 303,47.1 319,37.9 334,32 350,30 365,32 381,37.9 396,47.1 412,58.9 427,72.4 443,86.8 458,101 474,114.5 489,126.6 505,137 520,145.6 536,152.5 551,157.8 567,161.8 582,164.6 598,166.5"
+        fill="none" stroke="#2563eb" stroke-width="2.5"/>
+      <text x="330" y="20" font-size="11" fill="#1d4ed8">機率密度（曲線高度）</text>
+    </svg>
+    <div class="readguide">📖 <b>讀圖：</b>縱軸是「密度」不是機率。曲線越高的地方，代表 X 落在那附近的可能性越大，但單一點本身機率仍是 0。要拿到機率，得看下一節「一段區間下的面積」。</div>
+  </div>
+</div>
+
+<!-- S2 機率＝面積 -->
+<div class="sec" id="s2">
+  <div class="sec-title">機率 = 曲線下的面積<span class="page-badge">Week 3-1</span></div>
+  <div class="two">
+    <div class="box">
+      <h3>某區間的機率＝那段面積</h3>
+      <p style="font-size:.82rem;color:#475569;">X 落在 x₁ 到 x₂ 之間的機率，等於機率密度曲線在這兩點之間<strong>圍出的面積</strong>（積分）。</p>
+      <div class="lf" style="font-size:1rem;">P{x₁ ≤ X ≤ x₂} = <span class="lf-frac"><span class="lf-num" style="border:none;">x₂</span><span class="lf-den" style="border-top:1.8px solid #1e293b;padding-top:2px;">x₁</span></span>∫ f(x) dx</div>
+      <div class="tip">💡 <b>∫（積分符號）</b>不用怕：它就是「把一段面積加總起來」的意思。EMBA 不會叫你手算積分，交給查表或計算機。</div>
+    </div>
+    <div class="box">
+      <h3>兩條鐵則（跟離散版對應）</h3>
+      <div class="fml">① 密度不為負：<span class="hl">f(x) ≥ 0</span>（曲線不會跑到 x 軸下面）</div>
+      <div class="fml">② 全部面積 = 1：<span class="hl">∫ f(x) dx = 1</span>（整條曲線下總面積 = 1）</div>
+      <p style="font-size:.8rem;color:#64748b;margin-top:.4rem;">跟離散的 Σf(x)=1 是同一個精神，只是把「加總」換成「面積」。</p>
+    </div>
+  </div>
+  <div class="box">
+    <h3>期望值與變異數（把 Σ 換成 ∫）</h3>
+    <div class="two">
+      <div class="fml">期望值（平均、中心）<br>E(X) = ∫ <span class="hl">x·f(x)</span> dx</div>
+      <div class="fml">變異數（分散程度）<br>Var(X) = ∫ <span class="hl">(x−μ)²·f(x)</span> dx</div>
+    </div>
+    <div class="readguide">📖 對照上週：離散是 E(X)=Σx·f(x)，連續是 E(X)=∫x·f(x)dx。「加權平均」的概念完全一樣，只是離散用加總、連續用面積。</div>
+  </div>
+</div>
+
+<!-- ══════════ PART 2 ══════════ -->
+<div class="part-header">
+  <h2>PART 2 &nbsp;·&nbsp; 三大連續分配</h2>
+  <p>均勻（平的長方形）、常態（鐘形，最重要）、指數（等待時間、遞減）。每個分配都看三件事：中心（平均）、分散（變異數）、形狀。</p>
+</div>
+
+<!-- S3 均勻分配 -->
+<div class="sec" id="s3">
+  <div class="sec-title">均勻分配 Uniform Distribution（均勻分配）<span class="page-badge">Week 3-2</span></div>
+  <div class="bnote"><b>白話：</b>在 a 到 b 之間<b>每個位置的可能性都一樣</b>，機率跟「區間長度」成正比。密度曲線是一條<b>平的橫線</b>，圍出來的圖形是長方形。</div>
+  <div class="two">
+    <div class="box">
+      <h3>機率密度函數 f(x)</h3>
+      <div class="lf" style="font-size:1rem;">f(x) = <span class="lf-frac"><span class="lf-num">1</span><span class="lf-den">b − a</span></span>&nbsp;（a ≤ x ≤ b），否則 = 0</div>
+      <p style="font-size:.8rem;color:#475569;"><span class="sym">a</span>＝變數能取的最小值；<span class="sym">b</span>＝最大值。高度固定為 1/(b−a)，讓長方形總面積剛好 = 1。</p>
+      <div class="fml" style="font-size:.9rem;">累積 F(x)：x&lt;a 時 0；a≤x≤b 時 (x−a)/(b−a)；x&gt;b 時 1</div>
+    </div>
+    <div class="box">
+      <h3>讀圖方法：平坦的長方形</h3>
+      <svg viewBox="0 0 380 180" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-width:380px;display:block;margin:.2rem auto;">
+        <line x1="30" y1="150" x2="360" y2="150" stroke="#334155" stroke-width="1.5"/>
+        <line x1="30" y1="150" x2="30" y2="20" stroke="#334155" stroke-width="1.5"/>
+        <rect x="110" y="70" width="170" height="80" fill="#bfdbfe" fill-opacity="0.6" stroke="#1d4ed8" stroke-width="2"/>
+        <line x1="30" y1="70" x2="110" y2="70" stroke="#94a3b8" stroke-width="1.2" stroke-dasharray="4 3"/>
+        <text x="8" y="74" font-size="11" fill="#475569">1/(b−a)</text>
+        <text x="110" y="168" text-anchor="middle" font-size="12" fill="#1e3a5f">a</text>
+        <text x="280" y="168" text-anchor="middle" font-size="12" fill="#1e3a5f">b</text>
+        <text x="195" y="115" text-anchor="middle" font-size="12" fill="#1d4ed8">面積 = 1</text>
+      </svg>
+      <div class="readguide">📖 高度一樣＝每個值機率密度相同。要某段機率，就量那段長方形面積＝(長度)×(1/(b−a))。</div>
+    </div>
+  </div>
+  <div class="box">
+    <h3>三件事：中心・分散・形狀</h3>
+    <div class="three">
+      <div class="skb" style="background:white;border-radius:10px;padding:.9rem;box-shadow:0 1px 5px rgba(0,0,0,.07);text-align:center;">
+        <span class="tag t-blue">① 中心 Mean</span>
+        <div class="lf" style="font-size:1rem;">E(X) = <span class="lf-frac"><span class="lf-num">a + b</span><span class="lf-den">2</span></span></div>
+        <p style="font-size:.78rem;color:#64748b;">就是頭尾的正中間</p>
+      </div>
+      <div class="skb" style="background:white;border-radius:10px;padding:.9rem;box-shadow:0 1px 5px rgba(0,0,0,.07);text-align:center;">
+        <span class="tag t-orange">② 分散 Variance</span>
+        <div class="lf" style="font-size:1rem;">Var(X) = <span class="lf-frac"><span class="lf-num">(b − a)²</span><span class="lf-den">12</span></span></div>
+        <p style="font-size:.78rem;color:#64748b;">區間越寬越分散</p>
+      </div>
+      <div class="skb" style="background:white;border-radius:10px;padding:.9rem;box-shadow:0 1px 5px rgba(0,0,0,.07);text-align:center;">
+        <span class="tag t-green">③ 形狀 Shape</span>
+        <div style="font-size:1.6rem;margin:.3rem 0;">▭</div>
+        <p style="font-size:.78rem;color:#64748b;">平的長方形</p>
+      </div>
+    </div>
+  </div>
+  <div class="box">
+    <span class="tag t-purple">課本例：統計成績 X ~ Uniform(70, 90)</span>
+    <div class="two" style="margin-top:.3rem;">
+      <div class="fml">E(X) = (70+90)/2 = <span class="hl">80</span><br>Var(X) = (90−70)²/12 = 400/12 ≈ <span class="hl">33.33</span><br>標準差 σ = √33.33 ≈ <span class="hl">5.774</span></div>
+      <div class="fml">P{X ≥ 85} = (90−85)/(90−70)<br>= 5/20 = <span class="hl">0.25</span><br><span style="font-size:.8rem;color:#94a3b8;">（課本另算 P 到 85 為 15/20=0.75）</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- S4 均勻範例 -->
+<div class="sec" id="s4">
+  <div class="sec-title">均勻分配範例：Slater 沙拉秤重<span class="page-badge">Week 3-3</span></div>
+  <div class="bnote"><b>情境：</b>Slater 餐廳按沙拉重量收費。抽樣發現取的沙拉重量在 <b>5 到 15 盎司</b>之間均勻分布。→ a=5, b=15。</div>
+  <div class="two">
+    <div class="box">
+      <h3>建立密度與平均、變異數</h3>
+      <div class="fml">f(x) = 1/(15−5) = <span class="hl">1/10</span>（5 &lt; x &lt; 15）</div>
+      <div class="fml">E(X) = (5+15)/2 = <span class="hl">10</span> 盎司</div>
+      <div class="fml">Var(X) = (15−5)²/12 = 100/12 ≈ <span class="hl">8.33</span> → σ ≈ 2.89</div>
+    </div>
+    <div class="box">
+      <h3>P(12 &lt; X &lt; 15)＝那段長方形面積</h3>
+      <svg viewBox="0 0 380 180" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-width:380px;display:block;margin:.2rem auto;">
+        <line x1="30" y1="150" x2="360" y2="150" stroke="#334155" stroke-width="1.5"/>
+        <line x1="30" y1="150" x2="30" y2="20" stroke="#334155" stroke-width="1.5"/>
+        <rect x="90" y="80" width="230" height="70" fill="#e2e8f0" stroke="#94a3b8" stroke-width="1.5"/>
+        <rect x="252" y="80" width="68" height="70" fill="#fbbf24" fill-opacity="0.55" stroke="#d97706" stroke-width="2"/>
+        <text x="8" y="84" font-size="10" fill="#475569">1/10</text>
+        <text x="90" y="168" text-anchor="middle" font-size="11" fill="#1e3a5f">5</text>
+        <text x="205" y="168" text-anchor="middle" font-size="11" fill="#1e3a5f">10</text>
+        <text x="252" y="168" text-anchor="middle" font-size="11" fill="#d97706">12</text>
+        <text x="320" y="168" text-anchor="middle" font-size="11" fill="#1e3a5f">15</text>
+        <text x="286" y="120" text-anchor="middle" font-size="10" fill="#92400e">0.3</text>
+        <text x="240" y="14" text-anchor="middle" font-size="10" fill="#64748b">沙拉重量 (oz.)</text>
+      </svg>
+      <div class="fml" style="font-size:.9rem;">P(12&lt;X&lt;15) = (15−12)×(1/10) = <span class="hl">0.3</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- S5 常態分配 -->
+<div class="sec" id="s5">
+  <div class="sec-title">常態（高斯）分配 Normal Distribution（常態分配）<span class="page-badge">Week 3-4</span></div>
+  <div class="bnote"><b>白話：</b>最重要、最常見的連續分配，長得像一口<b>對稱的鐘</b>。很多自然現象（身高、體重、測量誤差）都近似常態。只要兩個數字就能完全決定它：<b>μ（平均，決定位置）</b>和 <b>σ（標準差，決定胖瘦）</b>。</div>
+  <div class="two">
+    <div class="box">
+      <h3>常態機率密度函數（看看就好，不用背）</h3>
+      <div class="lf" style="font-size:.95rem;">f(x) = <span class="lf-frac"><span class="lf-num">1</span><span class="lf-den">σ√(2π)</span></span> e<sup>−(x−μ)²/(2σ²)</sup></div>
+      <p style="font-size:.8rem;color:#475569;">其中 π ≈ 3.14159、e ≈ 2.71828 是固定常數。式子很嚇人，但實務上一律<strong>查表或用計算機</strong>，不會手算。</p>
+      <div class="tip">💡 兩個參數的角色：<b>μ</b> 把整個鐘平移到哪（中心）；<b>σ</b> 決定鐘有多胖多矮（越大越扁平）。</div>
+    </div>
+    <div class="box">
+      <h3>讀圖方法：對稱的鐘形</h3>
+      <svg viewBox="0 0 380 190" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-width:380px;display:block;margin:.2rem auto;">
+        <line x1="20" y1="165" x2="365" y2="165" stroke="#334155" stroke-width="1.5"/>
+        <path d="M25,164 45,163 65,161 85,158 105,152 125,143 145,130 165,112 185,90 190,85 195,90 205,112 225,130 245,143 265,152 285,158 305,161 325,163 345,164"
+          fill="#bfdbfe" fill-opacity="0.45" stroke="#2563eb" stroke-width="2.5"/>
+        <line x1="190" y1="85" x2="190" y2="165" stroke="#1e3a5f" stroke-width="1.5" stroke-dasharray="4 3"/>
+        <text x="190" y="182" text-anchor="middle" font-size="12" fill="#1e3a5f">μ</text>
+        <text x="190" y="78" text-anchor="middle" font-size="9.5" fill="#475569">平均=中位數=眾數</text>
+      </svg>
+      <div class="readguide">📖 最高點在正中央（μ）。左右完全對稱，所以<b>平均 = 中位數 = 眾數</b>，全都在 μ。</div>
+    </div>
+  </div>
+  <div class="cards">
+    <div class="card c-blue"><span class="tag t-blue">① 中心</span><h3>E(X) = μ</h3><p>最高點的位置就是平均數。</p></div>
+    <div class="card c-orange"><span class="tag t-orange">② 分散</span><h3>Var(X) = σ²</h3><p>σ 越大鐘越寬越矮；越小越尖越窄。</p></div>
+    <div class="card c-green"><span class="tag t-green">③ 形狀</span><h3>對稱鐘形</h3><p>曲線下總面積 = 1（左右各 0.5）。</p></div>
+  </div>
+</div>
+
+<!-- S6 常態性質 -->
+<div class="sec" id="s6">
+  <div class="sec-title">常態的性質・參數的影響<span class="page-badge">Week 3-5</span></div>
+  <div class="box">
+    <h3>四個必記性質</h3>
+    <div class="two">
+      <div>
+        <div class="fml" style="font-size:.9rem;">① 鐘形且左右<span class="hl">對稱</span></div>
+        <div class="fml" style="font-size:.9rem;">② 平均 = 中位數 = 眾數 = <span class="hl">μ</span></div>
+      </div>
+      <div>
+        <div class="fml" style="font-size:.9rem;">③ <span class="hl">μ 和 σ</span> 完全決定整條曲線</div>
+        <div class="fml" style="font-size:.9rem;">④ <span class="hl">反曲點</span>（曲線凹凸轉折）在 μ ± σ</div>
+      </div>
+    </div>
+    <div class="tip">💡 反曲點（inflection point）＝曲線從「向下彎」變成「向上彎」的地方，剛好落在離中心一個標準差 μ±σ 之處。這是 σ 的幾何意義。</div>
+  </div>
+  <div class="box">
+    <h3>參數變化的效果（讀圖方法：同軸比較胖瘦位置）</h3>
+    <svg viewBox="0 0 700 200" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-width:700px;display:block;margin:.3rem auto;">
+      <line x1="40" y1="170" x2="660" y2="170" stroke="#334155" stroke-width="1.5"/>
+      <!-- A: small sigma, tall narrow (green) -->
+      <path d="M40,170 133,170 195,167.5 226,159.3 257,137 288,96.3 319,50.8 334.5,35.5 350,30 365.5,35.5 381,50.8 412,96.3 443,137 474,159.3 505,167.5 567,170 660,170"
+        fill="none" stroke="#16a34a" stroke-width="2.2"/>
+      <!-- B: standard (blue) -->
+      <path d="M40,169.6 133,161.8 195,137 241.5,101 288,58.9 319,37.9 350,30 381,37.9 412,58.9 458.5,101 505,137 567,161.8 660,169.6"
+        fill="none" stroke="#2563eb" stroke-width="2.2"/>
+      <!-- C: large sigma, wide flat (orange) -->
+      <path d="M40,155.4 102,137 164,107.9 226,72.4 288,42.1 319,33.1 350,30 381,33.1 412,42.1 474,72.4 536,107.9 598,137 660,155.4"
+        fill="none" stroke="#ea580c" stroke-width="2.2"/>
+      <text x="352" y="25" text-anchor="middle" font-size="11" fill="#16a34a">A：σ 小 → 高瘦</text>
+      <text x="150" y="150" font-size="11" fill="#ea580c">C：σ 大 → 矮胖</text>
+      <text x="470" y="150" font-size="11" fill="#2563eb">B：中等 σ</text>
+    </svg>
+    <div class="readguide">📖 三條鐘中心都在同一點（μ 相同）。σ 越小越集中（高瘦），σ 越大越分散（矮胖）。若改變 μ，整條鐘會左右平移。</div>
+  </div>
+  <div class="warn">⚠️ 常態機率＝曲線下面積。想求 P{X ≤ x} 得算積分——但這式子沒有簡單解，得靠查表，而這正是下一節「標準化」要解決的問題。</div>
+</div>
+
+<!-- S7 標準化 -->
+<div class="sec" id="s7">
+  <div class="sec-title">標準化與 Z 分數（一張表通吃）<span class="page-badge">Week 3-6</span></div>
+  <div class="box">
+    <h3>問題：每種 μ、σ 都要一張表 → 無限多張表！</h3>
+    <p style="font-size:.82rem;color:#475569;">「我不會積分，能給我一張表查嗎？」——問題是 μ、σ 有無限多組合，難道要印無限多張表？<strong>解法：先把任何常態變成同一個標準版本。</strong></p>
+  </div>
+  <div class="box">
+    <span class="tag t-blue">標準化定理</span>
+    <h3 style="margin-top:.3rem;">任何常態都能變成「標準常態」</h3>
+    <div class="lf">若 X ~ Normal(μ, σ²)，令 Z = <span class="lf-frac"><span class="lf-num">X − μ</span><span class="lf-den">σ</span></span>，則 Z ~ Normal(0, 1)</div>
+    <div class="bnote">💡 <b>Z 分數（Z-score）的白話：</b>把原始值換算成「距離平均幾個標準差」。Z=0 代表剛好在平均；Z=1 代表比平均高一個標準差；Z=−2 代表比平均低兩個標準差。單位被消掉了，所以任何常態都能用同一把尺。</div>
+  </div>
+  <div class="box">
+    <h3>讀圖方法：把任意常態「壓」成標準常態</h3>
+    <svg viewBox="0 0 700 210" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-width:700px;display:block;margin:.3rem auto;">
+      <!-- left: original -->
+      <line x1="30" y1="170" x2="310" y2="170" stroke="#334155" stroke-width="1.3"/>
+      <path d="M40,168 90,163 130,150 165,120 185,90 200,80 215,90 235,120 270,150 300,163"
+        fill="#bfdbfe" fill-opacity="0.4" stroke="#2563eb" stroke-width="2"/>
+      <line x1="200" y1="80" x2="200" y2="170" stroke="#1e3a5f" stroke-width="1.2" stroke-dasharray="3 3"/>
+      <text x="200" y="188" text-anchor="middle" font-size="11" fill="#1e3a5f">μ</text>
+      <text x="90" y="200" text-anchor="middle" font-size="10" fill="#64748b">原始常態 (μ, σ)</text>
+      <text x="150" y="200" text-anchor="middle" font-size="10" fill="#64748b">x</text>
+      <!-- arrow -->
+      <text x="350" y="120" text-anchor="middle" font-size="26" fill="#f59e0b">→</text>
+      <text x="350" y="140" text-anchor="middle" font-size="10" fill="#b45309">Z=(x−μ)/σ</text>
+      <!-- right: standard -->
+      <line x1="400" y1="170" x2="680" y2="170" stroke="#334155" stroke-width="1.3"/>
+      <path d="M410,168 460,163 500,150 535,120 555,90 570,80 585,90 605,120 640,150 670,163"
+        fill="#d1fae5" fill-opacity="0.5" stroke="#16a34a" stroke-width="2"/>
+      <line x1="570" y1="80" x2="570" y2="170" stroke="#166534" stroke-width="1.2" stroke-dasharray="3 3"/>
+      <text x="570" y="188" text-anchor="middle" font-size="11" fill="#166534">0</text>
+      <text x="540" y="200" text-anchor="middle" font-size="10" fill="#64748b">標準常態 (0, 1)</text>
+      <text x="640" y="200" text-anchor="middle" font-size="10" fill="#64748b">z　σ=1</text>
+    </svg>
+    <div class="readguide">📖 左邊每個 x 都用 Z=(x−μ)/σ 換算，就映射到右邊的標準常態。只需<b>一張標準常態表</b>就能查所有機率。</div>
+  </div>
+</div>
+
+<!-- S8 經驗法則 -->
+<div class="sec" id="s8">
+  <div class="sec-title">標準常態與經驗法則 68-95-99.7<span class="page-badge">Week 3-7</span></div>
+  <div class="bnote"><b>標準常態 Standard Normal：</b>平均 0、標準差 1 的常態，用字母 <span class="sym">Z</span> 表示。Z 就是「x 離平均幾個標準差」的度量。</div>
+  <div class="box">
+    <h3>讀圖方法：離平均 1、2、3 個 σ 各涵蓋多少（面積）</h3>
+    <svg viewBox="0 0 700 210" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-width:700px;display:block;margin:.3rem auto;">
+      <line x1="40" y1="170" x2="660" y2="170" stroke="#334155" stroke-width="1.5"/>
+      <!-- shaded within +-1 sigma (x 258.8 to 441.2) -->
+      <path d="M258.8,170 L258.8,85.1 264.8,79.6 272.5,72.4 288,58.9 303.5,47.1 319,37.9 334.5,32 350,30 365.5,32 381,37.9 396.5,47.1 412,58.9 427.5,72.4 435.2,79.6 441.2,85.1 L441.2,170 Z"
+        fill="#22c55e" fill-opacity="0.35"/>
+      <!-- 1-2 sigma bands -->
+      <path d="M167.6,170 L167.6,151.1 179.5,145.6 195,137 210.5,126.6 226,114.5 241.5,101 257,86.8 258.8,85.1 L258.8,170 Z" fill="#3b82f6" fill-opacity="0.25"/>
+      <path d="M441.2,170 L441.2,85.1 443,86.8 458.5,101 474,114.5 489.5,126.6 505,137 520.5,145.6 532.4,151.1 L532.4,170 Z" fill="#3b82f6" fill-opacity="0.25"/>
+      <!-- full curve -->
+      <path d="M40,169.6 78.7,168.3 117.5,164.6 156.2,155.4 195,137 233.8,107.9 272.5,72.4 303.5,47.1 334.5,32 350,30 365.5,32 396.5,47.1 427.5,72.4 466.2,107.9 505,137 543.8,155.4 582.5,164.6 621.2,168.3 660,169.6"
+        fill="none" stroke="#1e3a5f" stroke-width="2.5"/>
+      <!-- ticks -->
+      <line x1="350" y1="170" x2="350" y2="176" stroke="#334155"/><text x="350" y="190" text-anchor="middle" font-size="10" fill="#475569">0</text>
+      <line x1="258.8" y1="170" x2="258.8" y2="176" stroke="#334155"/><text x="258.8" y="190" text-anchor="middle" font-size="10" fill="#475569">−1</text>
+      <line x1="441.2" y1="170" x2="441.2" y2="176" stroke="#334155"/><text x="441.2" y="190" text-anchor="middle" font-size="10" fill="#475569">+1</text>
+      <line x1="167.6" y1="170" x2="167.6" y2="176" stroke="#334155"/><text x="167.6" y="190" text-anchor="middle" font-size="10" fill="#475569">−2</text>
+      <line x1="532.4" y1="170" x2="532.4" y2="176" stroke="#334155"/><text x="532.4" y="190" text-anchor="middle" font-size="10" fill="#475569">+2</text>
+      <line x1="76.5" y1="170" x2="76.5" y2="176" stroke="#334155"/><text x="76.5" y="190" text-anchor="middle" font-size="10" fill="#475569">−3</text>
+      <line x1="623.5" y1="170" x2="623.5" y2="176" stroke="#334155"/><text x="623.5" y="190" text-anchor="middle" font-size="10" fill="#475569">+3</text>
+      <text x="350" y="115" text-anchor="middle" font-size="11" fill="#166534" font-weight="700">68.3%</text>
+      <text x="350" y="60" text-anchor="middle" font-size="10" fill="#1d4ed8">±2σ 內 95.5%</text>
+    </svg>
+  </div>
+  <div class="three">
+    <div class="box" style="text-align:center;">
+      <span class="tag t-green">±1σ</span>
+      <div class="fml" style="font-size:.85rem;">P(μ−σ &lt; X &lt; μ+σ)<br>= P(−1&lt;Z&lt;1)</div>
+      <div style="font-size:1.3rem;font-weight:700;color:#166534;">≈ 68.26%</div>
+    </div>
+    <div class="box" style="text-align:center;">
+      <span class="tag t-blue">±2σ</span>
+      <div class="fml" style="font-size:.85rem;">P(−2&lt;Z&lt;2)</div>
+      <div style="font-size:1.3rem;font-weight:700;color:#1d4ed8;">≈ 95.46%</div>
+    </div>
+    <div class="box" style="text-align:center;">
+      <span class="tag t-purple">±3σ</span>
+      <div class="fml" style="font-size:.85rem;">P(−3&lt;Z&lt;3)</div>
+      <div style="font-size:1.3rem;font-weight:700;color:#6d28d9;">≈ 99.73%</div>
+    </div>
+  </div>
+  <div class="tip">💡 <b>對稱好用的公式：</b>P(Z ≤ −z) = P(Z ≥ z) = 1 − P(Z ≤ z)。查表只需查正的一半，另一半用對稱推出來。（Z 表在課本附錄 TABLES.pdf）</div>
+</div>
+
+<!-- S9 常態範例 -->
+<div class="sec" id="s9">
+  <div class="sec-title">常態分配範例：X ~ Normal(40, 6²)<span class="page-badge">Week 3-9</span></div>
+  <div class="two">
+    <div class="box">
+      <span class="tag t-blue">反查：已知機率求 x</span>
+      <h3 style="margin-top:.3rem;">P{X ≤ x} = 0.45，求 x？</h3>
+      <div class="fml" style="font-size:.9rem;">先查表：P{Z ≤ z}=0.45 → z ≈ <span class="hl">−0.13</span></div>
+      <div class="fml" style="font-size:.9rem;">還原：x = μ + zσ = 40 + (−0.13)(6) ≈ <span class="hl">39.22</span></div>
+      <div class="readguide">📖 機率小於 0.5 → z 為負 → x 落在平均 40 的左邊，合理。</div>
+    </div>
+    <div class="box">
+      <span class="tag t-green">正查：已知 x 求機率</span>
+      <h3 style="margin-top:.3rem;">P{X ≥ 46.48} = ?</h3>
+      <div class="fml" style="font-size:.88rem;">標準化 z = (46.48 − 40)/6 = <span class="hl">1.08</span></div>
+      <div class="fml" style="font-size:.88rem;">P{Z ≥ 1.08} = 1 − P{Z ≤ 1.08}<br>= 1 − 0.86 = <span class="hl">0.14</span></div>
+    </div>
+  </div>
+  <div class="tip">💡 <b>解題三步驟：</b>①標準化算 z ②查標準常態表得面積 ③依題意（≥、≤、之間）用對稱與 1− 調整。</div>
+</div>
+
+<!-- S10 指數分配 -->
+<div class="sec" id="s10">
+  <div class="sec-title">指數分配 Exponential Distribution（指數分配）<span class="page-badge">Week 3-10</span></div>
+  <div class="bnote"><b>白話：</b>描述「<b>等一件事發生要多久</b>」的分配（例如下一位客人多久後上門、機器多久後故障）。和上週的布阿松分配是一對搭檔：布阿松數「一段時間內發生幾次」，指數量「距離下一次要等多久」。</div>
+  <div class="two">
+    <div class="box">
+      <h3>密度與累積函數</h3>
+      <div class="lf" style="font-size:.95rem;">f(x) = λe<sup>−λx</sup>（x ≥ 0）</div>
+      <div class="fml" style="font-size:.9rem;">累積 F(x) = 1 − e<sup>−λx</sup>（x ≥ 0），否則 0</div>
+      <p style="font-size:.8rem;color:#475569;"><span class="sym">λ</span>（lambda）＝單位時間的平均發生率；<span class="sym">x</span>＝等待時間。<br><span style="color:#94a3b8;">註：課本用 λ 表示「平均等待時間」寫法，下方三件事採此定義。</span></p>
+    </div>
+    <div class="box">
+      <h3>讀圖方法：一路遞減的曲線</h3>
+      <svg viewBox="0 0 380 190" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-width:380px;display:block;margin:.2rem auto;">
+        <line x1="35" y1="165" x2="360" y2="165" stroke="#334155" stroke-width="1.5"/>
+        <line x1="35" y1="165" x2="35" y2="25" stroke="#334155" stroke-width="1.5"/>
+        <path d="M35,35 55,55 78,73 101,88 126,102 152,114 177,124 203,133 228,141 254,147 279,153 305,157 330,161 355,163"
+          fill="none" stroke="#0891b2" stroke-width="2.5"/>
+        <text x="18" y="40" font-size="11" fill="#475569">f(x)</text>
+        <text x="352" y="182" font-size="11" fill="#475569">x</text>
+      </svg>
+      <div class="readguide">📖 x=0 時最高，之後單調下滑、永不觸底。等越久還沒發生的機率越低。</div>
+    </div>
+  </div>
+  <div class="three">
+    <div class="box" style="text-align:center;">
+      <span class="tag t-blue">① 中心 Mean</span>
+      <div class="lf" style="font-size:1rem;">E(X) = <span class="lf-frac"><span class="lf-num">1</span><span class="lf-den">λ</span></span></div>
+    </div>
+    <div class="box" style="text-align:center;">
+      <span class="tag t-orange">② 分散 Variance</span>
+      <div class="lf" style="font-size:1rem;">Var(X) = <span class="lf-frac"><span class="lf-num">1</span><span class="lf-den">λ²</span></span></div>
+    </div>
+    <div class="box" style="text-align:center;">
+      <span class="tag t-green">③ 形狀 Shape</span>
+      <div style="font-size:1.5rem;margin:.2rem 0;">⌐﹨</div>
+      <p style="font-size:.78rem;color:#64748b;">右偏遞減</p>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════ PART 3 ══════════ -->
+<div class="part-header">
+  <h2>PART 3 &nbsp;·&nbsp; 統計推論與點估計</h2>
+  <p>前面都在「已知母體、算機率」（演繹）。從這裡開始反過來：<strong>只看到一小把樣本，反推整個母體長怎樣</strong>（歸納 = 推論）。</p>
+</div>
+
+<!-- S11 統計推論詞彙 -->
+<div class="sec" id="s11">
+  <div class="sec-title">統計推論的基本詞彙<span class="page-badge">Week 3-11</span></div>
+  <div class="bnote"><b>統計推論 Statistical Inference：</b>從「樣本」帶的資訊，去推估「母體」的特性。因為通常沒辦法（也不划算）調查全部，只能抽一部分來估。</div>
+  <div class="cards">
+    <div class="card c-blue"><span class="tag t-blue">母體 Population</span><h3>全部對象</h3><p>你關心的<strong>所有元素</strong>的集合。例：全校 1500 位申請人。</p></div>
+    <div class="card c-green"><span class="tag t-green">樣本 Sample</span><h3>母體的子集</h3><p>從母體抽出的一小部分。例：隨機抽 50 位申請人。</p></div>
+    <div class="card c-purple"><span class="tag t-purple">參數 Parameter</span><h3>母體的數字特徵</h3><p>描述母體的數值，如母體平均 μ、母體比率 p。通常<strong>未知</strong>，是我們想估的目標。</p></div>
+    <div class="card c-orange"><span class="tag t-orange">估計 Estimate</span><h3>用樣本算出的近似值</h3><p>樣本結果只是母體特徵的<strong>估計</strong>，不會百分百等於真值。</p></div>
+  </div>
+  <div class="box" style="margin-top:.85rem;">
+    <h3>讀圖方法：兩個方向（演繹 vs 推論）</h3>
+    <div class="flow">
+      <div class="fb" style="background:#eff6ff;min-width:120px;">母體 Population<br><small style="color:#64748b;">參數 μ, σ, p</small></div>
+      <div style="display:flex;flex-direction:column;align-items:center;padding:0 .6rem;">
+        <div style="font-size:.72rem;color:#1d4ed8;">機率論・演繹 ↓</div>
+        <div style="font-size:.72rem;color:#16a34a;">↑ 推論・歸納</div>
+      </div>
+      <div class="fb" style="background:#f0fdf4;min-width:120px;">樣本 Sample<br><small style="color:#64748b;">統計量 X̄, S, p̂</small></div>
+    </div>
+    <div class="readguide">📖 <b>往下（機率論／演繹）：</b>已知母體，算樣本會怎樣。<b>往上（統計推論／歸納）：</b>只看到樣本，反推母體。本週後半都在走「往上」這條路。</div>
+  </div>
+  <div class="two">
+    <div class="box"><span class="tag t-teal">隨機樣本 Random Sample</span><p style="font-size:.82rem;color:#475569;margin-top:.3rem;">抽取時<strong>沒有系統性偏向</strong>，每個樣本被選中的機率都相等。這是好估計的前提。</p></div>
+    <div class="box"><span class="tag t-blue">點估計 Point Estimation</span><p style="font-size:.82rem;color:#475569;margin-top:.3rem;">用樣本資料算出<strong>一個數字</strong>去估母體參數：X̄→μ、S²→σ²、S→σ、p̂→p。</p></div>
+  </div>
+</div>
+
+<!-- S12 抽樣誤差 -->
+<div class="sec" id="s12">
+  <div class="sec-title">抽樣誤差與普查 vs 抽樣<span class="page-badge">Week 3-12</span></div>
+  <div class="bnote"><b>抽樣誤差 Sampling Error：</b>不偏點估計值與母體真值之間的「絕對差距」。例如樣本平均 X̄ 與母體平均 μ 的差 |X̄ − μ|。它源自「只用一部分（樣本）而非全部（母體）」。</div>
+  <div class="box">
+    <h3>四種常見抽樣誤差</h3>
+    <div class="two">
+      <div class="fml" style="font-size:.88rem;">樣本平均：|X̄ − μ|<br>樣本比率：|p̂ − p|</div>
+      <div class="fml" style="font-size:.88rem;">樣本標準差：|S − σ|<br>樣本變異數：|S² − σ²|</div>
+    </div>
+  </div>
+  <div class="box">
+    <span class="tag t-purple">課本例：NTUST 每年 1,500 份申請</span>
+    <h3 style="margin-top:.3rem;">想知道：申請人平均 SAT 分數（μ）＆本地生比率（p）</h3>
+    <div class="two">
+      <div class="box" style="box-shadow:none;border:1px solid #bfdbfe;">
+        <span class="tag t-blue">方案①：普查 Census（全部 1500 人）</span>
+        <div class="fml" style="font-size:.85rem;">母體平均 μ = <span class="hl">990</span><br>母體標準差 σ = <span class="hl">80</span><br>母體比率 p = 1080/1500 = <span class="hl">0.72</span></div>
+        <p style="font-size:.78rem;color:#64748b;">普查得到「真值」，但費時費錢。</p>
+      </div>
+      <div class="box" style="box-shadow:none;border:1px solid #bbf7d0;">
+        <span class="tag t-green">方案②：抽樣 Sample（隨機 50 人）</span>
+        <div class="fml" style="font-size:.85rem;">X̄ = 49850/50 = <span class="hl">997</span>（估 μ）<br>S ≈ <span class="hl">75.2</span>（估 σ）<br>p̂ = 34/50 = <span class="hl">0.68</span>（估 p）</div>
+        <p style="font-size:.78rem;color:#64748b;">快又省，但有抽樣誤差。</p>
+      </div>
+    </div>
+    <div class="fml">誤差：|X̄−μ|=|997−990|=<span class="hl">7</span>　|S−σ|=|75.2−80|=<span class="hl">4.8</span>　|p̂−p|=|0.68−0.72|=<span class="hl">0.04</span></div>
+  </div>
+</div>
+
+<!-- S13 點估計 -->
+<div class="sec" id="s13">
+  <div class="sec-title">點估計：用統計量估參數<span class="page-badge">Week 3-12 ~ 3-13</span></div>
+  <div class="box">
+    <h3>對照表：樣本統計量 → 母體參數</h3>
+    <table class="tbl">
+      <tr><th>母體參數（想估的目標，未知）</th><th>樣本統計量（點估計式）</th><th>NTUST 數值</th></tr>
+      <tr><td>母體平均 μ</td><td>樣本平均 X̄ = ΣXᵢ / n</td><td>997（估 990）</td></tr>
+      <tr><td>母體標準差 σ</td><td>樣本標準差 S = √[Σ(Xᵢ−X̄)²/(n−1)]</td><td>75.2（估 80）</td></tr>
+      <tr><td>母體比率 p</td><td>樣本比率 p̂ = X / n</td><td>0.68（估 0.72）</td></tr>
+    </table>
+    <div class="tip">💡 樣本標準差 S 的分母是 <b>n−1</b> 不是 n（叫「自由度」修正），這樣算出來對 σ 才不會系統性偏低。</div>
+  </div>
+</div>
+
+<!-- S14 抽樣分配是什麼 -->
+<div class="sec" id="s14">
+  <div class="sec-title">抽樣分配 Sampling Distribution 是什麼<span class="page-badge">Week 3-13</span></div>
+  <div class="bnote"><b>關鍵觀念：</b>樣本統計量（如 X̄）本身也是<b>隨機變數</b>——換一組樣本就會得到不同的 X̄。把「所有可能樣本算出的統計量」的機率分配，就叫<b>抽樣分配</b>。</div>
+  <div class="box">
+    <h3>讀圖方法：一個母體 → 抽很多次 → 每次得一個統計量</h3>
+    <svg viewBox="0 0 640 210" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-width:640px;display:block;margin:.3rem auto;">
+      <rect x="20" y="70" width="120" height="70" rx="10" fill="#eff6ff" stroke="#3b82f6" stroke-width="2"/>
+      <text x="80" y="100" text-anchor="middle" font-size="12" font-weight="700" fill="#1d4ed8">母體</text>
+      <text x="80" y="122" text-anchor="middle" font-size="10" fill="#475569">(μ, σ)</text>
+      <!-- arrows to samples -->
+      <line x1="140" y1="90" x2="230" y2="45" stroke="#f59e0b" stroke-width="1.5"/>
+      <line x1="140" y1="105" x2="230" y2="105" stroke="#f59e0b" stroke-width="1.5"/>
+      <line x1="140" y1="120" x2="230" y2="165" stroke="#f59e0b" stroke-width="1.5"/>
+      <text x="185" y="80" font-size="9" fill="#b45309">抽樣 n</text>
+      <rect x="232" y="28" width="90" height="34" rx="6" fill="#f8fafc" stroke="#94a3b8"/><text x="277" y="49" text-anchor="middle" font-size="10" fill="#475569">樣本1 → X̄₁</text>
+      <rect x="232" y="88" width="90" height="34" rx="6" fill="#f8fafc" stroke="#94a3b8"/><text x="277" y="109" text-anchor="middle" font-size="10" fill="#475569">樣本2 → X̄₂</text>
+      <rect x="232" y="148" width="90" height="34" rx="6" fill="#f8fafc" stroke="#94a3b8"/><text x="277" y="169" text-anchor="middle" font-size="10" fill="#475569">樣本3 → X̄₃</text>
+      <!-- arrow to distribution -->
+      <line x1="322" y1="105" x2="400" y2="105" stroke="#16a34a" stroke-width="1.8"/>
+      <text x="361" y="98" text-anchor="middle" font-size="9" fill="#166534">收集</text>
+      <line x1="410" y1="175" x2="620" y2="175" stroke="#334155" stroke-width="1.3"/>
+      <path d="M420,173 460,168 490,155 515,125 535,98 545,90 555,98 575,125 600,155 615,168"
+        fill="#d1fae5" fill-opacity="0.5" stroke="#16a34a" stroke-width="2"/>
+      <text x="515" y="200" text-anchor="middle" font-size="10" fill="#166534">X̄ 的抽樣分配（統計量的分配）</text>
+    </svg>
+    <div class="readguide">📖 每抽一組樣本就得到一個 X̄；X̄ 們自己也形成一個分配。研究這個分配的中心、分散、形狀，就能量化「用樣本估母體有多準」。</div>
+  </div>
+</div>
+
+<!-- ══════════ PART 4 ══════════ -->
+<div class="part-header">
+  <h2>PART 4 &nbsp;·&nbsp; 抽樣分配（X̄、p̂、S²）</h2>
+  <p>三個最重要的抽樣分配。X̄ 靠中心極限定理變常態、p̂ 也近似常態、S² 走卡方分配。每個都看：中心在哪、分散多少、形狀是什麼。</p>
+</div>
+
+<!-- S15 X-bar -->
+<div class="sec" id="s15">
+  <div class="sec-title">樣本平均數 X̄ 的抽樣分配<span class="page-badge">Week 3-14</span></div>
+  <div class="two">
+    <div class="box">
+      <span class="tag t-blue">中心（期望值）</span>
+      <h3 style="margin-top:.3rem;">X̄ 平均起來 = 母體平均</h3>
+      <div class="lf">μ<sub>X̄</sub> = E(X̄) = <span class="hl">μ</span></div>
+      <p style="font-size:.8rem;color:#475569;">X̄ 是「不偏」的：長期平均剛好命中 μ，不會系統性偏高或偏低。</p>
+    </div>
+    <div class="box">
+      <span class="tag t-orange">分散（標準誤）</span>
+      <h3 style="margin-top:.3rem;">X̄ 的標準差 = σ ÷ √n</h3>
+      <div class="lf">σ<sub>X̄</sub> = <span class="lf-frac"><span class="lf-num">σ</span><span class="lf-den">√n</span></span></div>
+      <p style="font-size:.8rem;color:#475569;">叫「標準誤」。<strong>n 越大，X̄ 越集中在 μ 附近</strong>——樣本越多估得越準。</p>
+    </div>
+  </div>
+  <div class="box">
+    <h3>有限母體要乘「有限修正因子」</h3>
+    <div class="lf" style="font-size:1rem;">σ<sub>X̄</sub> = <span class="lf-frac"><span class="lf-num">σ</span><span class="lf-den">√n</span></span> × √<span class="lf-frac"><span class="lf-num">N − n</span><span class="lf-den">N − 1</span></span></div>
+    <div class="tip">💡 <b>什麼時候可以忽略修正？</b>當 n/N &lt; 0.05（樣本占母體不到 5%），就把母體當作無限大，直接用 σ/√n 即可。√[(N−n)/(N−1)] 就是「有限修正因子」。</div>
+  </div>
+</div>
+
+<!-- S16 CLT -->
+<div class="sec" id="s16">
+  <div class="sec-title">中心極限定理 Central Limit Theorem（中心極限定理）<span class="page-badge">Week 3-15</span></div>
+  <div class="bnote"><b>白話（本週最重要定理）：</b>不管母體原本長什麼樣（歪的、平的都行），只要<b>樣本夠大（n ≥ 30）</b>，樣本平均 X̄ 的抽樣分配就會<b>近似常態</b>。這就是為什麼常態分配到處都用得上。</div>
+  <div class="box">
+    <h3>結論公式</h3>
+    <div class="two">
+      <div class="lf" style="font-size:1rem;">X̄ ~ Normal(μ, <span class="lf-frac"><span class="lf-num">σ²</span><span class="lf-den">n</span></span>)</div>
+      <div class="lf" style="font-size:1rem;">Z = <span class="lf-frac"><span class="lf-num">X̄ − μ</span><span class="lf-den">σ/√n</span></span> ~ Normal(0, 1)</div>
+    </div>
+  </div>
+  <div class="two">
+    <div class="box">
+      <span class="tag t-green">n ≥ 30（大樣本）</span>
+      <p style="font-size:.82rem;color:#475569;margin-top:.3rem;">CLT 生效，X̄ 直接當<strong>常態</strong>用，母體形狀不重要。</p>
+    </div>
+    <div class="box">
+      <span class="tag t-orange">n &lt; 30（小樣本）</span>
+      <p style="font-size:.82rem;color:#475569;margin-top:.3rem;">只有在<strong>母體本身就是常態</strong>時，X̄ 才能當常態用。</p>
+    </div>
+  </div>
+  <div class="box">
+    <h3>讀圖方法：樣本越大，X̄ 的分配越窄越像鐘</h3>
+    <svg viewBox="0 0 640 190" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-width:640px;display:block;margin:.3rem auto;">
+      <line x1="30" y1="160" x2="620" y2="160" stroke="#334155" stroke-width="1.3"/>
+      <line x1="325" y1="160" x2="325" y2="30" stroke="#1e3a5f" stroke-width="1" stroke-dasharray="3 3"/>
+      <text x="325" y="178" text-anchor="middle" font-size="11" fill="#1e3a5f">μ</text>
+      <!-- wide (n small) -->
+      <path d="M60,158 130,150 200,132 260,100 300,70 325,60 350,70 390,100 450,132 520,150 590,158"
+        fill="none" stroke="#ea580c" stroke-width="2"/>
+      <text x="150" y="120" font-size="10" fill="#ea580c">n 小 → 較寬</text>
+      <!-- narrow (n large) -->
+      <path d="M240,158 285,148 305,120 318,70 325,45 332,70 345,120 365,148 410,158"
+        fill="#d1fae5" fill-opacity="0.4" stroke="#16a34a" stroke-width="2.2"/>
+      <text x="430" y="70" font-size="10" fill="#166534">n 大 → 高瘦（σ/√n 變小）</text>
+    </svg>
+    <div class="readguide">📖 中心都在 μ。n 越大，標準誤 σ/√n 越小，X̄ 越緊縮在 μ 周圍 → 估計越準。</div>
+  </div>
+</div>
+
+<!-- S17 X-bar example -->
+<div class="sec" id="s17">
+  <div class="sec-title">X̄ 抽樣分配範例（NTUST）<span class="page-badge">Week 3-16 ~ 3-17</span></div>
+  <div class="box">
+    <h3>設定：μ=990, σ=80, 抽 n=50</h3>
+    <div class="fml">標準誤 σ<sub>X̄</sub> = 80/√50 = <span class="hl">11.3</span></div>
+    <p style="font-size:.8rem;color:#475569;">n=50 ≥ 30 → 由 CLT，X̄ ~ Normal(990, 11.3²)。</p>
+  </div>
+  <div class="box">
+    <span class="tag t-purple">問：抽 50 人，X̄ 落在 μ ± 10（即 980~1000）的機率？</span>
+    <div class="fml" style="font-size:.9rem;">標準化：z = (980−990)/11.3 = −0.88；z = (1000−990)/11.3 = +0.88</div>
+    <div class="fml" style="font-size:.9rem;">P{980 ≤ X̄ ≤ 1000} = P{−0.88 ≤ Z ≤ 0.88} = <span class="hl">0.6212</span></div>
+    <div class="readguide">📖 讀法：隨機抽 50 人，樣本平均落在真值 ±10 分內的機會約 62%。想更準（提高這機率），就加大 n 讓 σ<sub>X̄</sub> 縮小。</div>
+  </div>
+</div>
+
+<!-- S18 p-hat -->
+<div class="sec" id="s18">
+  <div class="sec-title">樣本比率 p̂ 的抽樣分配<span class="page-badge">Week 3-17 ~ 3-18</span></div>
+  <div class="bnote"><b>白話：</b>把「比率」也拿來估。樣本裡「成功」的比例 <span class="sym">p̂ = X/n</span>（X 是成功次數，服從二項分配）。跟 X̄ 一樣，p̂ 也有自己的抽樣分配。</div>
+  <div class="two">
+    <div class="box">
+      <span class="tag t-blue">中心</span>
+      <div class="lf">μ<sub>p̂</sub> = E(p̂) = <span class="hl">p</span></div>
+      <p style="font-size:.8rem;color:#475569;">p̂ 也是不偏估計，平均起來命中母體比率 p。</p>
+    </div>
+    <div class="box">
+      <span class="tag t-orange">分散（標準誤）</span>
+      <div class="lf">σ<sub>p̂</sub> = √<span class="lf-frac"><span class="lf-num">p(1−p)</span><span class="lf-den">n</span></span></div>
+      <p style="font-size:.8rem;color:#475569;">有限母體再乘 √[(N−n)/(N−1)]，規則同 X̄。</p>
+    </div>
+  </div>
+  <div class="box">
+    <span class="tag t-green">形狀：什麼時候能當常態？</span>
+    <h3 style="margin-top:.3rem;">np ≥ 5（且 n(1−p) ≥ 5）時可用常態近似</h3>
+    <div class="lf" style="font-size:1rem;">p̂ ~ Normal(p, <span class="lf-frac"><span class="lf-num">p(1−p)</span><span class="lf-den">n</span></span>)</div>
+    <div class="warn">⚠️ 若 np &lt; 5，常態近似不夠好，得回頭用二項分配硬算：P{p̂ ≤ a} = P{X ≤ na} = Σ C(n,k)pᵏ(1−p)ⁿ⁻ᵏ。</div>
+  </div>
+</div>
+
+<!-- S19 p-hat example -->
+<div class="sec" id="s19">
+  <div class="sec-title">p̂ 抽樣分配範例（NTUST）<span class="page-badge">Week 3-19</span></div>
+  <div class="box">
+    <h3>設定：p=0.72, n=50</h3>
+    <div class="fml">檢查 np = 50×0.72 = 36 ≥ 5 ✓ → 可用常態近似</div>
+    <div class="fml">標準誤 σ<sub>p̂</sub> = √[0.72×0.28/50] = √0.004032 ≈ <span class="hl">0.0635</span></div>
+  </div>
+  <div class="box">
+    <span class="tag t-purple">問：抽 50 人，p̂ 落在 p ± 0.05（即 0.67~0.77）的機率？</span>
+    <div class="fml" style="font-size:.9rem;">標準化：z = (0.67−0.72)/0.0635 = −0.79；z = (0.77−0.72)/0.0635 = +0.79</div>
+    <div class="fml" style="font-size:.9rem;">P{0.67 ≤ p̂ ≤ 0.77} = P{−0.79 ≤ Z ≤ 0.79} = <span class="hl">0.5704</span></div>
+  </div>
+</div>
+
+<!-- S20 S-squared chi -->
+<div class="sec" id="s20">
+  <div class="sec-title">樣本變異數 S² 與卡方分配<span class="page-badge">Week 3-20 ~ 3-21</span></div>
+  <div class="bnote"><b>白話：</b>估「分散程度」時，樣本變異數 S² 的抽樣分配不是常態，而是走一個新分配——<b>卡方分配 χ²（chi-square）</b>。它右偏（右邊拖一條長尾），且只出現在正值。</div>
+  <div class="two">
+    <div class="box">
+      <span class="tag t-blue">卡方分配怎麼來的</span>
+      <p style="font-size:.82rem;color:#475569;margin-top:.3rem;">把 n 個獨立的標準常態 Z 各自平方再相加：<br>Z₁²+Z₂²+…+Zₙ² ~ χ²(自由度 n)。</p>
+      <div class="fml" style="font-size:.85rem;">E(χ²)=ν，Var(χ²)=2ν（ν=自由度）</div>
+    </div>
+    <div class="box">
+      <span class="tag t-green">S² 的抽樣分配（母體須常態）</span>
+      <div class="lf" style="font-size:1rem;"><span class="lf-frac"><span class="lf-num">(n−1)S²</span><span class="lf-den">σ²</span></span> ~ χ²<sub>(n−1)</sub></div>
+      <p style="font-size:.8rem;color:#475569;">自由度 = n−1。把 S² 換算成這個量，就能查卡方表。</p>
+    </div>
+  </div>
+  <div class="box">
+    <h3>讀圖方法：右偏、只在正值的卡方曲線</h3>
+    <svg viewBox="0 0 600 190" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-width:600px;display:block;margin:.3rem auto;">
+      <line x1="45" y1="170" x2="575" y2="170" stroke="#334155" stroke-width="1.5"/>
+      <line x1="50" y1="170" x2="50" y2="25" stroke="#334155" stroke-width="1.5"/>
+      <path d="M50,170 61,142.3 72,107.4 84,77.9 95,56.4 107,42.9 118,36.2 129,35 135,36 146,40.6 163,51.7 186,70.3 214,94 242,114.6 271,131 299,143.2 333,154.6 373,160.7 418,165.3 469,167.9 526,169.2 560,169.5"
+        fill="#ede9fe" fill-opacity="0.5" stroke="#7c3aed" stroke-width="2.5"/>
+      <text x="28" y="35" font-size="11" fill="#475569">f</text>
+      <text x="568" y="188" font-size="11" fill="#475569">χ²</text>
+      <text x="300" y="60" font-size="10" fill="#6d28d9">右偏長尾 →</text>
+    </svg>
+    <div class="readguide">📖 卡方不對稱：左邊被 0 擋住，右邊拖長尾。自由度越大，越往右移、越接近對稱的鐘形。</div>
+  </div>
+</div>
+
+<!-- S21 chi example -->
+<div class="sec" id="s21">
+  <div class="sec-title">卡方分配範例（NTUST）<span class="page-badge">Week 3-23</span></div>
+  <div class="box">
+    <h3>設定：σ=80, 抽 n=51（自由度 = 50）</h3>
+    <span class="tag t-purple">問：樣本標準差 S 落在 61.664 ~ 92.955 的機率？</span>
+    <div class="fml" style="font-size:.86rem;">先把 S 轉成卡方量（平方後乘 (n−1)/σ²）：</div>
+    <div class="fml" style="font-size:.84rem;">下界：50×(61.664)²/80² = <span class="hl">29.707</span><br>上界：50×(92.955)²/80² = <span class="hl">67.505</span></div>
+    <div class="fml" style="font-size:.86rem;">P{29.707 ≤ χ²₅₀ ≤ 67.505} ≈ 0.99 − 0.05 = <span class="hl">0.94</span></div>
+    <div class="readguide">📖 三步驟同常態，只是查的是「卡方表」而非「Z 表」：①把 S 換算成 (n−1)S²/σ² ②查卡方表得兩端機率 ③相減得區間機率。</div>
+  </div>
+</div>
+
+<!-- ══════════ 公式計算機 ══════════ -->
+<div class="part-header" style="background:linear-gradient(135deg,#334155,#1e3a5f);">
+  <h2>🧮 &nbsp;公式計算機</h2>
+  <p>點藍色符號會跳到對應輸入框。每格上方有「初學者說明」，輸入後即時顯示計算過程；數字無效會提示。</p>
+</div>
+
+<!-- C1 均勻 -->
+<div class="sec" id="c1">
+  <div class="sec-title">均勻分配 Uniform<span class="page-badge">Week 3-2</span></div>
+  <div class="fc">
+    <div class="fc-head"><h3>E(X), Var(X), σ, P(區間)</h3></div>
+    <div class="fc-body">
+      <div class="lf" style="font-size:1rem;">
+        E(X)=<span class="lf-frac"><span class="lf-num"><span class="pb" data-tip="a：最小值" onclick="focusParam('c1-a')">a</span>+<span class="pb" data-tip="b：最大值" onclick="focusParam('c1-b')">b</span></span><span class="lf-den">2</span></span>
+        &nbsp; Var=<span class="lf-frac"><span class="lf-num">(b−a)²</span><span class="lf-den">12</span></span>
+      </div>
+      <div class="bnote">💡 <b>初學者說明：</b><b>a</b>＝變數能取的最小值；<b>b</b>＝最大值（須 b&gt;a）。若想算某段機率，另填區間 <b>x₁, x₂</b>（會算 P(x₁≤X≤x₂)＝該段長度÷(b−a)）；不填則略過。</div>
+      <div class="lf-live" id="c1-live"><span class="lhint">← 填入 a 與 b 後自動計算</span></div>
+      <div class="pi-grid">
+        <div><div style="margin-bottom:.3rem;font-size:.82rem;font-weight:600;color:#374151;"><span class="pi-sym" onclick="focusParam('c1-a')">a</span> 最小值</div>
+          <input class="pi-inp" type="number" id="c1-a" placeholder="例：5" step="any" oninput="liveC1()"></div>
+        <div><div style="margin-bottom:.3rem;font-size:.82rem;font-weight:600;color:#374151;"><span class="pi-sym" onclick="focusParam('c1-b')">b</span> 最大值</div>
+          <input class="pi-inp" type="number" id="c1-b" placeholder="例：15" step="any" oninput="liveC1()"></div>
+        <div><div style="margin-bottom:.3rem;font-size:.82rem;font-weight:600;color:#374151;"><span class="pi-sym" onclick="focusParam('c1-x1')">x₁</span> 區間下限（選填）</div>
+          <input class="pi-inp" type="number" id="c1-x1" placeholder="例：12" step="any" oninput="liveC1()"></div>
+        <div><div style="margin-bottom:.3rem;font-size:.82rem;font-weight:600;color:#374151;"><span class="pi-sym" onclick="focusParam('c1-x2')">x₂</span> 區間上限（選填）</div>
+          <input class="pi-inp" type="number" id="c1-x2" placeholder="例：15" step="any" oninput="liveC1()"></div>
+      </div>
+      <div class="calc-err" id="c1-err">請確認 b &gt; a。</div>
+    </div>
+  </div>
+</div>
+
+<!-- C2 標準化 Z -->
+<div class="sec" id="c2">
+  <div class="sec-title">常態標準化 Z 分數<span class="page-badge">Week 3-6</span></div>
+  <div class="fc">
+    <div class="fc-head"><h3>Z = (x − μ) / σ</h3></div>
+    <div class="fc-body">
+      <div class="lf">
+        <span class="pb" style="cursor:default">Z</span> =
+        <span class="lf-frac">
+          <span class="lf-num"><span class="pb" data-tip="x：原始值" onclick="focusParam('c2-x')">x</span> − <span class="pb" data-tip="μ：母體平均" onclick="focusParam('c2-mu')">μ</span></span>
+          <span class="lf-den"><span class="pb" data-tip="σ：母體標準差" onclick="focusParam('c2-sig')">σ</span></span>
+        </span>
+      </div>
+      <div class="bnote">💡 <b>初學者說明：</b><b>x</b>＝要換算的原始數值；<b>μ</b>＝平均；<b>σ</b>＝標準差（須 &gt;0）。算出的 Z＝「x 距離平均幾個標準差」。Z&gt;0 在右邊、Z&lt;0 在左邊。</div>
+      <div class="lf-live" id="c2-live"><span class="lhint">← 填入 x、μ、σ 後自動計算</span></div>
+      <div class="pi-grid">
+        <div><div style="margin-bottom:.3rem;font-size:.82rem;font-weight:600;color:#374151;"><span class="pi-sym" onclick="focusParam('c2-x')">x</span> 原始值</div>
+          <input class="pi-inp" type="number" id="c2-x" placeholder="例：46.48" step="any" oninput="liveC2()"></div>
+        <div><div style="margin-bottom:.3rem;font-size:.82rem;font-weight:600;color:#374151;"><span class="pi-sym" onclick="focusParam('c2-mu')">μ</span> 平均</div>
+          <input class="pi-inp" type="number" id="c2-mu" placeholder="例：40" step="any" oninput="liveC2()"></div>
+        <div><div style="margin-bottom:.3rem;font-size:.82rem;font-weight:600;color:#374151;"><span class="pi-sym" onclick="focusParam('c2-sig')">σ</span> 標準差</div>
+          <input class="pi-inp" type="number" id="c2-sig" placeholder="例：6" min="0" step="any" oninput="liveC2()"></div>
+      </div>
+      <div class="calc-err" id="c2-err">σ 必須大於 0。</div>
+    </div>
+  </div>
+</div>
+
+<!-- C3 指數 -->
+<div class="sec" id="c3">
+  <div class="sec-title">指數分配 Exponential<span class="page-badge">Week 3-10</span></div>
+  <div class="fc">
+    <div class="fc-head"><h3>f(x), F(x), E(X), Var(X)</h3></div>
+    <div class="fc-body">
+      <div class="lf">f(x) = <span class="pb" data-tip="λ：發生率" onclick="focusParam('c3-l')">λ</span>e<sup>−λ<span style="font-size:.8em">x</span></sup> &nbsp; F(x)=1−e<sup>−λx</sup></div>
+      <div class="bnote">💡 <b>初學者說明：</b><b>λ</b>（lambda，發生率）＝單位時間平均發生次數（&gt;0）；<b>x</b>＝等待時間（≥0）。F(x)＝「x 時間內就發生」的累積機率。E(X)=1/λ、Var(X)=1/λ²。</div>
+      <div class="lf-live" id="c3-live"><span class="lhint">← 填入 λ 與 x 後自動計算</span></div>
+      <div class="pi-grid">
+        <div><div style="margin-bottom:.3rem;font-size:.82rem;font-weight:600;color:#374151;"><span class="pi-sym" onclick="focusParam('c3-l')">λ</span> 發生率</div>
+          <input class="pi-inp" type="number" id="c3-l" placeholder="例：0.5" min="0" step="any" oninput="liveC3()"></div>
+        <div><div style="margin-bottom:.3rem;font-size:.82rem;font-weight:600;color:#374151;"><span class="pi-sym" onclick="focusParam('c3-x')">x</span> 等待時間</div>
+          <input class="pi-inp" type="number" id="c3-x" placeholder="例：2" min="0" step="any" oninput="liveC3()"></div>
+      </div>
+      <div class="calc-err" id="c3-err">λ 需 &gt; 0，x 需 ≥ 0。</div>
+    </div>
+  </div>
+</div>
+
+<!-- C4 X-bar -->
+<div class="sec" id="c4">
+  <div class="sec-title">X̄ 抽樣分配（標準誤與機率）<span class="page-badge">Week 3-14 ~ 3-16</span></div>
+  <div class="fc">
+    <div class="fc-head"><h3>σ<sub>X̄</sub> = σ/√n，Z = (X̄ − μ)/σ<sub>X̄</sub></h3></div>
+    <div class="fc-body">
+      <div class="lf">σ<sub>X̄</sub> = <span class="lf-frac"><span class="lf-num"><span class="pb" data-tip="σ：母體標準差" onclick="focusParam('c4-sig')">σ</span></span><span class="lf-den">√<span class="pb" data-tip="n：樣本數" onclick="focusParam('c4-n')">n</span></span></span></div>
+      <div class="bnote">💡 <b>初學者說明：</b><b>σ</b>＝母體標準差；<b>n</b>＝樣本數（正整數）。先算標準誤 σ<sub>X̄</sub>。若想算「X̄ 落在某區間」的機率，另填 <b>μ、X̄下限、X̄上限</b>（會標準化算 P，需 n≥30 或母體常態）；不填則只給標準誤。</div>
+      <div class="lf-live" id="c4-live"><span class="lhint">← 填入 σ 與 n 後自動計算</span></div>
+      <div class="pi-grid">
+        <div><div style="margin-bottom:.3rem;font-size:.82rem;font-weight:600;color:#374151;"><span class="pi-sym" onclick="focusParam('c4-sig')">σ</span> 母體標準差</div>
+          <input class="pi-inp" type="number" id="c4-sig" placeholder="例：80" min="0" step="any" oninput="liveC4()"></div>
+        <div><div style="margin-bottom:.3rem;font-size:.82rem;font-weight:600;color:#374151;"><span class="pi-sym" onclick="focusParam('c4-n')">n</span> 樣本數</div>
+          <input class="pi-inp" type="number" id="c4-n" placeholder="例：50" min="1" step="1" oninput="liveC4()"></div>
+        <div><div style="margin-bottom:.3rem;font-size:.82rem;font-weight:600;color:#374151;"><span class="pi-sym" onclick="focusParam('c4-mu')">μ</span> 平均（選填）</div>
+          <input class="pi-inp" type="number" id="c4-mu" placeholder="例：990" step="any" oninput="liveC4()"></div>
+        <div><div style="margin-bottom:.3rem;font-size:.82rem;font-weight:600;color:#374151;"><span class="pi-sym" onclick="focusParam('c4-lo')">X̄下限</span>（選填）</div>
+          <input class="pi-inp" type="number" id="c4-lo" placeholder="例：980" step="any" oninput="liveC4()"></div>
+        <div><div style="margin-bottom:.3rem;font-size:.82rem;font-weight:600;color:#374151;"><span class="pi-sym" onclick="focusParam('c4-hi')">X̄上限</span>（選填）</div>
+          <input class="pi-inp" type="number" id="c4-hi" placeholder="例：1000" step="any" oninput="liveC4()"></div>
+      </div>
+      <div class="calc-err" id="c4-err">σ 需 &gt; 0，n 需為正整數。</div>
+    </div>
+  </div>
+</div>
+
+<!-- C5 p-hat -->
+<div class="sec" id="c5">
+  <div class="sec-title">p̂ 抽樣分配（標準誤與機率）<span class="page-badge">Week 3-17 ~ 3-19</span></div>
+  <div class="fc">
+    <div class="fc-head"><h3>σ<sub>p̂</sub> = √[p(1−p)/n]</h3></div>
+    <div class="fc-body">
+      <div class="lf">σ<sub>p̂</sub> = √<span class="lf-frac"><span class="lf-num"><span class="pb" data-tip="p：母體比率" onclick="focusParam('c5-p')">p</span>(1−p)</span><span class="lf-den"><span class="pb" data-tip="n：樣本數" onclick="focusParam('c5-n')">n</span></span></span></div>
+      <div class="bnote">💡 <b>初學者說明：</b><b>p</b>＝母體比率（0~1）；<b>n</b>＝樣本數（正整數）。會自動檢查 np≥5 是否可用常態近似。若想算「p̂ 落在某區間」的機率，另填 <b>p̂下限、p̂上限</b>（會標準化算 P）。</div>
+      <div class="lf-live" id="c5-live"><span class="lhint">← 填入 p 與 n 後自動計算</span></div>
+      <div class="pi-grid">
+        <div><div style="margin-bottom:.3rem;font-size:.82rem;font-weight:600;color:#374151;"><span class="pi-sym" onclick="focusParam('c5-p')">p</span> 母體比率</div>
+          <input class="pi-inp" type="number" id="c5-p" placeholder="例：0.72" min="0" max="1" step="any" oninput="liveC5()"></div>
+        <div><div style="margin-bottom:.3rem;font-size:.82rem;font-weight:600;color:#374151;"><span class="pi-sym" onclick="focusParam('c5-n')">n</span> 樣本數</div>
+          <input class="pi-inp" type="number" id="c5-n" placeholder="例：50" min="1" step="1" oninput="liveC5()"></div>
+        <div><div style="margin-bottom:.3rem;font-size:.82rem;font-weight:600;color:#374151;"><span class="pi-sym" onclick="focusParam('c5-lo')">p̂下限</span>（選填）</div>
+          <input class="pi-inp" type="number" id="c5-lo" placeholder="例：0.67" min="0" max="1" step="any" oninput="liveC5()"></div>
+        <div><div style="margin-bottom:.3rem;font-size:.82rem;font-weight:600;color:#374151;"><span class="pi-sym" onclick="focusParam('c5-hi')">p̂上限</span>（選填）</div>
+          <input class="pi-inp" type="number" id="c5-hi" placeholder="例：0.77" min="0" max="1" step="any" oninput="liveC5()"></div>
+      </div>
+      <div class="calc-err" id="c5-err">p 需介於 0~1，n 需為正整數。</div>
+    </div>
+  </div>
+</div>
+
+<!-- C6 chi -->
+<div class="sec" id="c6">
+  <div class="sec-title">卡方 S² 換算<span class="page-badge">Week 3-20 ~ 3-23</span></div>
+  <div class="fc">
+    <div class="fc-head"><h3>χ² = (n−1)S² / σ²</h3></div>
+    <div class="fc-body">
+      <div class="lf">χ² = <span class="lf-frac"><span class="lf-num">(<span class="pb" data-tip="n：樣本數" onclick="focusParam('c6-n')">n</span>−1)<span class="pb" data-tip="S²：樣本變異數" onclick="focusParam('c6-s2')">S²</span></span><span class="lf-den"><span class="pb" data-tip="σ²：母體變異數" onclick="focusParam('c6-sig2')">σ²</span></span></span></div>
+      <div class="bnote">💡 <b>初學者說明：</b><b>n</b>＝樣本數；<b>S²</b>＝樣本變異數；<b>σ²</b>＝母體變異數（&gt;0）。算出的值服從自由度 (n−1) 的卡方分配，拿去查卡方表。若你手上是標準差，記得先平方成變異數再填。</div>
+      <div class="lf-live" id="c6-live"><span class="lhint">← 填入 n、S²、σ² 後自動計算</span></div>
+      <div class="pi-grid">
+        <div><div style="margin-bottom:.3rem;font-size:.82rem;font-weight:600;color:#374151;"><span class="pi-sym" onclick="focusParam('c6-n')">n</span> 樣本數</div>
+          <input class="pi-inp" type="number" id="c6-n" placeholder="例：51" min="2" step="1" oninput="liveC6()"></div>
+        <div><div style="margin-bottom:.3rem;font-size:.82rem;font-weight:600;color:#374151;"><span class="pi-sym" onclick="focusParam('c6-s2')">S²</span> 樣本變異數</div>
+          <input class="pi-inp" type="number" id="c6-s2" placeholder="例：3802.6" min="0" step="any" oninput="liveC6()"></div>
+        <div><div style="margin-bottom:.3rem;font-size:.82rem;font-weight:600;color:#374151;"><span class="pi-sym" onclick="focusParam('c6-sig2')">σ²</span> 母體變異數</div>
+          <input class="pi-inp" type="number" id="c6-sig2" placeholder="例：6400" min="0" step="any" oninput="liveC6()"></div>
+      </div>
+      <div class="calc-err" id="c6-err">n≥2，σ²&gt;0，S²≥0。</div>
+    </div>
+  </div>
+</div>
+
+</main>
+
+<script>
+// ════════════ 共用工具 ════════════
+function r(n,d=4){ if(!isFinite(n))return n; return Math.round(n*Math.pow(10,d))/Math.pow(10,d); }
+function setLive(id,html){ document.getElementById(id+'-live').innerHTML=html; }
+function hint(id,msg){ setLive(id,'<span class="lhint">'+(msg||'← 填入數值後自動計算')+'</span>'); }
+function liveErr(id,msg){ document.getElementById(id+'-err').classList.add('show'); document.getElementById(id+'-err').textContent=msg; setLive(id,'<span class="lhint">'+msg+'</span>'); }
+function clearErr(id){ document.getElementById(id+'-err').classList.remove('show'); }
+function focusParam(id){ const el=document.getElementById(id); if(!el)return; el.focus(); el.classList.add('lit'); setTimeout(()=>el.classList.remove('lit'),1500); }
+function val(id){ return document.getElementById(id).value; }
+
+// 標準常態 CDF（Abramowitz & Stegun 近似，供機率計算）
+function normCdf(z){
+  const b1=0.319381530,b2=-0.356563782,b3=1.781477937,b4=-1.821255978,b5=1.330274429,p=0.2316419,c=0.39894228;
+  if(z>=0){ const t=1/(1+p*z); return 1-c*Math.exp(-z*z/2)*t*(b1+t*(b2+t*(b3+t*(b4+t*b5)))); }
+  else { const t=1/(1-p*z); return c*Math.exp(-z*z/2)*t*(b1+t*(b2+t*(b3+t*(b4+t*b5)))); }
+}
+function pBetween(zlo,zhi){ return normCdf(zhi)-normCdf(zlo); }
+
+// C1 均勻
+function liveC1(){
+  clearErr('c1');
+  const av=val('c1-a'), bv=val('c1-b');
+  if(av===''||bv===''){hint('c1','← 填入 a 與 b 後自動計算');return;}
+  const a=+av,b=+bv;
+  if(b<=a){liveErr('c1','請確認 b > a');return;}
+  const mean=(a+b)/2, varc=Math.pow(b-a,2)/12, sd=Math.sqrt(varc);
+  let out=`E(X)=(${a}+${b})/2=<span class="la">${r(mean,4)}</span> &nbsp; Var=(${b}−${a})²/12=<span class="la">${r(varc,4)}</span> &nbsp; σ=<span class="la">${r(sd,4)}</span>`;
+  const x1v=val('c1-x1'), x2v=val('c1-x2');
+  if(x1v!==''&&x2v!==''){
+    let lo=Math.min(+x1v,+x2v), hi=Math.max(+x1v,+x2v);
+    lo=Math.max(lo,a); hi=Math.min(hi,b);
+    const p=(hi-lo)/(b-a);
+    out+=`<br>P(${r(lo,3)}≤X≤${r(hi,3)}) = (${r(hi,3)}−${r(lo,3)})/(${b}−${a}) = <span class="la">${r(p,4)}</span>`;
+  }
+  setLive('c1',out);
+}
+// C2 標準化
+function liveC2(){
+  clearErr('c2');
+  const xv=val('c2-x'), muv=val('c2-mu'), sv=val('c2-sig');
+  if(xv===''||muv===''||sv===''){hint('c2','← 填入 x、μ、σ 後自動計算');return;}
+  const x=+xv,mu=+muv,s=+sv;
+  if(s<=0){liveErr('c2','σ 必須大於 0');return;}
+  const z=(x-mu)/s;
+  setLive('c2',`Z = (${x}−${mu})/${s} = <span class="la">${r(z,4)}</span> &nbsp; <span class="lhint">P(X≤x)=P(Z≤${r(z,2)})≈${r(normCdf(z),4)}</span>`);
+}
+// C3 指數
+function liveC3(){
+  clearErr('c3');
+  const lv=val('c3-l'), xv=val('c3-x');
+  if(lv===''||xv===''){hint('c3','← 填入 λ 與 x 後自動計算');return;}
+  const l=+lv,x=+xv;
+  if(l<=0||x<0){liveErr('c3','λ 需 >0，x 需 ≥0');return;}
+  const f=l*Math.exp(-l*x), F=1-Math.exp(-l*x);
+  setLive('c3',`f(${x})=${l}·e^(−${r(l*x,4)})=<span class="la">${r(f,5)}</span> &nbsp; F(${x})=1−e^(−${r(l*x,4)})=<span class="la">${r(F,5)}</span> &nbsp; E(X)=1/λ=<span class="la">${r(1/l,4)}</span> &nbsp; Var=1/λ²=<span class="la">${r(1/(l*l),4)}</span>`);
+}
+// C4 X-bar
+function liveC4(){
+  clearErr('c4');
+  const sv=val('c4-sig'), nv=val('c4-n');
+  if(sv===''||nv===''){hint('c4','← 填入 σ 與 n 後自動計算');return;}
+  const s=+sv,n=+nv;
+  if(s<=0||!Number.isInteger(n)||n<1){liveErr('c4','σ 需 >0，n 需為正整數');return;}
+  const se=s/Math.sqrt(n);
+  let out=`σ<sub>X̄</sub> = ${s}/√${n} = <span class="la">${r(se,4)}</span>`;
+  out += n>=30? ` <span class="lhint">(n≥30，CLT 生效)</span>` : ` <span class="lhint">(n<30，須母體為常態)</span>`;
+  const muv=val('c4-mu'), lov=val('c4-lo'), hiv=val('c4-hi');
+  if(muv!==''&&lov!==''&&hiv!==''){
+    const mu=+muv, lo=Math.min(+lov,+hiv), hi=Math.max(+lov,+hiv);
+    const zlo=(lo-mu)/se, zhi=(hi-mu)/se;
+    out+=`<br>z=(${lo}−${mu})/${r(se,3)}=${r(zlo,2)}, (${hi}−${mu})/${r(se,3)}=${r(zhi,2)} → P=<span class="la">${r(pBetween(zlo,zhi),4)}</span>`;
+  }
+  setLive('c4',out);
+}
+// C5 p-hat
+function liveC5(){
+  clearErr('c5');
+  const pv=val('c5-p'), nv=val('c5-n');
+  if(pv===''||nv===''){hint('c5','← 填入 p 與 n 後自動計算');return;}
+  const p=+pv,n=+nv;
+  if(p<0||p>1||!Number.isInteger(n)||n<1){liveErr('c5','p 需 0~1，n 需為正整數');return;}
+  const se=Math.sqrt(p*(1-p)/n), np=n*p;
+  let out=`σ<sub>p̂</sub> = √(${p}·${r(1-p,4)}/${n}) = <span class="la">${r(se,5)}</span> &nbsp; np=${r(np,2)}`;
+  out += np>=5? ` <span class="lhint">(np≥5，可用常態近似)</span>` : ` <span class="lhint">(np<5，宜用二項)</span>`;
+  const lov=val('c5-lo'), hiv=val('c5-hi');
+  if(lov!==''&&hiv!==''&&se>0){
+    const lo=Math.min(+lov,+hiv), hi=Math.max(+lov,+hiv);
+    const zlo=(lo-p)/se, zhi=(hi-p)/se;
+    out+=`<br>z=(${lo}−${p})/${r(se,4)}=${r(zlo,2)}, (${hi}−${p})/${r(se,4)}=${r(zhi,2)} → P=<span class="la">${r(pBetween(zlo,zhi),4)}</span>`;
+  }
+  setLive('c5',out);
+}
+// C6 chi
+function liveC6(){
+  clearErr('c6');
+  const nv=val('c6-n'), s2v=val('c6-s2'), sig2v=val('c6-sig2');
+  if(nv===''||s2v===''||sig2v===''){hint('c6','← 填入 n、S²、σ² 後自動計算');return;}
+  const n=+nv,s2=+s2v,sig2=+sig2v;
+  if(!Number.isInteger(n)||n<2||sig2<=0||s2<0){liveErr('c6','n≥2，σ²>0，S²≥0');return;}
+  const chi=(n-1)*s2/sig2;
+  setLive('c6',`χ² = (${n}−1)·${s2} / ${sig2} = <span class="la">${r(chi,4)}</span> &nbsp; <span class="lhint">自由度 = ${n-1}，查卡方表</span>`);
+}
+
+// ── scroll spy ──
+const links=document.querySelectorAll('#sidenav a');
+const sections=[...links].map(a=>document.querySelector(a.getAttribute('href')));
+window.addEventListener('scroll',()=>{
+  let cur=0;
+  sections.forEach((s,i)=>{ if(s && window.scrollY>=s.offsetTop-130) cur=i; });
+  links.forEach(l=>l.classList.remove('active'));
+  if(links[cur]) links[cur].classList.add('active');
+},{passive:true});
+</script>
+</body>
+</html>

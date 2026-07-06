@@ -763,15 +763,15 @@ sub{font-size:.6em;}
   <div class="sec-title">期望值與變異數（離散）<span class="page-badge">Week 2-16 ~ 2-17</span></div>
   <div class="two">
     <div class="box">
-      <span class="tag t-blue">期望值 Expected Value（期望值）</span>
-      <h3 style="margin-top:.3rem;">分配的「中心 / 平均」</h3>
-      <div class="lf">E(X) = μ = Σ x·f(x)</div>
-      <p style="font-size:.8rem;color:#475569;">把每個值 × 它的機率，全部加起來＝「長期平均會落在哪」。</p>
+      <span class="tag t-blue">① 中心點 Location / Central tendency</span>
+      <h3 style="margin-top:.3rem;">用「期望值 Mean」描述：分配落在哪</h3>
+      <div class="lf">μ = E(X) = Σ x·f(x)</div>
+      <p style="font-size:.8rem;color:#475569;">把每個值 × 它的機率，全部加起來＝「長期平均會落在哪」，也就是分配的<strong>中心點</strong>。</p>
     </div>
     <div class="box">
-      <span class="tag t-orange">變異數 Variance（變異數）</span>
-      <h3 style="margin-top:.3rem;">分配的「分散程度」</h3>
-      <div class="lf" style="font-size:.95rem;">Var(X) = σ² = Σ(x−μ)²·f(x)</div>
+      <span class="tag t-orange">② 離散程度 Dispersion / Spread</span>
+      <h3 style="margin-top:.3rem;">用「變異數 Variance」描述：分得多開</h3>
+      <div class="lf" style="font-size:.95rem;">σ² = Var(X) = Σ(x−μ)²·f(x)</div>
       <div class="lf" style="font-size:.95rem;">= Σx²·f(x) − μ²　<span style="font-size:.8rem;color:#64748b;">(快算版)</span></div>
       <p style="font-size:.8rem;color:#475569;">標準差 σ = √Var(X)，把分散程度換回原單位。</p>
     </div>
@@ -840,8 +840,8 @@ sub{font-size:.6em;}
   <div class="two">
     <div class="box">
       <h3>期望值與變異數</h3>
-      <div class="lf">μ = E(X) = p</div>
-      <div class="lf">σ² = Var(X) = p·q = p(1−p)</div>
+      <div class="lf"><span style="font-size:.72rem;color:#2563eb;font-weight:700;">📍中心點</span>　μ = E(X) = p</div>
+      <div class="lf"><span style="font-size:.72rem;color:#ea580c;font-weight:700;">📏離散程度</span>　σ² = Var(X) = p·q = p(1−p)</div>
     </div>
     <div class="box">
       <span class="tag t-blue">伯努利過程 Bernoulli Process</span>
@@ -862,8 +862,8 @@ sub{font-size:.6em;}
     </div>
     <p style="font-size:.8rem;color:#475569;">C(n,x) = 在 n 次中挑出哪幾次成功的組合數；pˣ = 那幾次成功；q^(n−x) = 其餘失敗。</p>
     <div class="two" style="margin-top:.5rem;">
-      <div class="fml" style="font-size:.9rem;">μ = E(X) = <span class="hl">np</span></div>
-      <div class="fml" style="font-size:.9rem;">σ² = Var(X) = <span class="hl">npq</span></div>
+      <div class="fml" style="font-size:.9rem;"><span style="font-size:.72rem;color:#2563eb;font-weight:700;">📍中心點</span>　μ = E(X) = <span class="hl">np</span></div>
+      <div class="fml" style="font-size:.9rem;"><span style="font-size:.72rem;color:#ea580c;font-weight:700;">📏離散程度</span>　σ² = Var(X) = <span class="hl">npq</span></div>
     </div>
   </div>
   <div class="two">
@@ -914,8 +914,8 @@ sub{font-size:.6em;}
       f(x) = <span class="lf-frac"><span class="lf-num">λˣ e<sup>−λ</sup></span><span class="lf-den">x!</span></span>　<span style="font-size:.82rem;color:#64748b;">x = 0,1,2,…　e ≈ 2.71828</span>
     </div>
     <div class="two" style="margin-top:.5rem;">
-      <div class="fml" style="font-size:.9rem;">μ = E(X) = <span class="hl">λ</span></div>
-      <div class="fml" style="font-size:.9rem;">σ² = Var(X) = <span class="hl">λ</span>　<small style="color:#64748b;">(平均=變異數，特色！)</small></div>
+      <div class="fml" style="font-size:.9rem;"><span style="font-size:.72rem;color:#2563eb;font-weight:700;">📍中心點</span>　μ = E(X) = <span class="hl">λ</span></div>
+      <div class="fml" style="font-size:.9rem;"><span style="font-size:.72rem;color:#ea580c;font-weight:700;">📏離散程度</span>　σ² = Var(X) = <span class="hl">λ</span>　<small style="color:#64748b;">(平均=變異數，特色！)</small></div>
     </div>
   </div>
   <div class="two">
@@ -947,8 +947,8 @@ sub{font-size:.6em;}
     </div>
     <p style="font-size:.8rem;color:#475569;">N=母體總數，r=母體中成功個數，n=抽樣數，x=樣本中成功數。x = 0,1,…,min(n,r)。</p>
     <div class="two" style="margin-top:.4rem;">
-      <div class="fml" style="font-size:.85rem;">μ = n·(r/N)</div>
-      <div class="fml" style="font-size:.82rem;">σ² = n·(r/N)·(1−r/N)·<span style="white-space:nowrap;">(N−n)/(N−1)</span></div>
+      <div class="fml" style="font-size:.85rem;"><span style="font-size:.72rem;color:#2563eb;font-weight:700;">📍中心點</span>　μ = E(X) = n·(r/N) = <span class="hl">nr/N</span></div>
+      <div class="fml" style="font-size:.82rem;"><span style="font-size:.72rem;color:#ea580c;font-weight:700;">📏離散程度</span>　σ² = n·(r/N)·(1−r/N)·<span style="white-space:nowrap;">(N−n)/(N−1)</span></div>
     </div>
   </div>
   <div class="two">
@@ -975,8 +975,8 @@ sub{font-size:.6em;}
       <div class="lf">f(x) = p(1−p)<sup>x−1</sup> = p·q<sup>x−1</sup></div>
       <p style="font-size:.8rem;color:#475569;">x = 1,2,…：前 x−1 次都失敗、第 x 次成功。</p>
       <div class="two" style="margin-top:.4rem;">
-        <div class="fml" style="font-size:.85rem;">μ = 1/p</div>
-        <div class="fml" style="font-size:.85rem;">σ² = (1−p)/p²</div>
+        <div class="fml" style="font-size:.85rem;"><span style="font-size:.72rem;color:#2563eb;font-weight:700;">📍中心點</span>　μ = E(X) = 1/p</div>
+        <div class="fml" style="font-size:.85rem;"><span style="font-size:.72rem;color:#ea580c;font-weight:700;">📏離散程度</span>　σ² = (1−p)/p²</div>
       </div>
     </div>
     <div class="box">
@@ -999,8 +999,8 @@ sub{font-size:.6em;}
       </div>
       <p style="font-size:.8rem;color:#475569;">x = r, r+1, …：第 x 次拿到第 r 次成功。</p>
       <div class="two" style="margin-top:.4rem;">
-        <div class="fml" style="font-size:.85rem;">μ = r/p</div>
-        <div class="fml" style="font-size:.85rem;">σ² = r(1−p)/p²</div>
+        <div class="fml" style="font-size:.85rem;"><span style="font-size:.72rem;color:#2563eb;font-weight:700;">📍中心點</span>　μ = E(X) = r/p</div>
+        <div class="fml" style="font-size:.85rem;"><span style="font-size:.72rem;color:#ea580c;font-weight:700;">📏離散程度</span>　σ² = r(1−p)/p²</div>
       </div>
     </div>
     <div class="box">

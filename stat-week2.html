@@ -170,6 +170,7 @@ textarea.pi-inp{resize:vertical;font-family:'Courier New',monospace;font-size:.8
 mark{padding:.05rem .3rem;border-radius:4px;}
 .sym{background:#dbeafe;color:#1e40af;padding:.05rem .4rem;border-radius:4px;font-family:'Times New Roman',serif;}
 sub{font-size:.6em;}
+abbr[title]{text-decoration:underline dotted #0ea5e9;text-underline-offset:2px;cursor:help;}
 </style>
 </head>
 <body>
@@ -1505,6 +1506,54 @@ window.addEventListener('scroll',()=>{
   links.forEach(l=>l.classList.remove('active'));
   if(links[cur]) links[cur].classList.add('active');
 },{passive:true});
+</script>
+<script>
+/* 自動為內文統計代號加上 title 提示（虛線底線）。長詞優先，避免短詞蓋過長詞。 */
+(function(){
+  var defs = {
+    "Var(X)":"變異數 Variance：數值分散的程度",
+    "E(X)":"期望值 Expected Value：長期平均，＝分配的中心點",
+    "F(x)":"累積分配函數 CDF：P(X ≤ x)",
+    "f(x)":"機率函數：每個 x 對應的機率（離散＝PMF）",
+    "σ²":"變異數（讀 sigma 平方）",
+    "σ":"標準差 Standard Deviation ＝ √變異數",
+    "μ":"母體平均／期望值（讀 mu）",
+    "λ":"布阿松分配的平均發生率（讀 lambda）",
+    "p":"單次成功機率",
+    "q":"單次失敗機率 ＝ 1−p",
+    "n":"試驗次數／樣本數",
+    "r":"目標成功次數",
+    "N":"母體總數",
+    "S":"樣本空間 Sample Space：所有可能結果的集合"
+  };
+  function esc(s){return s.replace(/[.*+?^${}()|[\]\\]/g,"\\$&");}
+  var keys = Object.keys(defs).sort(function(a,b){return b.length-a.length;});
+  var re = new RegExp("(?<![A-Za-z])(" + keys.map(esc).join("|") + ")(?![A-Za-z])","g");
+  var main = document.getElementById("main");
+  if(!main) return;
+  var skip = {ABBR:1,SCRIPT:1,STYLE:1,A:1,H1:1,H2:1,H3:1};
+  var walker = document.createTreeWalker(main, NodeFilter.SHOW_TEXT, null);
+  var nodes = [];
+  while(walker.nextNode()){
+    var n = walker.currentNode, p = n.parentNode;
+    re.lastIndex = 0;
+    if(n.nodeValue && re.test(n.nodeValue) && p && !skip[p.nodeName] &&
+       !(p.classList && p.classList.contains("sym"))) nodes.push(n);
+  }
+  nodes.forEach(function(n){
+    re.lastIndex = 0;
+    var frag = document.createDocumentFragment(), last = 0, m, s = n.nodeValue;
+    while((m = re.exec(s))){
+      if(m.index > last) frag.appendChild(document.createTextNode(s.slice(last, m.index)));
+      var ab = document.createElement("abbr");
+      ab.title = defs[m[1]]; ab.textContent = m[1];
+      frag.appendChild(ab);
+      last = m.index + m[1].length;
+    }
+    if(last < s.length) frag.appendChild(document.createTextNode(s.slice(last)));
+    n.parentNode.replaceChild(frag, n);
+  });
+})();
 </script>
 </body>
 </html>

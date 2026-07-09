@@ -1,0 +1,1221 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>經濟學 Week 3 視覺化 · 總體經濟</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'Segoe UI',sans-serif;background:#f1f5f9;display:flex;min-height:100vh;}
+/* ── Sidebar ── */
+#sidenav{width:210px;min-width:210px;background:#082f49;height:100vh;position:sticky;top:0;overflow-y:auto;font-size:.78rem;padding-bottom:2rem;}
+#sidenav::-webkit-scrollbar{width:4px;}
+#sidenav::-webkit-scrollbar-thumb{background:#0e4a6e;border-radius:2px;}
+#sidenav h2{color:#38bdf8;font-size:.63rem;text-transform:uppercase;letter-spacing:.08em;padding:.7rem 1rem .25rem;}
+#sidenav a{display:flex;align-items:center;justify-content:space-between;padding:.38rem 1rem .38rem 1.1rem;color:#94a3b8;text-decoration:none;border-left:2px solid transparent;transition:all .15s;}
+#sidenav a:hover,#sidenav a.active{color:white;background:#0c4a6e;border-left-color:#0ea5e9;}
+#sidenav a.active{color:#7dd3fc;}
+.pg{font-size:.65rem;background:#0c4a6e;color:#7dd3fc;padding:.05rem .35rem;border-radius:99px;white-space:nowrap;}
+/* ── Main ── */
+#main{flex:1;padding:1.5rem;max-width:1000px;}
+.part-header{background:linear-gradient(135deg,#0c4a6e,#0369a1);color:white;border-radius:14px;padding:1.1rem 1.5rem;margin-bottom:1.2rem;}
+.part-header h2{font-size:1.1rem;margin-bottom:.25rem;}
+.part-header p{font-size:.82rem;opacity:.85;}
+.sec{background:white;border-radius:12px;padding:1.1rem 1.3rem;margin-bottom:1rem;box-shadow:0 1px 6px rgba(0,0,0,.07);border:1px solid #e2e8f0;}
+.sec-title{font-size:.98rem;font-weight:700;color:#1e293b;margin-bottom:.85rem;padding-bottom:.5rem;border-bottom:2px solid #e2e8f0;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:.4rem;}
+.page-badge{font-size:.68rem;background:#f0f9ff;color:#0369a1;border:1px solid #bae6fd;border-radius:99px;padding:.1rem .55rem;font-weight:600;}
+.cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:.7rem;margin-bottom:.9rem;}
+.card{border-radius:10px;padding:.85rem;font-size:.83rem;line-height:1.6;border:1px solid transparent;}
+.card h3{font-size:.88rem;margin-bottom:.3rem;}
+.c-blue{background:#eff6ff;border-color:#bfdbfe;}.c-green{background:#ecfdf5;border-color:#a7f3d0;}
+.c-orange{background:#fff7ed;border-color:#fed7aa;}.c-purple{background:#f5f3ff;border-color:#ddd6fe;}
+.c-red{background:#fff1f2;border-color:#fecdd3;}.c-teal{background:#f0fdfa;border-color:#99f6e4;}
+.c-yellow{background:#fefce8;border-color:#fde68a;}.c-sky{background:#f0f9ff;border-color:#bae6fd;}
+.box{background:#f8fafc;border:1px solid #e2e8f0;border-radius:10px;padding:.85rem 1rem;margin-bottom:.75rem;}
+.box h3{font-size:.88rem;color:#1e293b;margin-bottom:.5rem;}
+.tip{background:#f0fdf4;border-left:3px solid #22c55e;padding:.55rem .85rem;border-radius:0 8px 8px 0;font-size:.82rem;color:#166534;margin-top:.65rem;line-height:1.7;}
+.warn{background:#fffbeb;border-left:3px solid #f59e0b;padding:.55rem .85rem;border-radius:0 8px 8px 0;font-size:.82rem;color:#92400e;margin-top:.65rem;line-height:1.7;}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:.75rem;margin-bottom:.75rem;}
+@media(max-width:600px){.two{grid-template-columns:1fr;}}
+.tag{display:inline-block;font-size:.68rem;font-weight:700;padding:.1rem .45rem;border-radius:99px;margin-bottom:.35rem;}
+.t-blue{background:#dbeafe;color:#1d4ed8;}.t-green{background:#dcfce7;color:#166534;}
+.t-orange{background:#ffedd5;color:#9a3412;}.t-purple{background:#ede9fe;color:#5b21b6;}
+.t-red{background:#fee2e2;color:#991b1b;}.t-teal{background:#ccfbf1;color:#115e59;}
+.t-sky{background:#e0f2fe;color:#075985;}
+.flow{display:flex;flex-wrap:wrap;align-items:center;gap:.4rem;margin:.5rem 0;}
+.fb{background:white;border:1.5px solid #e2e8f0;border-radius:8px;padding:.5rem .75rem;font-size:.8rem;text-align:center;min-width:80px;}
+.fa{color:#94a3b8;font-weight:700;}
+.diagram-wrap{overflow-x:auto;margin:.6rem 0;}
+.read-guide{background:#eef2ff;border:1px dashed #a5b4fc;border-radius:8px;padding:.5rem .8rem;font-size:.78rem;color:#3730a3;margin-top:.5rem;line-height:1.7;}
+/* formula cards */
+.fc{background:white;border-radius:12px;overflow:hidden;box-shadow:0 2px 10px rgba(0,0,0,.08);margin-bottom:1.2rem;border:1.5px solid #e2e8f0;}
+.fc-head{background:linear-gradient(135deg,#0c4a6e,#0369a1);color:white;padding:.7rem 1.1rem;}
+.fc-head h3{font-size:.95rem;margin:0;}
+.lf{background:#d1fae5;border:1px solid #6ee7b7;border-radius:8px;padding:.85rem 1.2rem;display:flex;align-items:center;gap:.35rem;font-family:'Times New Roman','Palatino Linotype',serif;font-size:1.1rem;flex-wrap:wrap;margin-bottom:1rem;}
+.lf-frac{display:inline-flex;flex-direction:column;align-items:center;vertical-align:middle;}
+.lf-num{border-bottom:1.8px solid #1e293b;padding:1px 4px 2px;text-align:center;}
+.lf-den{padding:2px 4px 0;text-align:center;}
+.pb{display:inline-block;cursor:pointer;background:#0369a1;color:white;font-family:'Times New Roman',serif;font-size:1rem;font-weight:700;padding:.05rem .45rem;border-radius:4px;vertical-align:middle;transition:background .15s,transform .1s;position:relative;}
+.pb:hover{background:#0284c7;transform:scale(1.08);}
+.pb[data-tip]:hover::after{content:attr(data-tip);position:absolute;bottom:110%;left:50%;transform:translateX(-50%);background:#0f172a;color:white;padding:3px 8px;border-radius:5px;font-size:.68rem;font-family:'Segoe UI',sans-serif;font-weight:400;white-space:nowrap;pointer-events:none;z-index:99;}
+.lf-live{background:#f0fdf4;border:1.5px solid #86efac;border-radius:8px;padding:.65rem 1rem;font-family:'Times New Roman',serif;font-size:1.05rem;min-height:2.8rem;display:flex;align-items:center;gap:.3rem;flex-wrap:wrap;margin-bottom:.9rem;}
+.lf-live .lv{color:#0369a1;font-weight:700;}
+.lf-live .la{color:#065f46;font-weight:700;font-size:1.2rem;background:#bbf7d0;padding:.05rem .4rem;border-radius:4px;}
+.lf-live .lhint{color:#94a3b8;font-family:'Segoe UI',sans-serif;font-size:.8rem;font-style:italic;}
+.pi-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(185px,1fr));gap:.75rem;margin:.5rem 0 .9rem;}
+.pi-sym{background:#0369a1;color:white;font-family:'Times New Roman',serif;font-size:.88rem;font-weight:700;padding:.1rem .45rem;border-radius:4px;cursor:pointer;user-select:none;}
+.pi-sym:hover{background:#0284c7;}
+.pi-inp{border:1.5px solid #cbd5e1;border-radius:7px;padding:.4rem .7rem;font-size:.87rem;outline:none;width:100%;box-sizing:border-box;transition:border .15s,box-shadow .15s;background:white;}
+.pi-inp:focus{border-color:#0ea5e9;box-shadow:0 0 0 2px rgba(14,165,233,.15);}
+.pi-inp.lit{border-color:#f59e0b;box-shadow:0 0 0 2px rgba(245,158,11,.18);}
+.calc-err{background:#fff1f2;border:1px solid #fca5a5;border-radius:8px;padding:.6rem .9rem;margin-top:.6rem;color:#991b1b;font-size:.82rem;display:none;}
+.calc-err.show{display:block;}
+/* table */
+.tbl{width:100%;border-collapse:collapse;font-size:.82rem;}
+.tbl th{background:#0f172a;color:white;padding:.45rem .7rem;text-align:left;}
+.tbl td{padding:.4rem .7rem;border-bottom:1px solid #e2e8f0;}
+.tbl tr:nth-child(even) td{background:#f8fafc;}
+</style>
+</head>
+<body>
+<nav id="sidenav">
+  <div style="padding:.5rem 1rem .8rem;border-bottom:1px solid #0c4a6e;">
+    <div style="color:white;font-weight:700;font-size:.9rem;">🌐 經濟學 Week 3</div>
+    <div style="color:#38bdf8;font-size:.72rem;margin-top:.2rem;">總體經濟 Macroeconomics</div>
+    <div style="color:#64748b;font-size:.7rem;padding:.3rem 0 0;">📖 第一版（上課後更新）</div>
+  </div>
+  <h2>PART 1 · 導論</h2>
+  <a href="#s1">從個體到總體 <span class="pg">p.2~13</span></a>
+  <a href="#s2">何謂總體經濟 <span class="pg">p.11~13</span></a>
+  <h2>PART 2 · GDP</h2>
+  <a href="#s3">GDP 是什麼 <span class="pg">p.14</span></a>
+  <a href="#s4">名目 vs 實質 GDP <span class="pg">p.15~17</span></a>
+  <a href="#s5">GDP 三種衡量法 <span class="pg">p.18~21</span></a>
+  <a href="#s6">GDP 的缺點與重要性 <span class="pg">p.22~24</span></a>
+  <h2>PART 3 · 經濟成長</h2>
+  <a href="#s7">經濟成長與生產函數 <span class="pg">p.29~35</span></a>
+  <a href="#s8">Solow 模型與技術進步 <span class="pg">p.34~40</span></a>
+  <a href="#s9">消費、儲蓄與投資 <span class="pg">p.44~45</span></a>
+  <h2>PART 4 · 凱因斯模型</h2>
+  <a href="#s10">古典 vs 凱因斯 <span class="pg">p.42~43</span></a>
+  <a href="#s11">消費與儲蓄函數 <span class="pg">p.51~55</span></a>
+  <a href="#s12">投資與均衡所得 <span class="pg">p.57~61</span></a>
+  <h2>PART 5 · 儲蓄的兩面</h2>
+  <a href="#s13">節儉的矛盾 <span class="pg">p.62~66</span></a>
+  <a href="#s14">儲蓄的好處 <span class="pg">p.67</span></a>
+  <h2>PART 6 · 政府部門</h2>
+  <a href="#s15">政府支出與預算限制 <span class="pg">p.73~75</span></a>
+  <a href="#s16">加入政府的均衡 <span class="pg">p.76~77</span></a>
+  <h2>PART 7 · 開放經濟</h2>
+  <a href="#s17">國外部門與貿易餘額 <span class="pg">p.82~86</span></a>
+  <a href="#s18">貿易條件與投資 <span class="pg">p.84~89</span></a>
+  <h2>PART 8 · 成長政策</h2>
+  <a href="#s19">促進成長的政策 <span class="pg">p.90~95</span></a>
+  <h2>🧮 公式計算機</h2>
+  <a href="#c1">實質 GDP 成長率</a>
+  <a href="#c2">GDP 支出面 (C+I+G+NX)</a>
+  <a href="#c3">Solow 成長率</a>
+  <a href="#c4">消費函數與乘數</a>
+  <a href="#c5">均衡所得 Y*</a>
+</nav>
+
+<main id="main">
+
+<!-- PART 1 -->
+<div class="part-header">
+  <h2>PART 1 &nbsp;·&nbsp; 從個體走向總體</h2>
+  <p>上兩堂我們研究「一個人、一家廠商」；這堂我們把鏡頭拉遠，看「整個國家」的經濟。</p>
+</div>
+
+<div class="sec" id="s1">
+  <div class="sec-title">複習：個體經濟的地圖<span class="page-badge">p.2~13</span></div>
+  <p style="font-size:.84rem;color:#475569;line-height:1.8;margin-bottom:.7rem;">
+    個體經濟（Microeconomics）研究<strong>單一</strong>消費者與廠商如何在市場上互動，最後匯集成<strong>價格</strong>。總體經濟（Macroeconomics）則把所有人加總起來，研究<strong>整個經濟體</strong>的表現。
+  </p>
+  <div class="cards">
+    <div class="card c-blue">
+      <span class="tag t-blue">消費者行為</span>
+      <h3>買方</h3>
+      <p>無異曲線（消費偏好）、預算線（消費限制）、效用最大消費（消費決策）。</p>
+    </div>
+    <div class="card c-orange">
+      <span class="tag t-orange">廠商行為</span>
+      <h3>賣方</h3>
+      <p>等產量線（生產組合）、等成本線（生產限制）、最小成本生產（生產決策）。</p>
+    </div>
+    <div class="card c-green">
+      <span class="tag t-green">市場價格</span>
+      <h3>供需交會</h3>
+      <p>需求＋供給 → 市場均衡價格。完全競爭下廠商是<strong>價格接受者</strong>；非競爭市場廠商是<strong>價格制定者</strong>。</p>
+    </div>
+  </div>
+  <div class="box">
+    <h3>🔭 一句話分辨個體 vs 總體</h3>
+    <div class="two" style="margin-bottom:0;">
+      <div style="background:#eff6ff;border-radius:8px;padding:.6rem .8rem;font-size:.83rem;color:#475569;">
+        <strong>個體（Micro）</strong><br>一顆樹：某家公司的定價、某個人的消費選擇。
+      </div>
+      <div style="background:#ecfdf5;border-radius:8px;padding:.6rem .8rem;font-size:.83rem;color:#475569;">
+        <strong>總體（Macro）</strong><br>整片森林：全國的 GDP、失業率、通膨、經濟成長。
+      </div>
+    </div>
+  </div>
+  <div class="box" style="border:1.5px solid #bae6fd;">
+    <span class="tag t-sky">🔖 真實案例</span>
+    <h3>台灣近年經濟成長率（GDP 年增率）像坐雲霄飛車</h3>
+    <p style="font-size:.83rem;color:#475569;line-height:1.9;">
+      2021 Q1 疫後爆發 <strong>+8.16%</strong> → 2023 Q1 出口衰退 <strong>−3.02%</strong>（金融海嘯以來最差）→ 2024 Q1 反彈 <strong>+6.51%</strong>（11 年新高）→ 受 AI 與半導體帶動，2025 全年上修至 <strong>8.63%</strong>，2026 Q1 更衝上 <strong>14.55%</strong>（近 48 年新高）。這些新聞標題背後的主角，就是本堂的核心：<strong>GDP 與經濟成長</strong>。
+    </p>
+    <div class="read-guide">🧭 讀新聞的方法：新聞說的「經濟成長率」＝實質 GDP 的年增率。數字為正代表比去年生產更多、經濟在擴張；為負代表衰退。</div>
+  </div>
+</div>
+
+<div class="sec" id="s2">
+  <div class="sec-title">何謂總體經濟<span class="page-badge">p.11~13</span></div>
+  <div class="box">
+    <h3>定義</h3>
+    <p style="font-size:.84rem;color:#475569;line-height:1.8;">
+      總體經濟學（Macroeconomics）研究<strong>整個經濟體系的整體（總合）績效</strong>。核心是衡量財貨與勞務的總產出，也就是<strong>實質國內生產毛額（GDP, Gross Domestic Product）</strong>。
+    </p>
+  </div>
+  <div class="cards">
+    <div class="card c-blue"><h3>消費 C</h3><p>家戶購買的財貨與勞務。</p></div>
+    <div class="card c-orange"><h3>毛投資 I</h3><p>私部門新購買的資本財——設備和建築物。</p></div>
+    <div class="card c-purple"><h3>政府購買 G</h3><p>政府對財貨與勞務的購買。</p></div>
+    <div class="card c-teal"><h3>淨輸出 X−M</h3><p>出口減進口的淨額。</p></div>
+  </div>
+  <div class="two">
+    <div class="box">
+      <span class="tag t-green">總合就業</span>
+      <h3>Employment</h3>
+      <p style="font-size:.83rem;color:#475569;line-height:1.7;">在職人數——有工作的人。</p>
+    </div>
+    <div class="box">
+      <span class="tag t-red">總合失業</span>
+      <h3>Unemployment</h3>
+      <p style="font-size:.83rem;color:#475569;line-height:1.7;">沒有工作<strong>而且正在找工作</strong>的人數。（沒在找工作的不算失業。）</p>
+    </div>
+  </div>
+</div>
+
+<!-- PART 2 -->
+<div class="part-header" style="background:linear-gradient(135deg,#075985,#0284c7);">
+  <h2>PART 2 &nbsp;·&nbsp; GDP 國內生產毛額</h2>
+  <p>衡量一個國家「一年生產了多少」的總指標，怎麼定義、怎麼算、有什麼盲點？</p>
+</div>
+
+<div class="sec" id="s3">
+  <div class="sec-title">GDP 是什麼<span class="page-badge">p.14</span></div>
+  <div class="box">
+    <h3>國內生產毛額（GDP, Gross Domestic Product）</h3>
+    <p style="font-size:.84rem;color:#475569;line-height:1.9;">
+      一定時期內（一季或一年），一個區域經濟活動中所生產出的<strong>全部最終成果</strong>（產品和勞務）的<strong>市場價值（market value）</strong>。它是國民經濟核算的核心指標，用來衡量一國經濟狀況與發展水準。
+    </p>
+  </div>
+  <div class="cards">
+    <div class="card c-sky"><h3>🏭 國內</h3><p>只算「在這塊土地上」生產的，不管生產者是本國人還是外國人。</p></div>
+    <div class="card c-green"><h3>🎯 最終成果</h3><p>只算最終產品，避免重複計算。麵粉做成麵包，只算麵包，不重複算麵粉。</p></div>
+    <div class="card c-orange"><h3>💰 市場價值</h3><p>用市場價格加總。沒有市場交易的（如自己煮飯）不計入。</p></div>
+  </div>
+  <div class="tip">💡 記憶訣竅：GDP＝「這一年，這塊土地上，生產出來能賣錢的東西，全部加起來值多少錢」。</div>
+</div>
+
+<div class="sec" id="s4">
+  <div class="sec-title">名目 GDP vs 實質 GDP<span class="page-badge">p.15~17</span></div>
+  <div class="two">
+    <div class="box">
+      <span class="tag t-orange">名目 GDP</span>
+      <h3>Nominal GDP</h3>
+      <p style="font-size:.84rem;color:#475569;line-height:1.8;">用<strong>當年價格</strong>衡量一段期間內生產出來的財貨總值。物價漲，名目 GDP 就跟著虛胖。</p>
+    </div>
+    <div class="box">
+      <span class="tag t-green">實質 GDP</span>
+      <h3>Real GDP</h3>
+      <p style="font-size:.84rem;color:#475569;line-height:1.8;">名目 GDP 除以隱含物價水準；或用<strong>基期價格</strong>計算該年份的總產值，<strong>剔除通膨</strong>，反映真實產量。</p>
+    </div>
+  </div>
+  <div class="box">
+    <h3>📐 實質 GDP 成長率（經濟成長率）</h3>
+    <div class="lf" style="justify-content:center;">
+      成長率 =
+      <span class="lf-frac">
+        <span class="lf-num">Y<sub style="font-size:.6em;">t</sub> − Y<sub style="font-size:.6em;">t−1</sub></span>
+        <span class="lf-den">Y<sub style="font-size:.6em;">t−1</sub></span>
+      </span>
+      × 100%
+    </div>
+    <p style="font-size:.82rem;color:#475569;line-height:1.8;">
+      其中 <strong>Y<sub>t</sub></strong> 是今年的實質 GDP，<strong>Y<sub>t−1</sub></strong> 是去年的實質 GDP。乘以 100 就得到百分率表示的成長率。這正是新聞裡「經濟成長率 8.16%」的算法。
+    </p>
+    <div class="read-guide">🧭 讀圖方法：新聞的成長率折線圖（yoy＝與去年同期相比），線在 0 以上代表成長，跌破 0 代表衰退（如 2023 Q1 的 −3.02%）。</div>
+  </div>
+  <div class="warn">⚠️ 常見陷阱：名目 GDP 變大，不代表大家真的變富有——可能只是物價漲了。比較不同年份的經濟表現，一定要看<strong>實質 GDP</strong>。</div>
+</div>
+
+<div class="sec" id="s5">
+  <div class="sec-title">GDP 的三種衡量法<span class="page-badge">p.18~21</span></div>
+  <p style="font-size:.84rem;color:#475569;line-height:1.8;margin-bottom:.7rem;">
+    同一塊大餅可以從三個角度算，結果理論上相等：<strong>生產它 → 分配所得 → 花掉它</strong>。
+  </p>
+  <div class="cards">
+    <div class="card c-blue">
+      <span class="tag t-blue">① 所得面</span>
+      <h3>誰賺走了</h3>
+      <p>用各生產要素賺取的所得加總，稱為<strong>國民所得（national income）</strong>：薪資、租金、利潤、利息等。</p>
+    </div>
+    <div class="card c-orange">
+      <span class="tag t-orange">② 生產面</span>
+      <h3>哪個產業做的</h3>
+      <p>把國民所得依各<strong>生產部門</strong>細分：製造業、金融保險、批發零售、服務業⋯⋯</p>
+    </div>
+    <div class="card c-green">
+      <span class="tag t-green">③ 支出面</span>
+      <h3>誰買走了</h3>
+      <p>從最終購買者的<strong>支出</strong>估計，最常用。就是下面的 C+I+G+(X−M)。</p>
+    </div>
+  </div>
+  <div class="box">
+    <h3>📐 支出面公式（最常用）</h3>
+    <div class="lf" style="justify-content:center;font-size:1.15rem;">
+      GDP = C + I + G + (X − M)
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:.5rem;font-size:.82rem;">
+      <div style="background:#eff6ff;border-radius:7px;padding:.5rem .7rem;"><strong>C</strong>　私人消費開支</div>
+      <div style="background:#fff7ed;border-radius:7px;padding:.5rem .7rem;"><strong>I</strong>　投資總額</div>
+      <div style="background:#f5f3ff;border-radius:7px;padding:.5rem .7rem;"><strong>G</strong>　政府消費開支</div>
+      <div style="background:#f0fdfa;border-radius:7px;padding:.5rem .7rem;"><strong>X</strong>　出口毛額</div>
+      <div style="background:#fff1f2;border-radius:7px;padding:.5rem .7rem;"><strong>M</strong>　進口毛額</div>
+    </div>
+    <div class="tip">💡 為什麼要「減進口」？因為 C、I、G 裡面混進了買外國貨的錢，那不是「國內」生產的，要扣掉。</div>
+  </div>
+</div>
+
+<div class="sec" id="s6">
+  <div class="sec-title">GDP 的缺點與重要性<span class="page-badge">p.22~24</span></div>
+  <div class="two">
+    <div class="box" style="border:1.5px solid #fecaca;">
+      <span class="tag t-red">缺點：它沒算到的東西</span>
+      <ul style="font-size:.83rem;color:#475569;line-height:2;padding-left:1.1rem;margin-top:.3rem;">
+        <li>未考慮<strong>所得分配</strong>的變動（貧富差距看不出來）</li>
+        <li>排除了<strong>非市場財貨</strong>（自己帶小孩、做家事沒算）</li>
+        <li>未給予<strong>休閒時間</strong>任何價值</li>
+        <li>未考慮<strong>環境損害</strong>，如空氣和水的品質</li>
+      </ul>
+    </div>
+    <div class="box" style="border:1.5px solid #bbf7d0;">
+      <span class="tag t-green">重要性：為何仍是核心指標</span>
+      <p style="font-size:.83rem;color:#475569;line-height:1.9;margin-top:.3rem;">
+        儘管有盲點，實質 GDP 仍是衡量一國生活水準與景氣的<strong>最佳單一指標</strong>——它可跨年、跨國比較，資料齊全且更新快，是政策制定、投資判斷的共同語言。
+      </p>
+    </div>
+  </div>
+  <div class="warn">⚠️ 考試提示：「實質 GDP 的四大缺點」很常考——所得分配、非市場財貨、休閒、環境。用「分、非、休、環」四個字記。</div>
+</div>
+
+<!-- PART 3 -->
+<div class="part-header" style="background:linear-gradient(135deg,#0e4a5f,#0e7490);">
+  <h2>PART 3 &nbsp;·&nbsp; 經濟成長</h2>
+  <p>國家怎麼「一年比一年生產更多」？供給面（生產面）的視角：Solow 模型。</p>
+</div>
+
+<div class="sec" id="s7">
+  <div class="sec-title">經濟成長與生產函數<span class="page-badge">p.29~35</span></div>
+  <div class="two">
+    <div>
+      <div class="box">
+        <h3>什麼是經濟成長（economic growth）</h3>
+        <p style="font-size:.83rem;color:#475569;line-height:1.8;">指<strong>實質國民所得或產出，隨時間經過而增加</strong>的現象。畫在生產可能線（PPF）上，就是整條線往外推。</p>
+      </div>
+      <div class="box">
+        <h3>生產函數——古典學派</h3>
+        <div style="font-family:'Times New Roman',serif;font-size:1.1rem;background:#ecfdf5;border-radius:7px;padding:.55rem .85rem;margin:.4rem 0;text-align:center;">
+          Y = F(K, L)
+        </div>
+        <p style="font-size:.82rem;color:#475569;line-height:1.8;">
+          兩種要素投入：<strong>資本存量 K</strong>（capital stock，機器廠房）與<strong>勞動 L</strong>（labor，工人）。古典學派認為：勞動力增加＋資本累積，就創造了經濟成長。
+        </p>
+      </div>
+    </div>
+    <div class="diagram-wrap">
+      <div style="font-size:.8rem;font-weight:600;color:#334155;text-align:center;margin-bottom:.2rem;">生產可能線（PPF）外推＝經濟成長</div>
+      <svg viewBox="0 0 220 210" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-width:250px;display:block;margin:0 auto;">
+        <line x1="30" y1="15" x2="30" y2="185" stroke="#1e293b" stroke-width="1.5"/>
+        <line x1="30" y1="185" x2="205" y2="185" stroke="#1e293b" stroke-width="1.5"/>
+        <text x="24" y="13" font-size="10" fill="#1e293b" font-weight="700">X</text>
+        <text x="208" y="189" font-size="10" fill="#1e293b" font-weight="700">Y</text>
+        <!-- inner PPF (衰退) quarter-arc bowed outward, axis to axis -->
+        <path d="M 30 90 C 82 90, 125 133, 125 185" stroke="#16a34a" stroke-width="2" fill="none"/>
+        <text x="70" y="80" font-size="8" fill="#16a34a">衰退</text>
+        <!-- middle PPF -->
+        <path d="M 30 58 C 99 58, 156 116, 156 185" stroke="#dc2626" stroke-width="2" fill="none"/>
+        <!-- outer PPF (成長) -->
+        <path d="M 30 26 C 118 26, 190 97, 190 185" stroke="#0369a1" stroke-width="2.2" fill="none"/>
+        <text x="150" y="40" font-size="8" fill="#0369a1" font-weight="700">成長</text>
+        <!-- growth arrow: from inner toward outer (outward) -->
+        <line x1="96" y1="104" x2="128" y2="70" stroke="#0369a1" stroke-width="1.6" marker-end="url(#arrG)"/>
+        <!-- recession arrow: outward toward inner -->
+        <line x1="150" y1="120" x2="120" y2="150" stroke="#16a34a" stroke-width="1.4" marker-end="url(#arrGr)"/>
+        <defs>
+          <marker id="arrG" markerWidth="7" markerHeight="7" refX="5" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="#0369a1"/></marker>
+          <marker id="arrGr" markerWidth="7" markerHeight="7" refX="5" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="#16a34a"/></marker>
+        </defs>
+      </svg>
+      <div class="read-guide" style="margin-top:.3rem;">🧭 讀圖：線離原點越遠＝能生產越多。往外推＝經濟成長，往內縮＝衰退。</div>
+    </div>
+  </div>
+</div>
+
+<div class="sec" id="s8">
+  <div class="sec-title">Solow 模型與技術進步<span class="page-badge">p.34~40</span></div>
+  <div class="box">
+    <h3>生產函數——新古典學派（Solow 模型）</h3>
+    <div style="font-family:'Times New Roman',serif;font-size:1.2rem;background:#ecfdf5;border-radius:7px;padding:.6rem .85rem;margin:.4rem 0;text-align:center;">
+      Y = A · F(K, L)
+    </div>
+    <p style="font-size:.83rem;color:#475569;line-height:1.9;">
+      在資本 K、勞動 L 之外，再加上第三個要素——<strong>技術進步 A（advanced technology）</strong>。觀察式子：Y 和 A 呈比例變動，若 A 倍增而 K、L 不變，Y 也倍增。這解決了「光靠增加人和機器，成長會停滯」的困境。
+    </p>
+  </div>
+  <div class="two">
+    <div>
+      <div class="box">
+        <h3>📐 Solow 成長分解式</h3>
+        <div class="lf" style="font-size:.98rem;justify-content:center;">
+          <span class="lf-frac"><span class="lf-num">ΔY</span><span class="lf-den">Y</span></span> =
+          <span class="lf-frac"><span class="lf-num">ΔA</span><span class="lf-den">A</span></span> +
+          α·<span class="lf-frac"><span class="lf-num">ΔK</span><span class="lf-den">K</span></span> +
+          β·<span class="lf-frac"><span class="lf-num">ΔL</span><span class="lf-den">L</span></span>
+        </div>
+        <p style="font-size:.82rem;color:#475569;line-height:1.8;">
+          白話：<strong>經濟成長率</strong>（ΔY/Y）＝ 技術成長（ΔA/A）＋ 資本貢獻（α·ΔK/K）＋ 勞動貢獻（β·ΔL/L）。技術進步、資本、勞動，就是生產函數的三項要素。
+        </p>
+      </div>
+      <div class="box">
+        <h3>🚀 技術進步：四次工業革命</h3>
+        <div style="display:flex;flex-direction:column;gap:.3rem;font-size:.8rem;color:#475569;">
+          <div style="background:#f0f9ff;border-radius:6px;padding:.35rem .6rem;">① 第一次（1760–）蒸汽機</div>
+          <div style="background:#f0f9ff;border-radius:6px;padding:.35rem .6rem;">② 第二次（1870–）電力</div>
+          <div style="background:#f0f9ff;border-radius:6px;padding:.35rem .6rem;">③ 第三次（1945–）電腦/資訊</div>
+          <div style="background:#e0f2fe;border-radius:6px;padding:.35rem .6rem;font-weight:600;">④ 第四次（2010–）AI/物聯網</div>
+        </div>
+      </div>
+    </div>
+    <div class="diagram-wrap">
+      <div style="font-size:.8rem;font-weight:600;color:#334155;text-align:center;margin-bottom:.2rem;">技術進步 A↑ → 生產函數整條上移</div>
+      <svg viewBox="0 0 240 210" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-width:270px;display:block;margin:0 auto;">
+        <line x1="32" y1="15" x2="32" y2="185" stroke="#1e293b" stroke-width="1.5"/>
+        <line x1="32" y1="185" x2="225" y2="185" stroke="#1e293b" stroke-width="1.5"/>
+        <text x="20" y="13" font-size="9" fill="#1e293b" font-weight="700">產出Y</text>
+        <text x="200" y="198" font-size="9" fill="#1e293b" font-weight="700">資本投入K</text>
+        <!-- F1: lowest, concave increasing -->
+        <path d="M 32 185 C 70 150, 140 128, 215 120" stroke="#94a3b8" stroke-width="2" fill="none"/>
+        <text x="180" y="115" font-size="8" fill="#64748b">F₁(K,h₁L)</text>
+        <!-- F2 -->
+        <path d="M 32 185 C 70 128, 140 95, 215 85" stroke="#0ea5e9" stroke-width="2" fill="none"/>
+        <text x="180" y="80" font-size="8" fill="#0284c7">F₂(K,h₂L)</text>
+        <!-- F3: highest -->
+        <path d="M 32 185 C 70 105, 140 62, 215 50" stroke="#0369a1" stroke-width="2.3" fill="none"/>
+        <text x="180" y="45" font-size="8" fill="#0369a1" font-weight="700">F₃(K,h₃L)</text>
+        <!-- up arrow -->
+        <line x1="150" y1="120" x2="150" y2="66" stroke="#f59e0b" stroke-width="1.5" marker-end="url(#arrU)"/>
+        <defs><marker id="arrU" markerWidth="7" markerHeight="7" refX="3" refY="1" orient="auto"><path d="M0,6 L3,0 L6,6 Z" fill="#f59e0b"/></marker></defs>
+        <text x="154" y="100" font-size="7.5" fill="#b45309">A↑</text>
+      </svg>
+      <div class="read-guide" style="margin-top:.3rem;">🧭 讀圖：曲線凹向下＝資本報酬遞減（機器越加越多，多出來的產量越少）。技術 A 進步讓整條線往上跳。</div>
+    </div>
+  </div>
+  <div class="tip">💡 記憶訣竅：古典學派「K + L」兩要素 → Solow 加一個「A」變三要素。台灣近年 GDP 飆高，主角就是 A：AI 與半導體技術帶動。</div>
+</div>
+
+<div class="sec" id="s9">
+  <div class="sec-title">均衡時的消費、儲蓄與投資<span class="page-badge">p.44~45</span></div>
+  <div class="box">
+    <h3>關鍵方程式（家戶預算限制的總合形式）</h3>
+    <div class="lf" style="justify-content:center;font-size:1.15rem;">
+      C + ΔK = Y − δK
+    </div>
+    <p style="font-size:.83rem;color:#475569;line-height:1.9;">
+      左邊：<strong>消費 C ＋ 淨投資 ΔK</strong>；右邊：<strong>實質 GDP（Y）− 折舊（δK）＝ 實質國內生產淨額</strong>。意思是：一國生產出來的東西扣掉機器耗損後，不是被<strong>消費掉</strong>，就是拿去<strong>累積成新資本</strong>（投資）。家戶消費 C 選得越少，留給投資 ΔK 的就越多。
+    </p>
+    <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:.5rem;font-size:.8rem;margin-top:.5rem;">
+      <div style="background:#eff6ff;border-radius:7px;padding:.5rem .7rem;"><strong>ΔK</strong>　淨投資（新增資本）</div>
+      <div style="background:#fff7ed;border-radius:7px;padding:.5rem .7rem;"><strong>δ</strong>　折舊率（機器耗損）</div>
+      <div style="background:#f0fdfa;border-radius:7px;padding:.5rem .7rem;"><strong>δK</strong>　折舊金額</div>
+    </div>
+  </div>
+  <div class="tip">💡 這條式子是連結「成長理論」與下一節「凱因斯模型」的橋梁：儲蓄（沒消費的部分）＝可用來投資的資金。</div>
+</div>
+
+<!-- PART 4 -->
+<div class="part-header" style="background:linear-gradient(135deg,#0c4a6e,#1d4ed8);">
+  <h2>PART 4 &nbsp;·&nbsp; 凱因斯模型</h2>
+  <p>需求面（支出面）的視角：是「花錢（需求）」帶動了生產，還是「生產（供給）」創造了需求？</p>
+</div>
+
+<div class="sec" id="s10">
+  <div class="sec-title">古典學派 vs 凱因斯學派<span class="page-badge">p.42~43</span></div>
+  <p style="font-size:.84rem;color:#475569;line-height:1.8;margin-bottom:.7rem;">
+    1930 年代<strong>大蕭條</strong>是分水嶺。之前古典學派當道，之後凱因斯學派興起。兩派對「價格會不會自己調整」「政府該不該出手」看法完全相反。
+  </p>
+  <div class="two">
+    <div class="box" style="border:1.5px solid #fecaca;">
+      <span class="tag t-red">古典學派（1930 前）</span>
+      <ul style="font-size:.82rem;color:#475569;line-height:1.95;padding-left:1.1rem;margin-top:.3rem;">
+        <li>價格（工資）有<strong>伸縮性</strong>（會漲也會跌）</li>
+        <li>充分就業是常態</li>
+        <li><strong>供給創造本身需求</strong>（賽伊法則）</li>
+        <li>重視貨幣政策</li>
+        <li><strong>反對政府干預</strong></li>
+      </ul>
+    </div>
+    <div class="box" style="border:1.5px solid #bfdbfe;">
+      <span class="tag t-blue">凱因斯學派（1930 大蕭條後）</span>
+      <ul style="font-size:.82rem;color:#475569;line-height:1.95;padding-left:1.1rem;margin-top:.3rem;">
+        <li>價格（工資）有<strong>僵硬性</strong>（不易下跌）</li>
+        <li>失業是常態</li>
+        <li><strong>需求才能創造供給</strong></li>
+        <li>重視財政政策</li>
+        <li><strong>政府要干預</strong>經濟活動</li>
+      </ul>
+    </div>
+  </div>
+  <div class="tip">💡 一句話對比：古典說「東西做出來自然賣得掉」；凱因斯說「大家不敢花錢，東西就賣不掉，政府得帶頭花」。景氣差時政府發振興券、普發現金，就是凱因斯的思路。</div>
+  <div class="box" style="border:1.5px solid #bae6fd;margin-top:.75rem;">
+    <span class="tag t-sky">🔖 真實案例</span>
+    <h3>政府「帶頭花錢」刺激需求</h3>
+    <p style="font-size:.82rem;color:#475569;line-height:1.9;">
+      台灣：2015 年 GDP 保 1 → 政院砸 40.8 億刺激消費；2020 振興三倍券、2021 五倍券、2023 普發現金 6000（編列 1416.5 億）、2025 普發一萬。前瞻基礎建設 8800 億帶動 GDP。國外：美國拜登 1.2 兆美元基建法案、沙烏地 1 兆美元蓋未來城、韓國青瓦台砸 16.5 兆蓋「韓版南科」。這些都是<strong>用 G（政府支出）與 I（投資）拉抬總需求</strong>。
+    </p>
+  </div>
+</div>
+
+<div class="sec" id="s11">
+  <div class="sec-title">消費函數與儲蓄函數<span class="page-badge">p.51~55</span></div>
+  <div class="box">
+    <h3>總需求（總合支出）的四元素</h3>
+    <p style="font-size:.83rem;color:#475569;line-height:1.8;">經濟體對產出的需求總量稱為<strong>總合支出（總合需求）</strong>，由四部分組成：消費 C、投資 I、政府支出 G、淨出口 NX（＝出口 X − 進口 M）。</p>
+  </div>
+  <div class="two">
+    <div class="box">
+      <span class="tag t-blue">消費函數</span>
+      <div style="font-family:'Times New Roman',serif;font-size:1.05rem;background:#eff6ff;border-radius:7px;padding:.55rem .85rem;margin:.4rem 0;text-align:center;">
+        C = a + c(Y − T) = a + c·Y<sub>d</sub>
+      </div>
+      <div style="font-size:.81rem;color:#475569;line-height:1.9;">
+        <strong>a</strong>：自發性消費（autonomous consumption）——與所得無關、生存也得花的錢。<br>
+        <strong>c</strong>：邊際消費傾向（MPC, marginal propensity to consume）＝ΔC/ΔY<sub>d</sub>，介於 0 與 1。多賺 1 元會花掉的比例。<br>
+        <strong>Y<sub>d</sub></strong>：可支配所得（＝所得 Y − 稅 T）。
+      </div>
+    </div>
+    <div class="box">
+      <span class="tag t-green">儲蓄函數</span>
+      <div style="font-family:'Times New Roman',serif;font-size:1.02rem;background:#ecfdf5;border-radius:7px;padding:.55rem .85rem;margin:.4rem 0;text-align:center;">
+        S = −a + (1−c)Y<sub>d</sub> = −a + s·Y<sub>d</sub>
+      </div>
+      <div style="font-size:.81rem;color:#475569;line-height:1.9;">
+        沒被消費掉的所得就是儲蓄：S = Y<sub>d</sub> − C。<br>
+        <strong>−a</strong>：自發性儲蓄（負儲蓄）——所得為 0 時得動老本。<br>
+        <strong>s</strong>：邊際儲蓄傾向（MPS）＝1−c。多賺 1 元會存起來的比例。<br>
+        必然關係：<strong>c + s = 1</strong>（賺的錢不是花就是存）。
+      </div>
+    </div>
+  </div>
+  <div class="box">
+    <h3>💰 利率對消費與儲蓄的效果（圖 7-4）</h3>
+    <div class="two" style="margin-bottom:0;">
+      <div style="background:#fef9c3;border-radius:8px;padding:.55rem .8rem;font-size:.81rem;color:#475569;">
+        <strong>跨期替代效果</strong>：利率↑ → 存錢更划算 → <span style="color:#166534;">減少消費、增加儲蓄</span>。
+      </div>
+      <div style="background:#dbeafe;border-radius:8px;padding:.55rem .8rem;font-size:.81rem;color:#475569;">
+        <strong>所得效果</strong>：利率↑ → 利息收入變多、覺得變有錢 → <span style="color:#9a3412;">增加消費、減少儲蓄</span>。
+      </div>
+    </div>
+    <div class="warn">⚠️ 兩效果方向相反，實際淨效果要看誰大。這也是為何有些國家會用「負利率」逼大家別存錢、多花錢（如歐洲央行、日本）。</div>
+  </div>
+</div>
+
+<div class="sec" id="s12">
+  <div class="sec-title">投資函數與均衡所得<span class="page-badge">p.57~61</span></div>
+  <div class="two">
+    <div>
+      <div class="box">
+        <h3>投資支出函數</h3>
+        <p style="font-size:.82rem;color:#475569;line-height:1.85;">
+          <strong>預擬投資 I<sub>p</sub></strong>（planned）：廠商「想達成」的投資量。<br>
+          <strong>實際投資 I<sub>r</sub></strong>（realized）：實際達成的投資量。<br>
+          當 <strong>I<sub>p</sub> = I<sub>r</sub></strong> 時廠商不再調整生產，此時所得＝<strong>均衡所得</strong>。<br>
+          簡化假設：投資為常數（自發性投資）I = I<sub>a</sub>。
+        </p>
+      </div>
+      <div class="box">
+        <h3>📐 均衡所得（無政府部門）</h3>
+        <p style="font-size:.82rem;color:#475569;line-height:1.8;">均衡時總產出 Y ＝ 總需求 Y<sup>d</sup>。解出：</p>
+        <div class="lf" style="justify-content:center;">
+          Y* =
+          <span class="lf-frac">
+            <span class="lf-num">a + I<sub style="font-size:.6em;">a</sub></span>
+            <span class="lf-den">1 − c</span>
+          </span>
+        </div>
+        <p style="font-size:.81rem;color:#475569;line-height:1.8;">白話：均衡所得＝（自發性消費＋自發性投資）÷ 邊際儲蓄傾向（1−c）。分母 1−c 越小（越愛花錢），所得被放大越多，這就是<strong>乘數效果</strong>。</p>
+      </div>
+    </div>
+    <div class="diagram-wrap">
+      <div style="font-size:.8rem;font-weight:600;color:#334155;text-align:center;margin-bottom:.2rem;">凱因斯 45° 線：總需求＝總產出</div>
+      <svg viewBox="0 0 250 210" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-width:280px;display:block;margin:0 auto;">
+        <line x1="34" y1="12" x2="34" y2="185" stroke="#1e293b" stroke-width="1.5"/>
+        <line x1="34" y1="185" x2="230" y2="185" stroke="#1e293b" stroke-width="1.5"/>
+        <text x="14" y="14" font-size="9" fill="#1e293b" font-weight="700">Y<tspan font-size="7">d</tspan></text>
+        <text x="215" y="198" font-size="9" fill="#1e293b" font-weight="700">Y (所得)</text>
+        <!-- 45 degree line -->
+        <line x1="34" y1="185" x2="200" y2="19" stroke="#0f172a" stroke-width="1.5"/>
+        <text x="184" y="24" font-size="8" fill="#0f172a" font-weight="700">Y=Y ᵈ</text>
+        <text x="52" y="176" font-size="7" fill="#475569">45°</text>
+        <!-- AD line: Yd = a + cY + Ia (slope c<1, intercept positive) -->
+        <line x1="34" y1="120" x2="230" y2="70" stroke="#0369a1" stroke-width="2.2"/>
+        <text x="180" y="66" font-size="8" fill="#0369a1" font-weight="700">Yᵈ=a+cY+Iₐ</text>
+        <!-- Consumption line C=a+cY (parallel, lower) -->
+        <line x1="34" y1="150" x2="230" y2="100" stroke="#16a34a" stroke-width="1.8" stroke-dasharray="5,3"/>
+        <text x="196" y="112" font-size="8" fill="#16a34a">C=a+cY</text>
+        <!-- equilibrium point E: intersection of 45 line and AD -->
+        <circle cx="121" cy="98" r="4.5" fill="#f59e0b"/>
+        <text x="125" y="94" font-size="8.5" fill="#92400e" font-weight="700">E</text>
+        <line x1="121" y1="98" x2="121" y2="185" stroke="#f59e0b" stroke-width="1" stroke-dasharray="4,3"/>
+        <line x1="34" y1="98" x2="121" y2="98" stroke="#f59e0b" stroke-width="1" stroke-dasharray="4,3"/>
+        <text x="121" y="196" font-size="7.5" fill="#92400e">Y*</text>
+        <!-- intercept label -->
+        <text x="30" y="122" font-size="7" fill="#0369a1" text-anchor="end">a+Iₐ</text>
+      </svg>
+      <div class="read-guide" style="margin-top:.3rem;">🧭 讀圖：藍線（總需求）與黑色 45° 線的交點 E，就是均衡。E 對應的橫軸位置 Y* 即均衡所得。45° 線上任一點都滿足「需求＝產出」。</div>
+    </div>
+  </div>
+  <div class="box">
+    <h3>另一種求法：投資＝儲蓄（I = S）</h3>
+    <p style="font-size:.82rem;color:#475569;line-height:1.8;">均衡時 Y<sup>d</sup> = C + I = Y = C + S，兩邊消去 C 得 <strong>I = S</strong>。把儲蓄函數 S = −a + (1−c)Y 代入 I = I<sub>a</sub>，同樣解出 Y* = (a + I<sub>a</sub>)/(1−c)。兩種方法答案一致。</p>
+  </div>
+</div>
+
+<!-- PART 5 -->
+<div class="part-header" style="background:linear-gradient(135deg,#155e75,#0891b2);">
+  <h2>PART 5 &nbsp;·&nbsp; 儲蓄的兩面</h2>
+  <p>「儲蓄愈多愈好」嗎？短期會拖垮景氣（節儉悖論），長期卻能促進成長。</p>
+</div>
+
+<div class="sec" id="s13">
+  <div class="sec-title">節儉的矛盾（節儉的悖論）<span class="page-badge">p.62~66</span></div>
+  <div class="two">
+    <div>
+      <div class="box">
+        <h3>什麼是節儉的矛盾（Paradox of Thrift）</h3>
+        <p style="font-size:.82rem;color:#475569;line-height:1.85;">
+          當大家<strong>自發性儲蓄增加</strong>（儲蓄線 S₁ 上移到 S₂），均衡所得會<strong>下降</strong>（Y₁ → Y₂），而<strong>總儲蓄量卻沒有增加</strong>。想省錢反而讓整體變窮——這就是矛盾。
+        </p>
+      </div>
+      <div class="box">
+        <h3>📐 自發性支出乘數</h3>
+        <div class="lf" style="justify-content:center;">
+          <span class="lf-frac"><span class="lf-num">ΔY</span><span class="lf-den">Δa</span></span> =
+          <span class="lf-frac"><span class="lf-num">1</span><span class="lf-den">1 − c</span></span>
+        </div>
+        <p style="font-size:.81rem;color:#475569;line-height:1.8;">
+          自發性儲蓄增加 1 單位（即少花 1 元），均衡所得減少 1/(1−c) 單位。所得減少後，<strong>誘發性儲蓄</strong>剛好減少 1 單位，抵銷掉原本多存的 1 單位 → 總儲蓄不變。
+        </p>
+      </div>
+    </div>
+    <div class="diagram-wrap">
+      <div style="font-size:.8rem;font-weight:600;color:#334155;text-align:center;margin-bottom:.2rem;">儲蓄線上移 → 所得下降</div>
+      <svg viewBox="0 0 250 200" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-width:280px;display:block;margin:0 auto;">
+        <line x1="34" y1="12" x2="34" y2="175" stroke="#1e293b" stroke-width="1.5"/>
+        <line x1="34" y1="175" x2="235" y2="175" stroke="#1e293b" stroke-width="1.5"/>
+        <text x="16" y="14" font-size="9" fill="#1e293b" font-weight="700">I, S</text>
+        <text x="222" y="188" font-size="9" fill="#1e293b" font-weight="700">Y</text>
+        <!-- Investment horizontal line I=Ia -->
+        <line x1="34" y1="90" x2="235" y2="90" stroke="#0f172a" stroke-width="1.8"/>
+        <text x="215" y="86" font-size="8" fill="#0f172a" font-weight="700">I=Iₐ</text>
+        <!-- S1 (original, lower/right) upward sloping straight line -->
+        <line x1="70" y1="175" x2="215" y2="45" stroke="#0369a1" stroke-width="2"/>
+        <text x="200" y="52" font-size="8" fill="#0369a1" font-weight="700">S₁</text>
+        <!-- S2 (shifted up/left) -->
+        <line x1="48" y1="175" x2="180" y2="45" stroke="#dc2626" stroke-width="2"/>
+        <text x="150" y="50" font-size="8" fill="#dc2626" font-weight="700">S₂</text>
+        <!-- equilibrium points -->
+        <circle cx="170" cy="90" r="4" fill="#0369a1"/>
+        <circle cx="140" cy="90" r="4" fill="#dc2626"/>
+        <line x1="170" y1="90" x2="170" y2="175" stroke="#0369a1" stroke-width="1" stroke-dasharray="4,3"/>
+        <line x1="140" y1="90" x2="140" y2="175" stroke="#dc2626" stroke-width="1" stroke-dasharray="4,3"/>
+        <text x="170" y="187" font-size="7.5" fill="#0369a1">Y₁</text>
+        <text x="134" y="187" font-size="7.5" fill="#dc2626">Y₂</text>
+        <!-- arrows: up (S) and left (Y) -->
+        <line x1="95" y1="130" x2="95" y2="105" stroke="#2563eb" stroke-width="2.5" marker-end="url(#arrU2)"/>
+        <line x1="168" y1="150" x2="145" y2="150" stroke="#dc2626" stroke-width="2.5" marker-end="url(#arrL2)"/>
+        <defs>
+          <marker id="arrU2" markerWidth="8" markerHeight="8" refX="3" refY="1" orient="auto"><path d="M0,6 L3,0 L6,6 Z" fill="#2563eb"/></marker>
+          <marker id="arrL2" markerWidth="8" markerHeight="8" refX="1" refY="3" orient="auto"><path d="M6,0 L0,3 L6,6 Z" fill="#dc2626"/></marker>
+        </defs>
+      </svg>
+      <div class="read-guide" style="margin-top:.3rem;">🧭 讀圖：藍色↑箭頭＝大家更愛儲蓄，儲蓄線左上移；紅色←箭頭＝均衡所得從 Y₁ 縮到 Y₂。與投資線 I 的交點決定均衡。</div>
+    </div>
+  </div>
+  <div class="warn">⚠️ 考試提示：節儉悖論成立的前提是「短期、封閉經濟、需求不足」。個人省錢是美德，但<strong>全體同時</strong>省錢，會讓需求崩、所得縮。這正是凱因斯反對「大蕭條時緊縮」的理由。</div>
+</div>
+
+<div class="sec" id="s14">
+  <div class="sec-title">儲蓄的好處（長期視角）<span class="page-badge">p.67</span></div>
+  <div class="two">
+    <div>
+      <div class="cards" style="grid-template-columns:1fr;">
+        <div class="card c-green"><h3>① 促進資本累積</h3><p>存下來的錢化為投資，累積機器廠房（K↑）。</p></div>
+        <div class="card c-blue"><h3>② 融通投資</h3><p>一國要提高投資，須降低消費、提高儲蓄。整體儲蓄＝私人儲蓄＋政府儲蓄。</p></div>
+        <div class="card c-teal"><h3>③ 可貸資金供給增加</h3><p>整體儲蓄提高 → 可貸資金（S<sub>LF</sub>）供給增加。</p></div>
+      </div>
+      <div class="tip">💡 短期 vs 長期不矛盾：需求不足時（短期）別急著存；經濟正常時（長期）儲蓄才能養出資本、支撐成長。這也呼應 Solow 模型的 K。</div>
+    </div>
+    <div class="diagram-wrap">
+      <div style="font-size:.8rem;font-weight:600;color:#334155;text-align:center;margin-bottom:.2rem;">可貸資金市場（Loanable Funds）</div>
+      <svg viewBox="0 0 240 200" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-width:270px;display:block;margin:0 auto;">
+        <line x1="38" y1="12" x2="38" y2="175" stroke="#1e293b" stroke-width="1.5"/>
+        <line x1="38" y1="175" x2="228" y2="175" stroke="#1e293b" stroke-width="1.5"/>
+        <text x="18" y="16" font-size="8" fill="#1e293b" font-weight="700">實質利率</text>
+        <text x="180" y="188" font-size="8" fill="#1e293b" font-weight="700">可貸資金量</text>
+        <!-- Demand for funds (downward, cubic bezier convex to origin) -->
+        <path d="M 55 30 C 78 78, 150 132, 210 165" stroke="#0369a1" stroke-width="2.3" fill="none"/>
+        <text x="52" y="28" font-size="8" fill="#0369a1" font-weight="700">D_LF</text>
+        <!-- Supply of funds (upward, cubic bezier) -->
+        <path d="M 55 165 C 100 132, 168 78, 210 30" stroke="#dc2626" stroke-width="2.3" fill="none"/>
+        <text x="212" y="30" font-size="8" fill="#dc2626" font-weight="700">S_LF</text>
+        <!-- equilibrium: symmetric curves, midpoint -->
+        <circle cx="132" cy="97" r="4.5" fill="#f59e0b"/>
+        <line x1="38" y1="97" x2="132" y2="97" stroke="#f59e0b" stroke-width="1" stroke-dasharray="4,3"/>
+        <line x1="132" y1="97" x2="132" y2="175" stroke="#f59e0b" stroke-width="1" stroke-dasharray="4,3"/>
+        <text x="32" y="100" font-size="8" fill="#92400e" text-anchor="end">r₀</text>
+        <text x="132" y="188" font-size="8" fill="#92400e" text-anchor="middle">LF₀</text>
+      </svg>
+      <div class="read-guide" style="margin-top:.3rem;">🧭 讀圖：紅色 S<sub>LF</sub>（儲蓄＝資金供給）向右上、藍色 D<sub>LF</sub>（投資＝資金需求）向右下，交點決定均衡利率 r₀。儲蓄增加會使 S<sub>LF</sub> 右移，利率下降、投資增加。</div>
+    </div>
+  </div>
+</div>
+
+<!-- PART 6 -->
+<div class="part-header" style="background:linear-gradient(135deg,#0c4a6e,#0e7490);">
+  <h2>PART 6 &nbsp;·&nbsp; 政府部門</h2>
+  <p>把政府（G 與稅 T）放進凱因斯模型，均衡所得公式怎麼變？</p>
+</div>
+
+<div class="sec" id="s15">
+  <div class="sec-title">政府支出與預算限制<span class="page-badge">p.73~75</span></div>
+  <div class="box">
+    <h3>政府支出的定義</h3>
+    <p style="font-size:.83rem;color:#475569;line-height:1.85;">各級政府購買財貨與勞務、<strong>移轉支付</strong>（發給家戶與企業的錢，如補助）及利息支付的總金額。</p>
+  </div>
+  <div class="box">
+    <h3>政府的預算限制（Governmental Budget Constraint）</h3>
+    <div class="lf" style="justify-content:center;font-size:1.05rem;">
+      G<sub style="font-size:.6em;">t</sub> + V<sub style="font-size:.6em;">t</sub> = T<sub style="font-size:.6em;">t</sub> + (M<sub style="font-size:.6em;">t</sub> − M<sub style="font-size:.6em;">t−1</sub>) / P<sub style="font-size:.6em;">t</sub>
+    </div>
+    <p style="font-size:.82rem;color:#475569;line-height:1.85;">
+      白話：<strong>資金使用總額 ＝ 資金來源總額</strong>。<br>
+      左邊（用途）：實質購買 G ＋ 實質移轉 V。<br>
+      右邊（來源）：實質稅收 T ＋ 貨幣創造的實質收入（印鈔票）。
+    </p>
+  </div>
+  <div class="box">
+    <span class="tag t-sky">公共生產</span>
+    <p style="font-size:.82rem;color:#475569;line-height:1.85;margin-top:.3rem;">政府用 G 提供服務給家戶與企業，且<strong>免費</strong>提供：國防、警消、義務教育、部分健康服務、高速公路、公園等。</p>
+  </div>
+</div>
+
+<div class="sec" id="s16">
+  <div class="sec-title">加入政府部門的均衡所得<span class="page-badge">p.76~77</span></div>
+  <div class="two">
+    <div>
+      <div class="box">
+        <h3>模型設定</h3>
+        <p style="font-size:.82rem;color:#475569;line-height:1.85;">
+          總需求：Y<sup>d</sup> = C + I + G。<br>
+          消費函數：C = a + c(Y − T)。<br>
+          假設投資 I<sub>a</sub>、政府支出 G<sub>a</sub>、稅收 T<sub>a</sub> 均為常數。<br>
+          均衡時 Y = Y<sup>d</sup>：<br>
+          <span style="font-family:'Times New Roman',serif;">Y = a + c(Y − T<sub>a</sub>) + I<sub>a</sub> + G<sub>a</sub></span>
+        </p>
+      </div>
+      <div class="box">
+        <h3>📐 均衡所得（含政府）</h3>
+        <div class="lf" style="justify-content:center;font-size:.98rem;">
+          Y* =
+          <span class="lf-frac">
+            <span class="lf-num">a − c·T<sub style="font-size:.6em;">a</sub> + I<sub style="font-size:.6em;">a</sub> + G<sub style="font-size:.6em;">a</sub></span>
+            <span class="lf-den">1 − c</span>
+          </span>
+        </div>
+        <p style="font-size:.81rem;color:#475569;line-height:1.8;">政府支出 G↑ 或減稅 T↓，都會讓分子變大 → 均衡所得放大。這就是<strong>財政政策</strong>刺激景氣的原理。</p>
+      </div>
+    </div>
+    <div class="diagram-wrap">
+      <div style="font-size:.8rem;font-weight:600;color:#334155;text-align:center;margin-bottom:.2rem;">含政府的 45° 線</div>
+      <svg viewBox="0 0 250 205" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-width:280px;display:block;margin:0 auto;">
+        <line x1="34" y1="12" x2="34" y2="180" stroke="#1e293b" stroke-width="1.5"/>
+        <line x1="34" y1="180" x2="235" y2="180" stroke="#1e293b" stroke-width="1.5"/>
+        <text x="14" y="14" font-size="9" fill="#1e293b" font-weight="700">Y<tspan font-size="7">d</tspan></text>
+        <text x="218" y="193" font-size="9" fill="#1e293b" font-weight="700">Y</text>
+        <line x1="34" y1="180" x2="205" y2="18" stroke="#0f172a" stroke-width="1.5"/>
+        <text x="188" y="22" font-size="8" fill="#0f172a" font-weight="700">Y=Y ᵈ</text>
+        <!-- AD = C+I+G highest -->
+        <line x1="34" y1="98" x2="235" y2="55" stroke="#0369a1" stroke-width="2.2"/>
+        <text x="176" y="52" font-size="8" fill="#0369a1" font-weight="700">Yᵈ=C+I+G</text>
+        <!-- Consumption line -->
+        <line x1="34" y1="145" x2="235" y2="103" stroke="#16a34a" stroke-width="1.8" stroke-dasharray="5,3"/>
+        <text x="196" y="115" font-size="7.5" fill="#16a34a">C=a+c(Y−Tₐ)</text>
+        <!-- equilibrium -->
+        <circle cx="148" cy="74" r="4.5" fill="#f59e0b"/>
+        <text x="152" y="70" font-size="8.5" fill="#92400e" font-weight="700">E</text>
+        <line x1="148" y1="74" x2="148" y2="180" stroke="#f59e0b" stroke-width="1" stroke-dasharray="4,3"/>
+        <line x1="34" y1="74" x2="148" y2="74" stroke="#f59e0b" stroke-width="1" stroke-dasharray="4,3"/>
+        <text x="148" y="192" font-size="7" fill="#92400e">Y*</text>
+        <text x="30" y="100" font-size="6.5" fill="#0369a1" text-anchor="end">a−cTₐ+Iₐ+Gₐ</text>
+      </svg>
+      <div class="read-guide" style="margin-top:.3rem;">🧭 讀圖：加入 G 後，總需求線（藍）整條往上抬，與 45° 線的交點 E 右移 → 均衡所得 Y* 變大。</div>
+    </div>
+  </div>
+</div>
+
+<!-- PART 7 -->
+<div class="part-header" style="background:linear-gradient(135deg,#075985,#0369a1);">
+  <h2>PART 7 &nbsp;·&nbsp; 開放經濟與國際貿易</h2>
+  <p>再把「出口 X 與進口 M」放進來——台灣是出口導向國家，這一段特別關鍵。</p>
+</div>
+
+<div class="sec" id="s17">
+  <div class="sec-title">加入國外部門與貿易餘額<span class="page-badge">p.82~86</span></div>
+  <div class="two">
+    <div>
+      <div class="box">
+        <h3>開放經濟的總需求</h3>
+        <div style="font-family:'Times New Roman',serif;font-size:1rem;background:#eff6ff;border-radius:7px;padding:.5rem .8rem;margin:.4rem 0;text-align:center;">
+          Y<sup>d</sup> = C + I + G + (X − M)
+        </div>
+        <p style="font-size:.81rem;color:#475569;line-height:1.85;">
+          假設出口為常數 X = X<sub>a</sub>；進口函數 M = b + mY。<br>
+          <strong>b</strong>：自發性進口（與所得無關）。<br>
+          <strong>mY</strong>：誘發性進口（隨所得增加）。<br>
+          <strong>m</strong>：邊際進口傾向（MPI），0 < m < 1，多賺 1 元會拿去買外國貨的比例。
+        </p>
+      </div>
+      <div class="box">
+        <h3>📐 均衡所得（含政府＋開放）</h3>
+        <div class="lf" style="justify-content:center;font-size:.92rem;">
+          Y* =
+          <span class="lf-frac">
+            <span class="lf-num">a − b − c·T<sub style="font-size:.6em;">a</sub> + I<sub style="font-size:.6em;">a</sub> + G<sub style="font-size:.6em;">a</sub> + X<sub style="font-size:.6em;">a</sub></span>
+            <span class="lf-den">1 − c + m</span>
+          </span>
+        </div>
+        <p style="font-size:.81rem;color:#475569;line-height:1.8;">分母多了 <strong>+m</strong>：進口是「漏出」（錢流到國外），會削弱乘數效果。</p>
+      </div>
+    </div>
+    <div>
+      <div class="box">
+        <h3>貿易餘額（Trade Balance）＝淨輸出</h3>
+        <div style="font-family:'Times New Roman',serif;font-size:.95rem;background:#ecfdf5;border-radius:7px;padding:.5rem .8rem;margin:.4rem 0;text-align:center;">
+          貿易餘額 = Y<sub>t</sub> − (C<sub>t</sub> + I<sub>t</sub> + G<sub>t</sub>)<br>= 實質 GDP − 實質國內支出 = 出口 − 進口
+        </div>
+        <div class="two" style="margin-bottom:0;margin-top:.5rem;">
+          <div style="background:#dcfce7;border-radius:7px;padding:.5rem .7rem;font-size:.8rem;color:#166534;">
+            <strong>出口 > 進口</strong><br>貿易餘額為正 → <strong>盈餘</strong>
+          </div>
+          <div style="background:#fee2e2;border-radius:7px;padding:.5rem .7rem;font-size:.8rem;color:#991b1b;">
+            <strong>進口 > 出口</strong><br>貿易餘額為負 → <strong>赤字</strong>
+          </div>
+        </div>
+      </div>
+      <div class="box" style="border:1.5px solid #bae6fd;">
+        <span class="tag t-sky">🔖 真實案例</span>
+        <p style="font-size:.81rem;color:#475569;line-height:1.85;margin-top:.3rem;">台灣是<strong>出超（貿易盈餘）</strong>國家，AI 與半導體出口強勁是近年 GDP 飆升的主因（淨輸出 X−M 大幅為正）。這也是為何「出口不妙」時（2023 Q1）GDP 會轉負。</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="sec" id="s18">
+  <div class="sec-title">貿易條件與投資<span class="page-badge">p.84~89</span></div>
+  <div class="box">
+    <h3>貿易條件（Terms of Trade）</h3>
+    <p style="font-size:.82rem;color:#475569;line-height:1.85;">
+      本國商品價格 P 相對外國商品價格 P<sup>f</sup> 的比值 <strong>P / P<sup>f</sup></strong>。意義：每出口 1 單位本國商品，能換回多少單位外國商品。
+    </p>
+    <div class="two" style="margin-bottom:0;margin-top:.5rem;">
+      <div style="background:#dcfce7;border-radius:7px;padding:.5rem .75rem;font-size:.8rem;color:#166534;">
+        <strong>P/P<sup>f</sup> 上升</strong>（貿易條件改善）<br>每單位本國貨換到更多外國貨 → 本國福利↑
+      </div>
+      <div style="background:#fee2e2;border-radius:7px;padding:.5rem .75rem;font-size:.8rem;color:#991b1b;">
+        <strong>P/P<sup>f</sup> 下滑</strong>（貿易條件惡化）<br>換到的外國貨變少 → 本國福利↓
+      </div>
+    </div>
+  </div>
+  <div class="box">
+    <h3>貿易條件與投資的連動</h3>
+    <p style="font-size:.82rem;color:#475569;line-height:1.85;">
+      資本的實質淨報酬率 = (P/P<sup>f</sup>)·MPK − δ。當 <strong>P/P<sup>f</sup> 提高</strong>，效果類似<strong>技術水準 A 提高</strong>：MPK 上升 → 資本報酬率上升 → 國內淨投資（I − δK）反應很大，通常大過全國儲蓄的增加。
+    </p>
+    <div class="tip">💡 記憶訣竅：貿易條件改善 ≈ 技術進步，都會讓「投資變得更划算」，帶動 K 累積與成長。</div>
+  </div>
+  <div class="warn">⚠️ 政府常用<strong>關稅（tariff，對進口財課稅）</strong>或<strong>配額（quota，限制進口數量）</strong>限制貿易，但這會犧牲生產效率——由各國依相對要素稟賦「集中生產」才最有效率。</div>
+</div>
+
+<!-- PART 8 -->
+<div class="part-header" style="background:linear-gradient(135deg,#082f49,#0369a1);">
+  <h2>PART 8 &nbsp;·&nbsp; 促進成長的政策 & 總覽</h2>
+  <p>政府能做什麼來拉高長期成長率？最後用一張圖串起整堂總體經濟。</p>
+</div>
+
+<div class="sec" id="s19">
+  <div class="sec-title">促進經濟成長的政策<span class="page-badge">p.90~95</span></div>
+  <div class="cards">
+    <div class="card c-blue">
+      <span class="tag t-blue">鼓勵投資</span>
+      <p>投資租稅減免 → 投資增加 → 資金需求曲線右移、利率提高。（例：台版晶片法研發支出 25% 抵減營所稅）</p>
+    </div>
+    <div class="card c-green">
+      <span class="tag t-green">促進技術進步</span>
+      <p>用相同資源生產更多或更好的產品，也就是 Solow 模型的 A。</p>
+    </div>
+  </div>
+  <div class="box">
+    <h3>政策制訂者促進技術進步的四種手段</h3>
+    <ul style="font-size:.82rem;color:#475569;line-height:2;padding-left:1.1rem;">
+      <li><strong>直接資助基礎研究</strong>：知識具公共財性質，基礎研究常由政府資助。</li>
+      <li><strong>租稅政策</strong>：透過減稅鼓勵廠商研發（R&D）。</li>
+      <li><strong>保護智慧財產權</strong>：給研發成果一定期限的保護（專利），才有誘因創新。</li>
+      <li><strong>促進競爭</strong>：打擊獨占、提高競爭的政策或法令。</li>
+    </ul>
+  </div>
+  <div class="box" style="border:1.5px solid #bae6fd;">
+    <span class="tag t-sky">🔖 真實案例</span>
+    <p style="font-size:.81rem;color:#475569;line-height:1.85;margin-top:.3rem;">
+      中美貿易戰促台商「鮭魚返鄉」、境外資金匯回專法（實際匯回 3,351 億、創造國內投資 1,757 億）、台版晶片法（研發 25% 抵減營所稅、鼓勵企業根留台灣）——都是政府用政策拉抬投資 I 與技術 A 的實例。
+    </p>
+  </div>
+</div>
+
+<div class="sec">
+  <div class="sec-title">🗺️ Summary：總體經濟全圖<span class="page-badge">p.95</span></div>
+  <div class="diagram-wrap">
+    <svg viewBox="0 0 620 340" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-width:640px;display:block;margin:0 auto;">
+      <!-- 國民所得 -->
+      <rect x="20" y="150" width="110" height="40" rx="8" fill="#0c4a6e"/>
+      <text x="75" y="175" font-size="14" fill="white" text-anchor="middle" font-weight="700">國民所得</text>
+      <!-- 生產面 -->
+      <rect x="230" y="70" width="100" height="38" rx="8" fill="#0369a1"/>
+      <text x="280" y="94" font-size="13" fill="white" text-anchor="middle" font-weight="700">生產面</text>
+      <!-- 支出面 -->
+      <rect x="230" y="232" width="100" height="38" rx="8" fill="#0891b2"/>
+      <text x="280" y="256" font-size="13" fill="white" text-anchor="middle" font-weight="700">支出面</text>
+      <!-- 經濟成長 -->
+      <rect x="470" y="150" width="120" height="40" rx="8" fill="#065f46"/>
+      <text x="530" y="175" font-size="14" fill="white" text-anchor="middle" font-weight="700">經濟成長</text>
+      <!-- Solow 模型 -->
+      <rect x="230" y="12" width="100" height="34" rx="8" fill="#1e3a8a"/>
+      <text x="280" y="34" font-size="12" fill="white" text-anchor="middle" font-weight="700">Solow 模型</text>
+      <!-- 凱因斯模型 -->
+      <rect x="228" y="294" width="104" height="34" rx="8" fill="#7c2d12"/>
+      <text x="280" y="316" font-size="12" fill="white" text-anchor="middle" font-weight="700">凱因斯模型</text>
+      <!-- factor lists -->
+      <text x="352" y="20" font-size="10.5" fill="#475569">• 資本 (K)</text>
+      <text x="352" y="34" font-size="10.5" fill="#475569">• 勞動力 (L)</text>
+      <text x="352" y="48" font-size="10.5" fill="#475569">• 技術進步 (A)</text>
+      <text x="352" y="298" font-size="10.5" fill="#475569">• 消費 (C)　• 投資 (I)</text>
+      <text x="352" y="312" font-size="10.5" fill="#475569">• 政府支出 (G)</text>
+      <text x="352" y="326" font-size="10.5" fill="#475569">• 淨出口 (X−M)</text>
+      <!-- arrows -->
+      <defs><marker id="arrS" markerWidth="9" markerHeight="9" refX="6" refY="3" orient="auto"><path d="M0,0 L7,3 L0,6 Z" fill="#64748b"/></marker></defs>
+      <!-- 國民所得 -> 生產面 -->
+      <line x1="132" y1="160" x2="226" y2="98" stroke="#64748b" stroke-width="1.8" marker-end="url(#arrS)"/>
+      <!-- 國民所得 -> 支出面 -->
+      <line x1="132" y1="180" x2="226" y2="245" stroke="#64748b" stroke-width="1.8" marker-end="url(#arrS)"/>
+      <!-- 生產面 -> 經濟成長 -->
+      <line x1="332" y1="94" x2="468" y2="158" stroke="#64748b" stroke-width="1.8" marker-end="url(#arrS)"/>
+      <!-- 支出面 -> 經濟成長 -->
+      <line x1="332" y1="248" x2="468" y2="180" stroke="#64748b" stroke-width="1.8" marker-end="url(#arrS)"/>
+      <!-- Solow -> 生產面 -->
+      <line x1="280" y1="48" x2="280" y2="68" stroke="#64748b" stroke-width="1.8" marker-end="url(#arrS)"/>
+      <!-- 凱因斯 -> 支出面 -->
+      <line x1="280" y1="292" x2="280" y2="272" stroke="#64748b" stroke-width="1.8" marker-end="url(#arrS)"/>
+    </svg>
+  </div>
+  <div class="read-guide">🧭 一圖總覽：<strong>國民所得</strong>可從「生產面（供給）」與「支出面（需求）」兩路徑衡量，兩者都通往<strong>經濟成長</strong>。生產面由 <strong>Solow 模型</strong>（K、L、A）解釋；支出面由<strong>凱因斯模型</strong>（C、I、G、X−M）解釋。整堂課就是這張地圖。</div>
+</div>
+
+<!-- 公式計算機 -->
+<div class="part-header" style="background:linear-gradient(135deg,#0f172a,#0c4a6e);">
+  <h2>🧮 公式計算機</h2>
+  <p>點擊藍色符號跳至對應欄位 → 填入數字後即時顯示計算過程。</p>
+</div>
+
+<div class="sec" style="padding-bottom:.8rem;">
+  <div style="background:#fefce8;border:1.5px solid #fde68a;border-radius:12px;padding:1rem 1.2rem;">
+    <div style="font-size:.95rem;font-weight:700;color:#92400e;margin-bottom:.6rem;">📖 計算機使用說明</div>
+    <div style="font-size:.83rem;color:#374151;line-height:1.9;">
+      各計算機中的<span style="background:#0369a1;color:white;padding:.02rem .4rem;border-radius:4px;font-family:'Times New Roman',serif;">藍色符號</span>可點擊 → 跳到對應輸入框。填入數字後下方綠色框<strong>自動顯示代入過程與答案</strong>。滑鼠移到藍色符號上會顯示該變數的說明。
+    </div>
+  </div>
+</div>
+
+<!-- C1 實質 GDP 成長率 -->
+<div class="sec" id="c1">
+  <div class="sec-title">實質 GDP 成長率（經濟成長率）<span class="page-badge">p.16</span></div>
+  <div class="fc">
+    <div class="fc-head"><h3>成長率 = (Yₜ − Yₜ₋₁) / Yₜ₋₁ × 100%</h3></div>
+    <div style="padding:1rem 1.1rem;">
+      <div class="lf" style="justify-content:flex-start;">
+        成長率 =
+        <span class="lf-frac">
+          <span class="lf-num"><span class="pb" data-tip="今年的實質GDP" onclick="focusParam('c1-yt')">Y<sub style="font-size:.55em;">t</sub></span> − <span class="pb" data-tip="去年的實質GDP" onclick="focusParam('c1-yt1')">Y<sub style="font-size:.55em;">t−1</sub></span></span>
+          <span class="lf-den">Y<sub style="font-size:.55em;">t−1</sub></span>
+        </span>
+        × 100%
+      </div>
+      <div style="font-size:.82rem;color:#475569;margin-bottom:.6rem;">
+        <strong>符號：</strong>
+        <span style="background:#dbeafe;color:#1e40af;padding:.05rem .4rem;border-radius:4px;">Y<sub>t</sub></span> 今年實質GDP &nbsp;
+        <span style="background:#dbeafe;color:#1e40af;padding:.05rem .4rem;border-radius:4px;">Y<sub>t−1</sub></span> 去年實質GDP
+      </div>
+      <div style="background:#fefce8;border:1px solid #fde68a;border-radius:8px;padding:.6rem .9rem;font-size:.81rem;color:#374151;line-height:1.8;margin-bottom:.8rem;">
+        <strong>💡 初學者說明：</strong><br>
+        ① <strong>Y<sub>t</sub></strong>：今年一整年、這塊土地上生產出來的東西總值（剔除通膨的實質金額，單位：億元或兆元）。<br>
+        ② <strong>Y<sub>t−1</sub></strong>：去年同期的實質 GDP。<br>
+        → 算出來就是新聞說的「經濟成長率 X%」。正值＝擴張，負值＝衰退。
+      </div>
+      <div class="lf-live" id="c1-live"><span class="lhint">← 填入數值後自動計算</span></div>
+      <div class="pi-grid">
+        <div>
+          <div style="margin-bottom:.3rem;font-size:.82rem;font-weight:600;color:#374151;"><span class="pi-sym" onclick="focusParam('c1-yt')">Y<sub>t</sub></span> 今年實質GDP</div>
+          <input class="pi-inp" type="number" id="c1-yt" placeholder="例：232（兆元）" step="any" oninput="liveC1()">
+        </div>
+        <div>
+          <div style="margin-bottom:.3rem;font-size:.82rem;font-weight:600;color:#374151;"><span class="pi-sym" onclick="focusParam('c1-yt1')">Y<sub>t−1</sub></span> 去年實質GDP</div>
+          <input class="pi-inp" type="number" id="c1-yt1" placeholder="例：215（兆元）" step="any" oninput="liveC1()">
+        </div>
+      </div>
+      <div class="calc-err" id="c1-err">請輸入有效數字，且去年 GDP（Y<sub>t−1</sub>）不可為 0。</div>
+    </div>
+  </div>
+</div>
+
+<!-- C2 GDP 支出面 -->
+<div class="sec" id="c2">
+  <div class="sec-title">GDP 支出面（C + I + G + X − M）<span class="page-badge">p.21</span></div>
+  <div class="fc">
+    <div class="fc-head"><h3>GDP = C + I + G + (X − M)</h3></div>
+    <div style="padding:1rem 1.1rem;">
+      <div class="lf" style="justify-content:flex-start;font-size:1.05rem;">
+        GDP =
+        <span class="pb" data-tip="私人消費開支" onclick="focusParam('c2-c')">C</span> +
+        <span class="pb" data-tip="投資總額" onclick="focusParam('c2-i')">I</span> +
+        <span class="pb" data-tip="政府消費開支" onclick="focusParam('c2-g')">G</span> +
+        ( <span class="pb" data-tip="出口毛額" onclick="focusParam('c2-x')">X</span> −
+        <span class="pb" data-tip="進口毛額" onclick="focusParam('c2-m')">M</span> )
+      </div>
+      <div style="background:#fefce8;border:1px solid #fde68a;border-radius:8px;padding:.6rem .9rem;font-size:.81rem;color:#374151;line-height:1.8;margin-bottom:.8rem;">
+        <strong>💡 初學者說明（單位都用兆元或億元，要一致）：</strong><br>
+        <strong>C</strong> 私人消費（家戶買東西）／<strong>I</strong> 投資（廠商買設備蓋廠房）／<strong>G</strong> 政府支出（公共建設、國防）／<strong>X</strong> 出口（賣到國外）／<strong>M</strong> 進口（從國外買）。<br>
+        → 減 M 是因為 C、I、G 裡混進了買外國貨的錢，那不是國內生產，要扣掉。
+      </div>
+      <div class="lf-live" id="c2-live"><span class="lhint">← 填入數值後自動計算</span></div>
+      <div class="pi-grid">
+        <div><div style="margin-bottom:.3rem;font-size:.82rem;font-weight:600;color:#374151;"><span class="pi-sym" onclick="focusParam('c2-c')">C</span> 消費</div><input class="pi-inp" type="number" id="c2-c" placeholder="例：120" step="any" oninput="liveC2()"></div>
+        <div><div style="margin-bottom:.3rem;font-size:.82rem;font-weight:600;color:#374151;"><span class="pi-sym" onclick="focusParam('c2-i')">I</span> 投資</div><input class="pi-inp" type="number" id="c2-i" placeholder="例：60" step="any" oninput="liveC2()"></div>
+        <div><div style="margin-bottom:.3rem;font-size:.82rem;font-weight:600;color:#374151;"><span class="pi-sym" onclick="focusParam('c2-g')">G</span> 政府支出</div><input class="pi-inp" type="number" id="c2-g" placeholder="例:35" step="any" oninput="liveC2()"></div>
+        <div><div style="margin-bottom:.3rem;font-size:.82rem;font-weight:600;color:#374151;"><span class="pi-sym" onclick="focusParam('c2-x')">X</span> 出口</div><input class="pi-inp" type="number" id="c2-x" placeholder="例：90" step="any" oninput="liveC2()"></div>
+        <div><div style="margin-bottom:.3rem;font-size:.82rem;font-weight:600;color:#374151;"><span class="pi-sym" onclick="focusParam('c2-m')">M</span> 進口</div><input class="pi-inp" type="number" id="c2-m" placeholder="例：75" step="any" oninput="liveC2()"></div>
+      </div>
+      <div class="calc-err" id="c2-err">請至少填入有效數字。</div>
+    </div>
+  </div>
+</div>
+
+<!-- C3 Solow 成長率 -->
+<div class="sec" id="c3">
+  <div class="sec-title">Solow 成長分解<span class="page-badge">p.35</span></div>
+  <div class="fc">
+    <div class="fc-head"><h3>ΔY/Y = ΔA/A + α·(ΔK/K) + β·(ΔL/L)</h3></div>
+    <div style="padding:1rem 1.1rem;">
+      <div class="lf" style="justify-content:flex-start;font-size:.95rem;">
+        <span class="lf-frac"><span class="lf-num">ΔY</span><span class="lf-den">Y</span></span> =
+        <span class="pb" data-tip="技術成長率 ΔA/A (%)" onclick="focusParam('c3-a')">ΔA/A</span> +
+        <span class="pb" data-tip="資本所得份額 α" onclick="focusParam('c3-alpha')">α</span>·<span class="pb" data-tip="資本成長率 ΔK/K (%)" onclick="focusParam('c3-k')">ΔK/K</span> +
+        <span class="pb" data-tip="勞動所得份額 β" onclick="focusParam('c3-beta')">β</span>·<span class="pb" data-tip="勞動成長率 ΔL/L (%)" onclick="focusParam('c3-l')">ΔL/L</span>
+      </div>
+      <div style="background:#fefce8;border:1px solid #fde68a;border-radius:8px;padding:.6rem .9rem;font-size:.81rem;color:#374151;line-height:1.8;margin-bottom:.8rem;">
+        <strong>💡 初學者說明：</strong><br>
+        <strong>ΔA/A</strong>：技術進步率（%），例：技術一年進步 2%，填 2。<br>
+        <strong>ΔK/K、ΔL/L</strong>：資本、勞動的成長率（%）。<br>
+        <strong>α、β</strong>：資本、勞動的貢獻權重（所得份額），通常 α+β=1，例如 α=0.3、β=0.7。<br>
+        → 三項加起來就是整體經濟成長率（%）。
+      </div>
+      <div class="lf-live" id="c3-live"><span class="lhint">← 填入數值後自動計算</span></div>
+      <div class="pi-grid">
+        <div><div style="margin-bottom:.3rem;font-size:.82rem;font-weight:600;color:#374151;"><span class="pi-sym" onclick="focusParam('c3-a')">ΔA/A</span> 技術成長率(%)</div><input class="pi-inp" type="number" id="c3-a" placeholder="例：2" step="any" oninput="liveC3()"></div>
+        <div><div style="margin-bottom:.3rem;font-size:.82rem;font-weight:600;color:#374151;"><span class="pi-sym" onclick="focusParam('c3-alpha')">α</span> 資本份額</div><input class="pi-inp" type="number" id="c3-alpha" placeholder="例：0.3" step="any" oninput="liveC3()"></div>
+        <div><div style="margin-bottom:.3rem;font-size:.82rem;font-weight:600;color:#374151;"><span class="pi-sym" onclick="focusParam('c3-k')">ΔK/K</span> 資本成長率(%)</div><input class="pi-inp" type="number" id="c3-k" placeholder="例：4" step="any" oninput="liveC3()"></div>
+        <div><div style="margin-bottom:.3rem;font-size:.82rem;font-weight:600;color:#374151;"><span class="pi-sym" onclick="focusParam('c3-beta')">β</span> 勞動份額</div><input class="pi-inp" type="number" id="c3-beta" placeholder="例：0.7" step="any" oninput="liveC3()"></div>
+        <div><div style="margin-bottom:.3rem;font-size:.82rem;font-weight:600;color:#374151;"><span class="pi-sym" onclick="focusParam('c3-l')">ΔL/L</span> 勞動成長率(%)</div><input class="pi-inp" type="number" id="c3-l" placeholder="例：1" step="any" oninput="liveC3()"></div>
+      </div>
+      <div class="calc-err" id="c3-err">請填入有效數字。</div>
+    </div>
+  </div>
+</div>
+
+<!-- C4 消費函數與乘數 -->
+<div class="sec" id="c4">
+  <div class="sec-title">消費函數與支出乘數<span class="page-badge">p.53, 66</span></div>
+  <div class="fc">
+    <div class="fc-head"><h3>C = a + c·Y_d &nbsp;&nbsp;|&nbsp;&nbsp; 乘數 = 1 / (1 − c)</h3></div>
+    <div style="padding:1rem 1.1rem;">
+      <div class="lf" style="justify-content:flex-start;font-size:1.02rem;">
+        C = <span class="pb" data-tip="自發性消費 a" onclick="focusParam('c4-a')">a</span> +
+        <span class="pb" data-tip="邊際消費傾向 c (0~1)" onclick="focusParam('c4-c')">c</span> ·
+        <span class="pb" data-tip="可支配所得 Yd" onclick="focusParam('c4-yd')">Y<sub style="font-size:.6em;">d</sub></span>
+      </div>
+      <div style="background:#fefce8;border:1px solid #fde68a;border-radius:8px;padding:.6rem .9rem;font-size:.81rem;color:#374151;line-height:1.8;margin-bottom:.8rem;">
+        <strong>💡 初學者說明：</strong><br>
+        <strong>a</strong>：自發性消費——就算沒收入也得花的錢（單位：元/萬元）。<br>
+        <strong>c</strong>：邊際消費傾向（MPC），多賺 1 元會花掉的比例，介於 0~1，例如 0.8。<br>
+        <strong>Y<sub>d</sub></strong>：可支配所得（稅後能自由運用的錢）。<br>
+        → 同時算出消費 C，以及<strong>乘數 1/(1−c)</strong>（自發支出增加 1 元，均衡所得放大幾倍）。
+      </div>
+      <div class="lf-live" id="c4-live"><span class="lhint">← 填入數值後自動計算</span></div>
+      <div class="pi-grid">
+        <div><div style="margin-bottom:.3rem;font-size:.82rem;font-weight:600;color:#374151;"><span class="pi-sym" onclick="focusParam('c4-a')">a</span> 自發性消費</div><input class="pi-inp" type="number" id="c4-a" placeholder="例：100" step="any" oninput="liveC4()"></div>
+        <div><div style="margin-bottom:.3rem;font-size:.82rem;font-weight:600;color:#374151;"><span class="pi-sym" onclick="focusParam('c4-c')">c</span> 邊際消費傾向(0~1)</div><input class="pi-inp" type="number" id="c4-c" placeholder="例：0.8" step="any" oninput="liveC4()"></div>
+        <div><div style="margin-bottom:.3rem;font-size:.82rem;font-weight:600;color:#374151;"><span class="pi-sym" onclick="focusParam('c4-yd')">Y<sub>d</sub></span> 可支配所得</div><input class="pi-inp" type="number" id="c4-yd" placeholder="例：1000" step="any" oninput="liveC4()"></div>
+      </div>
+      <div class="calc-err" id="c4-err">請輸入有效數字，且邊際消費傾向 c 須介於 0 與 1 之間。</div>
+    </div>
+  </div>
+</div>
+
+<!-- C5 均衡所得 -->
+<div class="sec" id="c5">
+  <div class="sec-title">均衡所得 Y*（含政府部門）<span class="page-badge">p.76</span></div>
+  <div class="fc">
+    <div class="fc-head"><h3>Y* = (a − c·Tₐ + Iₐ + Gₐ) / (1 − c)</h3></div>
+    <div style="padding:1rem 1.1rem;">
+      <div class="lf" style="justify-content:flex-start;font-size:.92rem;">
+        Y* =
+        <span class="lf-frac">
+          <span class="lf-num"><span class="pb" data-tip="自發性消費 a" onclick="focusParam('c5-a')">a</span> − <span class="pb" data-tip="邊際消費傾向 c" onclick="focusParam('c5-c')">c</span>·<span class="pb" data-tip="定額稅 Ta" onclick="focusParam('c5-t')">T<sub style="font-size:.55em;">a</sub></span> + <span class="pb" data-tip="自發性投資 Ia" onclick="focusParam('c5-i')">I<sub style="font-size:.55em;">a</sub></span> + <span class="pb" data-tip="政府支出 Ga" onclick="focusParam('c5-g')">G<sub style="font-size:.55em;">a</sub></span></span>
+          <span class="lf-den">1 − c</span>
+        </span>
+      </div>
+      <div style="background:#fefce8;border:1px solid #fde68a;border-radius:8px;padding:.6rem .9rem;font-size:.81rem;color:#374151;line-height:1.8;margin-bottom:.8rem;">
+        <strong>💡 初學者說明：</strong><br>
+        <strong>a</strong> 自發性消費／<strong>c</strong> 邊際消費傾向(0~1)／<strong>T<sub>a</sub></strong> 稅收／<strong>I<sub>a</sub></strong> 自發性投資／<strong>G<sub>a</sub></strong> 政府支出。<br>
+        → 分母 1−c 是邊際儲蓄傾向；分子越大或 c 越大（越愛花錢），均衡所得放大越多（乘數效果）。
+      </div>
+      <div class="lf-live" id="c5-live"><span class="lhint">← 填入數值後自動計算</span></div>
+      <div class="pi-grid">
+        <div><div style="margin-bottom:.3rem;font-size:.82rem;font-weight:600;color:#374151;"><span class="pi-sym" onclick="focusParam('c5-a')">a</span> 自發性消費</div><input class="pi-inp" type="number" id="c5-a" placeholder="例：100" step="any" oninput="liveC5()"></div>
+        <div><div style="margin-bottom:.3rem;font-size:.82rem;font-weight:600;color:#374151;"><span class="pi-sym" onclick="focusParam('c5-c')">c</span> 邊際消費傾向</div><input class="pi-inp" type="number" id="c5-c" placeholder="例：0.8" step="any" oninput="liveC5()"></div>
+        <div><div style="margin-bottom:.3rem;font-size:.82rem;font-weight:600;color:#374151;"><span class="pi-sym" onclick="focusParam('c5-t')">T<sub>a</sub></span> 稅收</div><input class="pi-inp" type="number" id="c5-t" placeholder="例：50" step="any" oninput="liveC5()"></div>
+        <div><div style="margin-bottom:.3rem;font-size:.82rem;font-weight:600;color:#374151;"><span class="pi-sym" onclick="focusParam('c5-i')">I<sub>a</sub></span> 自發性投資</div><input class="pi-inp" type="number" id="c5-i" placeholder="例：120" step="any" oninput="liveC5()"></div>
+        <div><div style="margin-bottom:.3rem;font-size:.82rem;font-weight:600;color:#374151;"><span class="pi-sym" onclick="focusParam('c5-g')">G<sub>a</sub></span> 政府支出</div><input class="pi-inp" type="number" id="c5-g" placeholder="例：80" step="any" oninput="liveC5()"></div>
+      </div>
+      <div class="calc-err" id="c5-err">請輸入有效數字，且 c 須介於 0 與 1 之間（1−c ≠ 0）。</div>
+    </div>
+  </div>
+</div>
+
+<div style="height:2rem;"></div>
+</main>
+
+<script>
+/* ── Scroll spy ── */
+const navLinks=[...document.querySelectorAll('#sidenav a')];
+const secs=navLinks.map(a=>document.querySelector(a.getAttribute('href'))).filter(Boolean);
+const spy=()=>{
+  let cur=secs[0];
+  const y=window.scrollY+120;
+  for(const s of secs){ if(s.offsetTop<=y) cur=s; }
+  navLinks.forEach(a=>a.classList.toggle('active',a.getAttribute('href')==='#'+cur.id));
+};
+window.addEventListener('scroll',spy,{passive:true});
+window.addEventListener('load',spy);
+
+/* ── Jump to input & highlight ── */
+function focusParam(id){
+  const el=document.getElementById(id);
+  if(!el)return;
+  el.scrollIntoView({behavior:'smooth',block:'center'});
+  el.focus();
+  el.classList.add('lit');
+  setTimeout(()=>el.classList.remove('lit'),1400);
+}
+const num=id=>{const v=parseFloat(document.getElementById(id).value);return isNaN(v)?null:v;};
+const filled=id=>document.getElementById(id).value.trim()!=='';
+const fmt=x=>{ if(!isFinite(x))return '—'; const r=Math.round(x*1000)/1000; return (''+r); };
+
+/* C1 實質GDP成長率 */
+function liveC1(){
+  const box=document.getElementById('c1-live'),err=document.getElementById('c1-err');
+  const yt=num('c1-yt'),yt1=num('c1-yt1');
+  if(yt===null||yt1===null){box.innerHTML='<span class="lhint">← 填入數值後自動計算</span>';err.classList.remove('show');return;}
+  if(yt1===0){err.classList.add('show');box.innerHTML='<span class="lhint">去年 GDP 不可為 0</span>';return;}
+  err.classList.remove('show');
+  const g=(yt-yt1)/yt1*100;
+  box.innerHTML='成長率 = ('+fmt(yt)+' − '+fmt(yt1)+') / '+fmt(yt1)+' × 100% = <span class="la">'+fmt(g)+' %</span> '+
+    '<span class="lhint">('+(g>=0?'經濟擴張':'經濟衰退')+')</span>';
+}
+/* C2 支出面 */
+function liveC2(){
+  const box=document.getElementById('c2-live'),err=document.getElementById('c2-err');
+  const ids=['c2-c','c2-i','c2-g','c2-x','c2-m'];
+  if(!ids.some(filled)){box.innerHTML='<span class="lhint">← 填入數值後自動計算</span>';err.classList.remove('show');return;}
+  const c=num('c2-c')||0,i=num('c2-i')||0,g=num('c2-g')||0,x=num('c2-x')||0,m=num('c2-m')||0;
+  err.classList.remove('show');
+  const gdp=c+i+g+(x-m);
+  box.innerHTML='GDP = '+fmt(c)+' + '+fmt(i)+' + '+fmt(g)+' + ('+fmt(x)+' − '+fmt(m)+') = <span class="la">'+fmt(gdp)+'</span>'+
+    ' <span class="lhint">淨出口 X−M = '+fmt(x-m)+'</span>';
+}
+/* C3 Solow */
+function liveC3(){
+  const box=document.getElementById('c3-live'),err=document.getElementById('c3-err');
+  const ids=['c3-a','c3-alpha','c3-k','c3-beta','c3-l'];
+  if(!ids.every(filled)){box.innerHTML='<span class="lhint">← 五個欄位都填入後自動計算</span>';err.classList.remove('show');return;}
+  const a=num('c3-a'),al=num('c3-alpha'),k=num('c3-k'),be=num('c3-beta'),l=num('c3-l');
+  if([a,al,k,be,l].some(v=>v===null)){err.classList.add('show');return;}
+  err.classList.remove('show');
+  const g=a+al*k+be*l;
+  box.innerHTML='ΔY/Y = '+fmt(a)+' + '+fmt(al)+'×'+fmt(k)+' + '+fmt(be)+'×'+fmt(l)+' = <span class="la">'+fmt(g)+' %</span>';
+}
+/* C4 消費函數與乘數 */
+function liveC4(){
+  const box=document.getElementById('c4-live'),err=document.getElementById('c4-err');
+  const a=num('c4-a'),c=num('c4-c'),yd=num('c4-yd');
+  if(a===null&&c===null&&yd===null){box.innerHTML='<span class="lhint">← 填入數值後自動計算</span>';err.classList.remove('show');return;}
+  if(c!==null&&(c<=0||c>=1)){err.classList.add('show');box.innerHTML='<span class="lhint">c 須介於 0 與 1 之間</span>';return;}
+  err.classList.remove('show');
+  let html='';
+  if(a!==null&&c!==null&&yd!==null){
+    const C=a+c*yd;
+    html+='C = '+fmt(a)+' + '+fmt(c)+'×'+fmt(yd)+' = <span class="la">'+fmt(C)+'</span>&nbsp;&nbsp;';
+  }
+  if(c!==null){
+    const mult=1/(1-c);
+    html+='乘數 = 1/(1−'+fmt(c)+') = <span class="la">'+fmt(mult)+'</span>';
+  }
+  box.innerHTML=html||'<span class="lhint">← 填入數值後自動計算</span>';
+}
+/* C5 均衡所得 */
+function liveC5(){
+  const box=document.getElementById('c5-live'),err=document.getElementById('c5-err');
+  const ids=['c5-a','c5-c','c5-t','c5-i','c5-g'];
+  if(!ids.every(filled)){box.innerHTML='<span class="lhint">← 五個欄位都填入後自動計算</span>';err.classList.remove('show');return;}
+  const a=num('c5-a'),c=num('c5-c'),t=num('c5-t'),i=num('c5-i'),g=num('c5-g');
+  if([a,c,t,i,g].some(v=>v===null)||c<=0||c>=1){err.classList.add('show');box.innerHTML='<span class="lhint">請檢查數值，c 須在 0~1</span>';return;}
+  err.classList.remove('show');
+  const numer=a-c*t+i+g, y=numer/(1-c);
+  box.innerHTML='Y* = ('+fmt(a)+' − '+fmt(c)+'×'+fmt(t)+' + '+fmt(i)+' + '+fmt(g)+') / (1 − '+fmt(c)+') = '+
+    fmt(numer)+' / '+fmt(1-c)+' = <span class="la">'+fmt(y)+'</span>';
+}
+</script>
+</body>
+</html>

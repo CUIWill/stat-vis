@@ -1,0 +1,1194 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>入門統計學 Week 4 · 估計 Estimation</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'Segoe UI','Microsoft JhengHei',sans-serif;background:#f1f5f9;color:#1e293b;display:flex;min-height:100vh;}
+
+/* ── Side nav ── */
+#sidenav{
+  width:210px;min-width:210px;background:#0f1e30;
+  position:fixed;top:0;left:0;height:100vh;overflow-y:auto;z-index:200;
+  padding:1rem 0;
+}
+#sidenav h2{color:#94a3b8;font-size:.72rem;letter-spacing:.08em;text-transform:uppercase;padding:.5rem 1rem .3rem;margin-top:.5rem;}
+#sidenav a{
+  display:block;color:#cbd5e1;font-size:.8rem;padding:.42rem 1rem;
+  text-decoration:none;border-left:3px solid transparent;transition:all .15s;
+  line-height:1.4;
+}
+#sidenav a:hover{color:white;background:rgba(255,255,255,.06);}
+#sidenav a.active{color:#38bdf8;border-left-color:#38bdf8;background:rgba(56,189,248,.08);}
+#sidenav .pg{color:#475569;font-size:.7rem;margin-left:.3rem;}
+
+/* ── Main ── */
+#main{margin-left:210px;width:100%;max-width:1210px;padding:2rem 2.4rem 4rem;}
+
+/* Part headers */
+.part-header{
+  background:linear-gradient(135deg,#1e3a5f,#2563eb);
+  color:white;border-radius:14px;padding:1.1rem 1.6rem;margin:2.5rem 0 1.4rem;
+}
+.part-header h2{font-size:1.15rem;margin:0;}
+.part-header p{font-size:.82rem;opacity:.85;margin-top:.25rem;line-height:1.6;}
+
+/* Section */
+.sec{margin-bottom:2.2rem;}
+.sec-title{
+  display:flex;align-items:center;gap:.7rem;flex-wrap:wrap;
+  font-size:1.05rem;font-weight:700;color:#1e3a5f;
+  margin-bottom:.9rem;padding-bottom:.35rem;
+  border-bottom:2px solid #bfdbfe;
+}
+.page-badge{
+  background:#e0f2fe;color:#0369a1;font-size:.7rem;
+  font-weight:600;padding:.2rem .55rem;border-radius:99px;white-space:nowrap;
+}
+
+/* Cards */
+.cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:.85rem;}
+.card{background:white;border-radius:10px;padding:1.1rem;box-shadow:0 1px 6px rgba(0,0,0,.08);border-top:4px solid;}
+.card.c-blue{border-color:#3b82f6;} .card.c-purple{border-color:#8b5cf6;}
+.card.c-green{border-color:#10b981;} .card.c-orange{border-color:#f59e0b;}
+.card.c-red{border-color:#ef4444;}   .card.c-teal{border-color:#0891b2;}
+.card.c-sky{border-color:#38bdf8;}
+.card h3{font-size:.92rem;margin-bottom:.38rem;}
+.card p{font-size:.82rem;color:#475569;line-height:1.65;}
+
+/* Box */
+.box{background:white;border-radius:10px;padding:1.3rem;box-shadow:0 1px 6px rgba(0,0,0,.08);margin-bottom:.9rem;}
+.box h3{font-size:.9rem;color:#334155;margin-bottom:.75rem;}
+
+/* Tag */
+.tag{display:inline-block;font-size:.7rem;font-weight:700;padding:.12rem .5rem;border-radius:6px;margin-bottom:.4rem;}
+.t-blue{background:#dbeafe;color:#1d4ed8;} .t-green{background:#d1fae5;color:#065f46;}
+.t-orange{background:#fef3c7;color:#92400e;} .t-purple{background:#ede9fe;color:#6d28d9;}
+.t-red{background:#fee2e2;color:#991b1b;} .t-teal{background:#cffafe;color:#155e75;}
+
+/* Table */
+.tbl{width:100%;border-collapse:collapse;font-size:.84rem;}
+.tbl th{background:#1e3a5f;color:white;padding:.5rem .8rem;text-align:left;}
+.tbl td{padding:.45rem .8rem;border-bottom:1px solid #e2e8f0;}
+.tbl tr:nth-child(even) td{background:#f8fafc;}
+.tbl td.hl{background:#fef3c7 !important;font-weight:700;color:#92400e;}
+
+/* Inline formula chip */
+.fml{background:#0f172a;color:#e2e8f0;border-radius:8px;padding:.7rem 1.1rem;
+  font-family:'Times New Roman',serif;font-size:1rem;margin:.45rem 0;line-height:1.95;}
+.hl{color:#fbbf24;font-weight:700;}
+
+/* Tip / warn */
+.tip{background:#f0fdf4;border-left:4px solid #22c55e;border-radius:8px;
+  padding:.7rem .9rem;font-size:.82rem;color:#166534;margin-top:.7rem;line-height:1.75;}
+.warn{background:#fffbeb;border-left:4px solid #f59e0b;border-radius:8px;
+  padding:.7rem .9rem;font-size:.82rem;color:#92400e;margin-top:.7rem;line-height:1.75;}
+
+/* Two col */
+.two{display:grid;grid-template-columns:1fr 1fr;gap:.85rem;}
+.three{display:grid;grid-template-columns:1fr 1fr 1fr;gap:.8rem;}
+@media(max-width:760px){.two,.three{grid-template-columns:1fr;} #sidenav{display:none;} #main{margin-left:0;}}
+
+/* Flow row */
+.flow{display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:0;margin:.9rem 0;}
+.fb{background:white;border:2px solid #c7d2fe;border-radius:8px;padding:.55rem .9rem;
+  font-size:.84rem;text-align:center;min-width:95px;box-shadow:0 1px 5px rgba(0,0,0,.06);}
+.fa{font-size:1.2rem;color:#2563eb;padding:0 .3rem;}
+
+/* ── Formula Card ── */
+.fc{background:white;border-radius:12px;overflow:hidden;box-shadow:0 2px 10px rgba(0,0,0,.08);margin-bottom:1.2rem;border:1.5px solid #e2e8f0;}
+.fc-head{background:linear-gradient(135deg,#1e3a5f,#2563eb);color:white;padding:.7rem 1.1rem;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:.4rem;}
+.fc-head h3{font-size:.95rem;margin:0;}
+.fc-body{padding:1.1rem 1.2rem;}
+
+/* Green lecture formula box */
+.lf{background:#d1fae5;border:1px solid #6ee7b7;border-radius:8px;padding:.85rem 1.2rem;display:inline-flex;align-items:center;gap:.35rem;font-family:'Times New Roman','Palatino Linotype',serif;font-size:1.1rem;flex-wrap:wrap;margin-bottom:1rem;}
+.lf-eq{color:#374151;}
+
+/* Fraction */
+.lf-frac{display:inline-flex;flex-direction:column;align-items:center;vertical-align:middle;margin:0 .1rem;}
+.lf-num{border-bottom:1.8px solid #1e293b;padding:1px 4px 2px;text-align:center;white-space:nowrap;}
+.lf-den{padding:2px 4px 0;text-align:center;white-space:nowrap;}
+
+/* Param badge */
+.pb{
+  display:inline-block;cursor:pointer;
+  background:#1e3a5f;color:white;
+  font-family:'Times New Roman',serif;font-size:1rem;font-weight:700;
+  padding:.05rem .45rem;border-radius:4px;vertical-align:middle;
+  transition:background .15s, transform .1s;position:relative;
+}
+.pb:hover{background:#2563eb;transform:scale(1.08);}
+.pb.active{background:#f59e0b;color:#1e293b;}
+.pb[data-tip]:hover::after{
+  content:attr(data-tip);
+  position:absolute;bottom:120%;left:50%;transform:translateX(-50%);
+  background:#0f172a;color:white;padding:3px 8px;border-radius:5px;
+  font-size:.68rem;font-family:'Segoe UI',sans-serif;font-weight:400;
+  white-space:nowrap;pointer-events:none;z-index:99;
+}
+
+/* Live substitution bar */
+.lf-live{
+  background:#f0fdf4;border:1.5px solid #86efac;border-radius:8px;
+  padding:.65rem 1rem;font-family:'Times New Roman',serif;font-size:1.05rem;
+  min-height:2.8rem;display:flex;align-items:center;gap:.3rem;flex-wrap:wrap;
+  margin-bottom:.9rem;line-height:1.8;
+}
+.lf-live .lv{color:#1d4ed8;font-weight:700;}
+.lf-live .la{color:#065f46;font-weight:700;font-size:1.2rem;background:#bbf7d0;padding:.05rem .4rem;border-radius:4px;}
+.lf-live .lhint{color:#94a3b8;font-family:'Segoe UI',sans-serif;font-size:.8rem;font-style:italic;}
+
+/* Param input grid */
+.pi-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(185px,1fr));gap:.75rem;margin:.5rem 0 .9rem;}
+.pi-inp{
+  border:1.5px solid #cbd5e1;border-radius:7px;padding:.4rem .7rem;
+  font-size:.87rem;outline:none;width:100%;box-sizing:border-box;
+  transition:border .15s,box-shadow .15s;background:white;
+}
+.pi-inp:focus{border-color:#2563eb;box-shadow:0 0 0 2px rgba(37,99,235,.15);}
+.pi-inp.lit{border-color:#f59e0b;box-shadow:0 0 0 2px rgba(245,158,11,.18);}
+.pi-sym{
+  background:#1e3a5f;color:white;font-family:'Times New Roman',serif;
+  font-size:.88rem;font-weight:700;padding:.1rem .45rem;border-radius:4px;
+  cursor:pointer;user-select:none;transition:background .12s;
+}
+.pi-sym:hover{background:#2563eb;}
+.pi-lbl{margin-bottom:.3rem;font-size:.82rem;font-weight:600;color:#374151;}
+
+/* Beginner note box */
+.bnote{background:#eff6ff;border:1px dashed #93c5fd;border-radius:8px;padding:.7rem .95rem;font-size:.8rem;color:#1e40af;line-height:1.7;margin-bottom:.9rem;}
+.bnote b{color:#1e3a5f;}
+
+.calc-err{background:#fff1f2;border:1px solid #fca5a5;border-radius:7px;padding:.55rem .85rem;font-size:.82rem;color:#991b1b;display:none;margin-top:.5rem;}
+.calc-err.show{display:block;}
+
+mark{padding:.05rem .3rem;border-radius:4px;}
+.sym{background:#dbeafe;color:#1e40af;padding:.05rem .4rem;border-radius:4px;font-family:'Times New Roman',serif;}
+sub{font-size:.6em;}
+.readguide{background:#f8fafc;border:1px solid #cbd5e1;border-radius:7px;padding:.5rem .8rem;font-size:.78rem;color:#475569;margin-top:.5rem;line-height:1.6;}
+</style>
+</head>
+<body>
+
+<!-- ── Side Navigation ── -->
+<nav id="sidenav">
+  <div style="padding:.5rem 1rem .6rem;border-bottom:1px solid #1e3a5f;">
+    <div style="color:white;font-weight:700;font-size:.9rem;">📈 統計學 Week 4</div>
+    <div style="color:#64748b;font-size:.7rem;margin-top:.2rem;">估計 Estimation</div>
+  </div>
+  <div style="color:#64748b;font-size:.7rem;padding:.4rem 1rem;">📖 第一版（上課後更新）</div>
+
+  <h2>PART 1 · 估計基礎</h2>
+  <a href="#s1">歸納法 vs 演繹法 <span class="pg">4-1</span></a>
+  <a href="#s2">準則①無偏 Unbiased <span class="pg">4-1</span></a>
+  <a href="#s3">準則②有效③一致 <span class="pg">4-2</span></a>
+  <a href="#s4">點估計 vs 區間估計 <span class="pg">4-2~3</span></a>
+  <a href="#s5">各分配的點估計 <span class="pg">4-3</span></a>
+
+  <h2>PART 2 · 母體平均數 μ</h2>
+  <a href="#s6">區間估計原理 <span class="pg">4-4</span></a>
+  <a href="#s7">σ 已知（Z）+範例 <span class="pg">4-5</span></a>
+  <a href="#s8">σ 未知・t 分配 <span class="pg">4-6~7</span></a>
+  <a href="#s9">t 分配表讀法 <span class="pg">4-8</span></a>
+  <a href="#s10">房租範例（t）<span class="pg">4-9</span></a>
+  <a href="#s11">決定樣本數 n <span class="pg">4-9~10</span></a>
+
+  <h2>PART 3 · 母體比率 p</h2>
+  <a href="#s12">比率的信賴區間 <span class="pg">4-10</span></a>
+  <a href="#s13">選民民調範例 <span class="pg">4-11</span></a>
+  <a href="#s14">比率的樣本數 n <span class="pg">4-12</span></a>
+
+  <h2>PART 4 · 母體變異數 σ²</h2>
+  <a href="#s15">卡方區間+房租範例 <span class="pg">4-13</span></a>
+
+  <h2>PART 5 · 兩母體差異</h2>
+  <a href="#s16">兩母體平均差架構 <span class="pg">4-14~15</span></a>
+  <a href="#s17">σ 已知的差 <span class="pg">4-15</span></a>
+  <a href="#s18">σ 未知・合併變異數 <span class="pg">4-16~17</span></a>
+  <a href="#s19">高爾夫球範例（大樣本）<span class="pg">4-18</span></a>
+  <a href="#s20">汽車油耗範例（小樣本）<span class="pg">4-19</span></a>
+  <a href="#s21">配對樣本 <span class="pg">4-20~21</span></a>
+  <a href="#s22">兩母體比率差 <span class="pg">4-21~22</span></a>
+  <a href="#s23">廣告成效範例 <span class="pg">4-23</span></a>
+
+  <h2>PART 6 · F 檢定</h2>
+  <a href="#s24">F 分配・比較兩變異數 <span class="pg">4-24~25</span></a>
+
+  <h2>🧮 公式計算機</h2>
+  <a href="#c1">μ 區間（σ 已知 Z）</a>
+  <a href="#c2">μ 區間（σ 未知 t）</a>
+  <a href="#c3">決定樣本數 n</a>
+  <a href="#c4">p 比率區間</a>
+  <a href="#c5">比率樣本數 n</a>
+  <a href="#c6">σ² 變異數區間</a>
+  <a href="#c7">兩母體平均差</a>
+  <a href="#c8">兩母體比率差</a>
+</nav>
+
+<!-- ── Main Content ── -->
+<main id="main">
+
+<!-- ══════════ PART 1 ══════════ -->
+<div class="part-header">
+  <h2>PART 1 &nbsp;·&nbsp; 估計基礎：從樣本猜母體</h2>
+  <p>上週（Week 3）我們從「已知母體」往下推樣本會長怎樣（演繹法・機率論）。本週反過來：手上只有樣本，要往上猜「母體參數大概多少」——這就是<b>估計（Estimation）</b>，屬於歸納法。先學怎麼判斷一個估計好不好（三大準則），再學兩種估計方式（點估計、區間估計）。</p>
+</div>
+
+<!-- S1 歸納 vs 演繹 -->
+<div class="sec" id="s1">
+  <div class="sec-title">歸納法 Induction vs 演繹法 Deduction<span class="page-badge">Week 4-1</span></div>
+  <div class="bnote"><b>白話：</b>統計學有兩個方向。<b>演繹法（Deduction・機率論）</b>＝從「已知的母體」往下算樣本會怎樣（上週在做的事）。<b>歸納法（Induction・估計）</b>＝反過來，只看得到樣本，要往上推「母體參數大約是多少」（本週在做的事）。一句話：<b>根據事實或證據，去猜母體參數。</b></div>
+  <div class="box">
+    <h3>兩個方向的對照（讀圖方法：綠箭頭往上＝估計，白箭頭往下＝機率）</h3>
+    <svg viewBox="0 0 660 260" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-width:660px;display:block;margin:.4rem auto;">
+      <!-- 母體 ellipse -->
+      <ellipse cx="330" cy="52" rx="70" ry="34" fill="#dbeafe" stroke="#1e3a5f" stroke-width="2"/>
+      <text x="330" y="50" font-size="16" fill="#1e3a5f" text-anchor="middle" font-weight="bold">母體</text>
+      <text x="330" y="70" font-size="11" fill="#475569" text-anchor="middle">μ, σ, p, λ</text>
+      <!-- 樣本 ellipse -->
+      <ellipse cx="330" cy="188" rx="70" ry="34" fill="#d1fae5" stroke="#065f46" stroke-width="2"/>
+      <text x="330" y="186" font-size="16" fill="#065f46" text-anchor="middle" font-weight="bold">樣本</text>
+      <text x="330" y="206" font-size="11" fill="#475569" text-anchor="middle">X̄, S, p̂, λ̂</text>
+      <!-- up arrow (estimation) -->
+      <path d="M250,180 L250,68" stroke="#10b981" stroke-width="10" marker-end="url(#agr)"/>
+      <text x="150" y="120" font-size="13" fill="#065f46" font-weight="bold">Estimation 估計</text>
+      <text x="150" y="138" font-size="12" fill="#065f46">Induction 歸納法</text>
+      <!-- down arrow (probability) -->
+      <path d="M410,68 L410,180" stroke="#64748b" stroke-width="10" marker-end="url(#agr2)"/>
+      <text x="440" y="120" font-size="13" fill="#334155" font-weight="bold">Probability 機率論</text>
+      <text x="440" y="138" font-size="12" fill="#334155">Deduction 演繹法</text>
+      <defs>
+        <marker id="agr" markerWidth="12" markerHeight="12" refX="6" refY="6" orient="auto"><path d="M1,10 L6,1 L11,10 Z" fill="#10b981"/></marker>
+        <marker id="agr2" markerWidth="12" markerHeight="12" refX="6" refY="6" orient="auto"><path d="M1,2 L6,11 L11,2 Z" fill="#64748b"/></marker>
+      </defs>
+    </svg>
+    <div class="readguide">📖 <b>讀圖：</b>綠色箭頭（往上）＝從樣本統計量猜母體參數，這是「估計」；灰色箭頭（往下）＝從母體算樣本，這是上週的「機率論」。本週全部都在走綠色那條路。</div>
+  </div>
+</div>
+
+<!-- S2 無偏 -->
+<div class="sec" id="s2">
+  <div class="sec-title">估計準則① 無偏性 Unbiased<span class="page-badge">Week 4-1</span></div>
+  <div class="bnote"><b>先講一個名詞：估計量（estimator）</b>＝用來猜母體參數的公式，例如用樣本平均 X̄ 去猜母體平均 μ。「θ̂」（theta-hat，讀 theta-hat）是「拿來估計 θ 的統計量」的通用寫法，帽子＝估計值。</div>
+  <div class="two">
+    <div class="box">
+      <h3>定義：無偏估計量（無偏估計）</h3>
+      <p style="font-size:.83rem;color:#475569;">如果一個估計量 <span class="sym">θ̂</span> 的<strong>抽樣分配平均數</strong>剛好等於母體參數 θ，就叫它<strong>無偏估計量（unbiased estimator，無偏估計）</strong>。</p>
+      <div class="lf" style="font-size:1.15rem;">E{θ̂} = θ</div>
+      <div class="tip">💡 <b>白話：</b>「無偏」不是說每次都猜對，而是「平均而言不偏不倚」——如果重複抽很多次樣本、每次都算一個 X̄，這些 X̄ 的中心會剛好落在真正的 μ 上，不會系統性偏高或偏低。</div>
+    </div>
+    <div class="box">
+      <h3>讀圖：無偏 vs 有偏（Biased）</h3>
+      <svg viewBox="0 0 460 210" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-width:460px;display:block;margin:.2rem auto;">
+        <line x1="30" y1="170" x2="450" y2="170" stroke="#334155" stroke-width="1.5"/>
+        <text x="12" y="40" font-size="12" fill="#475569">P(X̄)</text>
+        <text x="445" y="188" font-size="12" fill="#475569" font-style="italic">X̄</text>
+        <!-- unbiased bell centered at 165 -->
+        <path d="M55,168 C110,166 130,40 165,40 C200,40 220,166 275,168" fill="none" stroke="#ef4444" stroke-width="2.6"/>
+        <line x1="165" y1="60" x2="165" y2="170" stroke="#ef4444" stroke-width="1" stroke-dasharray="3,3"/>
+        <text x="165" y="188" font-size="11" fill="#b91c1c" text-anchor="middle">μ_X̄ = μ_X</text>
+        <text x="150" y="30" font-size="12" fill="#b91c1c" font-weight="bold">Unbiased</text>
+        <!-- biased bell centered at 320 -->
+        <path d="M215,168 C265,166 285,55 320,55 C355,55 375,166 425,168" fill="none" stroke="#d946ef" stroke-width="2.6"/>
+        <line x1="320" y1="72" x2="320" y2="170" stroke="#d946ef" stroke-width="1" stroke-dasharray="3,3"/>
+        <text x="320" y="188" font-size="11" fill="#a21caf" text-anchor="middle">μ_X̄ ≠ μ_X</text>
+        <text x="315" y="45" font-size="12" fill="#a21caf" font-weight="bold">Biased</text>
+      </svg>
+      <div class="readguide">📖 <b>讀圖：</b>紅色鐘形的正中央剛好對在真正的 μ 上→無偏；紫色鐘形的中央偏離了 μ→有偏（系統性地偏一邊）。我們偏好無偏的估計量。</div>
+    </div>
+  </div>
+</div>
+
+<!-- S3 有效 + 一致 -->
+<div class="sec" id="s3">
+  <div class="sec-title">估計準則② 有效性・③ 一致性<span class="page-badge">Week 4-2</span></div>
+  <div class="two">
+    <div class="box">
+      <h3>② 有效性 Efficiency（變異數最小）</h3>
+      <p style="font-size:.83rem;color:#475569;">在所有<strong>無偏</strong>估計量之中，<strong>變異數最小</strong>的那一個，稱為<strong>最有效估計量（most efficient estimator）</strong>。</p>
+      <div class="tip">💡 <b>白話：</b>大家都不偏（中心都對），那就比誰「抖動最小、最集中」。越集中，代表單次估計越可能靠近真值。例如估計中心時，樣本平均數 X̄ 就比樣本中位數更有效（更集中）。</div>
+      <svg viewBox="0 0 460 190" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-width:460px;display:block;margin:.3rem auto;">
+        <line x1="30" y1="155" x2="450" y2="155" stroke="#334155" stroke-width="1.5"/>
+        <!-- wide (median) red -->
+        <path d="M45,153 C130,150 160,80 240,80 C320,80 350,150 435,153" fill="none" stroke="#ef4444" stroke-width="2.4"/>
+        <!-- narrow (mean) cyan -->
+        <path d="M150,153 C215,151 230,28 240,28 C250,28 265,151 330,153" fill="none" stroke="#06b6d4" stroke-width="2.6"/>
+        <line x1="240" y1="30" x2="240" y2="155" stroke="#334155" stroke-width="1" stroke-dasharray="3,3"/>
+        <text x="240" y="172" font-size="12" fill="#475569" text-anchor="middle" font-style="italic">μ</text>
+        <text x="250" y="40" font-size="11" fill="#0e7490">平均數 Mean（窄・有效）</text>
+        <text x="300" y="95" font-size="11" fill="#b91c1c">中位數 Median（寬）</text>
+      </svg>
+      <div class="readguide">📖 <b>讀圖：</b>兩條都對準 μ（都無偏），但<b>青色（平均數）比較窄</b>＝變異數小＝更有效。</div>
+    </div>
+    <div class="box">
+      <h3>③ 一致性 Consistency</h3>
+      <p style="font-size:.83rem;color:#475569;">當<strong>樣本數 n 越大</strong>，樣本平均數偏離母體平均數的機會就越小；n→∞ 時幾乎必然貼緊真值。</p>
+      <div class="fml" style="font-size:.95rem;">lim<sub>n→∞</sub> P(|X̄ − μ| ≥ ε) = 0 &nbsp;(任意 ε &gt; 0)</div>
+      <svg viewBox="0 0 460 190" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-width:460px;display:block;margin:.3rem auto;">
+        <line x1="30" y1="155" x2="450" y2="155" stroke="#334155" stroke-width="1.5"/>
+        <!-- small sample red wide -->
+        <path d="M45,153 C130,150 160,82 240,82 C320,82 350,150 435,153" fill="none" stroke="#ef4444" stroke-width="2.4"/>
+        <!-- large sample cyan narrow -->
+        <path d="M155,153 C217,151 230,30 240,30 C250,30 263,151 325,153" fill="none" stroke="#06b6d4" stroke-width="2.6"/>
+        <line x1="240" y1="32" x2="240" y2="155" stroke="#334155" stroke-width="1" stroke-dasharray="3,3"/>
+        <text x="240" y="172" font-size="12" fill="#475569" text-anchor="middle" font-style="italic">μ</text>
+        <text x="248" y="42" font-size="11" fill="#0e7490">大樣本（窄）</text>
+        <text x="300" y="97" font-size="11" fill="#b91c1c">小樣本（寬）</text>
+      </svg>
+      <div class="readguide">📖 <b>讀圖：</b>樣本越大，鐘形越窄、越貼近 μ。「加大樣本就會越來越準」就是一致性。</div>
+    </div>
+  </div>
+</div>
+
+<!-- S4 點估計 vs 區間估計 -->
+<div class="sec" id="s4">
+  <div class="sec-title">點估計 vs 區間估計<span class="page-badge">Week 4-2~3</span></div>
+  <div class="two">
+    <div class="card c-blue" style="border-top-width:4px;">
+      <span class="tag t-blue">點估計 Point Estimator</span>
+      <h3>給一個「單一數字」</h3>
+      <p>用一個統計量 <span class="sym">θ̂</span> 的<strong>單一值</strong>去猜母體參數。例：用 X̄ = 75 直接猜 μ ≈ 75。<br>優點：簡潔。缺點：幾乎不可能剛好命中，也沒說「誤差多大」。</p>
+    </div>
+    <div class="card c-green" style="border-top-width:4px;">
+      <span class="tag t-green">區間估計 Interval Estimator</span>
+      <h3>給一段「範圍」</h3>
+      <p>給一個區間把母體參數框住。<br>雙尾：<span class="sym">θ̂<sub>L</sub> ≤ θ ≤ θ̂<sub>U</sub></span><br>單尾：<span class="sym">θ ≤ θ̂<sub>U</sub></span> 或 <span class="sym">θ̂<sub>L</sub> ≤ θ</span><br>優點：同時表達「猜多少」與「有多不確定」。</p>
+    </div>
+  </div>
+  <div class="tip">💡 <b>一句話抓重點：</b>點估計像射一個「點」，區間估計像撒一張「網」。EMBA 更常用區間估計，因為它附帶了「信心水準」，能誠實說出估計的可信程度。</div>
+</div>
+
+<!-- S5 各分配點估計 -->
+<div class="sec" id="s5">
+  <div class="sec-title">各分配的點估計公式<span class="page-badge">Week 4-3</span></div>
+  <div class="bnote"><b>白話：</b>不同的母體參數，用不同的樣本統計量去估。好消息是——最常見的幾個都直接用<b>樣本平均數 X̄</b>！</div>
+  <div class="box">
+    <h3>一般情形（估計 μ 與 σ²）</h3>
+    <div class="two">
+      <div class="lf">μ̂ = <span class="lf-frac"><span class="lf-num">Σ X<sub>i</sub></span><span class="lf-den">n</span></span> = X̄</div>
+      <div class="lf">σ̂² = <span class="lf-frac"><span class="lf-num">Σ(X<sub>i</sub> − X̄)²</span><span class="lf-den">n − 1</span></span> = S²</div>
+    </div>
+    <div class="warn">⚠️ <b>注意一個陷阱：</b>S²（樣本變異數）是 σ² 的無偏估計，<b>但 S 本身不是 σ 的無偏估計</b>！E(S) ≠ σ。若要無偏估計 σ，得除以修正係數 c₄：σ̂ = S / c₄，其中 c₄ = (2/(n−1))<sup>½</sup> · Γ(n/2)/Γ((n−1)/2)。EMBA 實務上通常直接用 S 近似即可。</div>
+  </div>
+  <div class="three">
+    <div class="box"><span class="tag t-blue">一般</span><h3>母體平均 μ</h3><div class="lf" style="font-size:1rem;">μ̂ = X̄</div><p style="font-size:.8rem;color:#64748b;">E(X̄)=μ（無偏）</p></div>
+    <div class="box"><span class="tag t-green">二項</span><h3>母體比率 p</h3><div class="lf" style="font-size:1rem;">p̂ = <span class="lf-frac"><span class="lf-num">Σ X<sub>i</sub></span><span class="lf-den">n</span></span> = X̄</div><p style="font-size:.8rem;color:#64748b;">成功比例</p></div>
+    <div class="box"><span class="tag t-purple">卜瓦松</span><h3>母體率 λ</h3><div class="lf" style="font-size:1rem;">λ̂ = <span class="lf-frac"><span class="lf-num">Σ X<sub>i</sub></span><span class="lf-den">n</span></span> = X̄</div><p style="font-size:.8rem;color:#64748b;">平均發生數</p></div>
+  </div>
+</div>
+
+<!-- ══════════ PART 2 ══════════ -->
+<div class="part-header">
+  <h2>PART 2 &nbsp;·&nbsp; 母體平均數 μ 的區間估計</h2>
+  <p>最經典的問題：抽了一個樣本，算出 X̄，那母體真正的平均 μ 大約落在哪個範圍？答案分兩種情況——<b>σ 已知（用 Z）</b>與更常見的 <b>σ 未知（用 t 分配）</b>。再學怎麼反推「要抽多少人」才夠準。</p>
+</div>
+
+<!-- S6 區間估計原理 -->
+<div class="sec" id="s6">
+  <div class="sec-title">區間估計的原理・信賴區間<span class="page-badge">Week 4-4</span></div>
+  <div class="bnote"><b>從上週接上來：</b>Week 3 學過 X̄ 的抽樣分配 → 中心 μ_X̄ = μ，標準誤 σ_X̄ = σ/√n。標準化後 Z=(X̄−μ)/(σ/√n) 服從標準常態。把「95% 的 Z 落在 ±Z<sub>α/2</sub> 之間」這句話的不等式重新整理，就得到 μ 的信賴區間。</p></div>
+  <div class="box">
+    <h3>從機率式推到信賴區間（三步驟）</h3>
+    <div class="fml">① 標準常態：<span class="hl">P{−Z<sub>α/2</sub> ≤ Z ≤ Z<sub>α/2</sub>} = 1−α</span></div>
+    <div class="fml">② 代入 Z=(X̄−μ)/(σ/√n)，抽樣前（μ 已知）：<span class="hl">P{μ − Z<sub>α/2</sub>·σ/√n ≤ X̄ ≤ μ + Z<sub>α/2</sub>·σ/√n} = 1−α</span></div>
+    <div class="fml">③ 抽樣後（μ 未知，反解 μ）→ <span class="hl">信賴區間 Confidence Interval</span>：<br>X̄ − Z<sub>α/2</sub>·σ/√n ≤ μ ≤ X̄ + Z<sub>α/2</sub>·σ/√n</div>
+    <svg viewBox="0 0 640 210" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-width:640px;display:block;margin:.6rem auto;">
+      <line x1="30" y1="150" x2="440" y2="150" stroke="#334155" stroke-width="1.5"/>
+      <!-- bell -->
+      <path d="M55,148 C150,146 175,35 235,35 C295,35 320,146 415,148" fill="#c7d2fe" fill-opacity=".55" stroke="#2563eb" stroke-width="2.4"/>
+      <line x1="235" y1="45" x2="235" y2="150" stroke="#334155" stroke-width="1" stroke-dasharray="3,3"/>
+      <text x="235" y="168" font-size="12" fill="#475569" text-anchor="middle" font-style="italic">μ</text>
+      <!-- tails alpha/2 -->
+      <line x1="120" y1="150" x2="120" y2="120" stroke="#b91c1c" stroke-width="1.4"/>
+      <line x1="350" y1="150" x2="350" y2="120" stroke="#b91c1c" stroke-width="1.4"/>
+      <text x="95" y="115" font-size="12" fill="#b91c1c">α/2</text>
+      <text x="345" y="115" font-size="12" fill="#b91c1c">α/2</text>
+      <text x="235" y="100" font-size="12" fill="#1e3a5f" text-anchor="middle" font-weight="bold">1−α</text>
+      <text x="235" y="116" font-size="10" fill="#475569" text-anchor="middle">全部 X̄ 的比例</text>
+      <!-- CI depiction on right -->
+      <line x1="480" y1="70" x2="620" y2="70" stroke="#334155" stroke-width="2"/>
+      <line x1="480" y1="60" x2="480" y2="80" stroke="#1e3a5f" stroke-width="2.5"/>
+      <line x1="620" y1="60" x2="620" y2="80" stroke="#1e3a5f" stroke-width="2.5"/>
+      <circle cx="550" cy="70" r="6" fill="#10b981"/>
+      <text x="550" y="55" font-size="11" fill="#065f46" text-anchor="middle">X̄</text>
+      <text x="472" y="98" font-size="10" fill="#475569">下限 Lower</text>
+      <text x="595" y="98" font-size="10" fill="#475569">上限 Upper</text>
+      <text x="550" y="118" font-size="11" fill="#1e3a5f" text-anchor="middle" font-weight="bold">信賴區間</text>
+    </svg>
+    <div class="readguide">📖 <b>讀圖：</b>中間 1−α 的面積代表「有這麼高的信心」；兩尾各 α/2 是被排除的極端。右邊：以 X̄ 為中心，往兩邊各推 Z<sub>α/2</sub>·σ/√n，就框出信賴區間。</div>
+  </div>
+</div>
+
+<!-- S7 σ 已知 Z + 範例 -->
+<div class="sec" id="s7">
+  <div class="sec-title">σ 已知：用 Z 的信賴區間 + 範例<span class="page-badge">Week 4-5</span></div>
+  <div class="box">
+    <h3>(1−α) 信賴區間公式</h3>
+    <div class="lf" style="font-size:1.05rem;">X̄ ± Z<sub>α/2</sub> · <span class="lf-frac"><span class="lf-num">σ</span><span class="lf-den">√n</span></span></div>
+    <p style="font-size:.82rem;color:#475569;"><b>(1−α)</b> 稱為<strong>信賴係數 / 信賴水準（confidence coefficient / level）</strong>。常用：95%→Z=1.96；99%→Z=2.576；90%→Z=1.645。</p>
+    <div class="tip">💡 <b>名詞：邊際誤差（margin of error, E）</b>＝ Z<sub>α/2</sub>·σ/√n，就是「± 後面那一串」，代表點估計外推的半徑。</div>
+  </div>
+  <div class="box">
+    <h3>🔖 範例：National Discount（全國折扣連鎖）</h3>
+    <p style="font-size:.83rem;color:#475569;line-height:1.7;">某連鎖店評估新據點時，要估「該區居民平均年收入 μ」。抽 n=36 人，樣本平均 X̄=$21,100，標準差 σ=$4,500，用 95% 信賴水準。</p>
+    <div class="fml">邊際誤差 E = Z<sub>α/2</sub>·σ/√n = 1.96 × <span class="hl">4500/√36</span> = 1.96 × 750 = <span class="hl">1,470</span></div>
+    <div class="fml">區間估計 = 21,100 ± 1,470 → <span class="hl">P{19,630 ≤ μ ≤ 22,570} = 0.95</span></div>
+    <div class="readguide">📖 <b>精確度陳述（Precision Statement）：</b>「95% 的樣本平均會落在真值 μ 的 ±$1,470 內」。所以我們有 95% 信心，母體平均年收入介於 $19,630 到 $22,570。</div>
+  </div>
+</div>
+
+<!-- S8 σ 未知 t -->
+<div class="sec" id="s8">
+  <div class="sec-title">σ 未知：改用 Student-t 分配<span class="page-badge">Week 4-6~7</span></div>
+  <div class="bnote"><b>白話：</b>現實中母體標準差 σ 幾乎都不知道，只能用<b>樣本標準差 S</b> 代替。但用 S 取代 σ 會多一份不確定，所以分配不再是常態，而是<b>更胖尾的 t 分配</b>。臨界值改用 t<sub>α/2, n−1</sub>。</div>
+  <div class="box">
+    <h3>(1−α) 信賴區間（σ 未知）</h3>
+    <div class="lf" style="font-size:1.05rem;">X̄ ± t<sub>α/2, n−1</sub> · <span class="lf-frac"><span class="lf-num">S</span><span class="lf-den">√n</span></span></div>
+    <div class="two" style="margin-top:.6rem;">
+      <div class="warn">⚠️ n &lt; 30：<b>務必</b>用 t 分配 t<sub>α/2, n−1</sub>。</div>
+      <div class="tip">💡 n ≥ 30：t<sub>α/2, n−1</sub> ≈ Z<sub>α/2</sub>，用哪個都差不多。</div>
+    </div>
+  </div>
+  <div class="two">
+    <div class="box">
+      <h3>t 分配的重點性質</h3>
+      <ul style="font-size:.82rem;color:#475569;line-height:1.85;padding-left:1.1rem;">
+        <li>是一「家族」分配，由<strong>自由度 df（degrees of freedom，自由度）</strong>決定形狀，這裡 df = n−1。</li>
+        <li>鐘形、對稱、平均數 = 0。</li>
+        <li>比標準常態<strong>尾巴更胖</strong>（更保守，區間更寬）。</li>
+        <li>df 越大→越接近標準常態；df 越大→越集中。</li>
+      </ul>
+    </div>
+    <div class="box">
+      <h3>讀圖：t vs Z（df 越小尾越胖）</h3>
+      <svg viewBox="0 0 460 200" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-width:460px;display:block;margin:.2rem auto;">
+        <line x1="25" y1="165" x2="450" y2="165" stroke="#334155" stroke-width="1.5"/>
+        <line x1="237" y1="35" x2="237" y2="165" stroke="#334155" stroke-width="1" stroke-dasharray="3,3"/>
+        <text x="237" y="182" font-size="12" fill="#475569" text-anchor="middle">0</text>
+        <!-- Z tall narrow (red) -->
+        <path d="M60,163 C165,161 205,42 237,42 C269,42 309,161 414,163" fill="none" stroke="#ef4444" stroke-width="2.6"/>
+        <!-- t df=13 (magenta) -->
+        <path d="M50,163 C160,160 200,60 237,60 C274,60 314,160 424,163" fill="none" stroke="#d946ef" stroke-width="2.2"/>
+        <!-- t df=5 (cyan, fatter) -->
+        <path d="M40,162 C155,158 195,78 237,78 C279,78 319,158 434,162" fill="none" stroke="#06b6d4" stroke-width="2.2"/>
+        <text x="300" y="55" font-size="11" fill="#b91c1c">Z（標準常態）</text>
+        <text x="330" y="92" font-size="11" fill="#a21caf">t (df=13)</text>
+        <text x="340" y="120" font-size="11" fill="#0e7490">t (df=5)</text>
+      </svg>
+      <div class="readguide">📖 <b>讀圖：</b>紅色 Z 最高最瘦；df 越小的 t（青色）越矮、尾巴越翹（越胖）。所以小樣本用 t 得到的區間會比用 Z 更寬——這是誠實反映「樣本小、更不確定」。</div>
+    </div>
+  </div>
+</div>
+
+<!-- S9 t 表 -->
+<div class="sec" id="s9">
+  <div class="sec-title">t 分配表怎麼查<span class="page-badge">Week 4-8</span></div>
+  <div class="bnote"><b>讀表方法：</b>左邊選<b>自由度 df = n−1</b>，上面選<b>上尾面積</b>。雙尾 95% 信賴區間 → α=0.05 → 每尾 α/2=0.025 → 查 <b>.025</b> 那一欄。例：df=9、上尾 .025 → t = 2.262。</div>
+  <div class="box">
+    <table class="tbl">
+      <thead><tr><th>自由度 df</th><th>.10</th><th>.05</th><th>.025</th><th>.01</th><th>.005</th></tr></thead>
+      <tbody>
+        <tr><td>1</td><td>3.078</td><td>6.314</td><td>12.706</td><td>31.821</td><td>63.657</td></tr>
+        <tr><td>5</td><td>1.476</td><td>2.015</td><td>2.571</td><td>3.365</td><td>4.032</td></tr>
+        <tr><td class="hl">9</td><td>1.383</td><td>1.833</td><td class="hl">2.262</td><td>2.821</td><td>3.250</td></tr>
+        <tr><td>10</td><td>1.372</td><td>1.812</td><td>2.228</td><td>2.764</td><td>3.169</td></tr>
+        <tr><td>15</td><td>1.341</td><td>1.753</td><td>2.131</td><td>2.602</td><td>2.947</td></tr>
+        <tr><td class="hl">18</td><td>1.330</td><td>1.734</td><td class="hl">2.101</td><td>2.552</td><td>2.878</td></tr>
+        <tr><td>20</td><td>1.325</td><td>1.725</td><td>2.086</td><td>2.528</td><td>2.845</td></tr>
+        <tr><td>30</td><td>1.310</td><td>1.697</td><td>2.042</td><td>2.457</td><td>2.750</td></tr>
+        <tr><td>∞（=Z）</td><td>1.282</td><td>1.645</td><td>1.960</td><td>2.326</td><td>2.576</td></tr>
+      </tbody>
+    </table>
+    <div class="readguide">📖 黃底列＝本週兩個範例會用到的：df=9→t.025=2.262（房租、變異數範例）、df=18→t.025=2.101（汽車油耗範例）。最底列 df=∞ 就退化回 Z 值，印證「t 大樣本→常態」。</div>
+  </div>
+</div>
+
+<!-- S10 房租範例 -->
+<div class="sec" id="s10">
+  <div class="sec-title">🔖 範例：Apartment Rents（校區房租，t）<span class="page-badge">Week 4-9</span></div>
+  <div class="box">
+    <p style="font-size:.83rem;color:#475569;line-height:1.7;">校刊記者調查校區半英里內套房月租。抽 n=10 間，X̄=$550，S=$60，母體假設常態，求 95% 信賴區間。</p>
+    <div class="fml">σ 未知 + n=10&lt;30 → 用 t，df = n−1 = 9，t<sub>0.025,9</sub> = <span class="hl">2.262</span></div>
+    <div class="fml">E = t<sub>0.025,9</sub>·S/√n = 2.262 × 60/√10 = 2.262 × 18.97 = <span class="hl">42.92</span></div>
+    <div class="fml">550 ± 42.92 → <span class="hl">P{507.08 ≤ μ ≤ 592.92} = 0.95</span></div>
+    <div class="readguide">📖 有 95% 信心，母體平均月租介於 $507.08 到 $592.92。（想自己換數字？用下方「μ 區間（σ 未知 t）」計算機。）</div>
+  </div>
+</div>
+
+<!-- S11 樣本數 -->
+<div class="sec" id="s11">
+  <div class="sec-title">決定樣本數 n（平均數）<span class="page-badge">Week 4-9~10</span></div>
+  <div class="bnote"><b>反過來問：</b>如果我先規定「誤差不能超過 E」，那到底要抽幾個人？把邊際誤差公式 E = Z<sub>α/2</sub>·σ/√n 反解出 n 即可。</div>
+  <div class="box">
+    <h3>樣本數公式</h3>
+    <div class="lf" style="font-size:1.1rem;">n = <span class="lf-frac"><span class="lf-num">(Z<sub>α/2</sub>)² · σ²</span><span class="lf-den">E²</span></span></div>
+    <div class="warn">⚠️ n 算出來若有小數，<b>一律無條件進位</b>（要湊足精度，寧多勿少）。</div>
+  </div>
+  <div class="box">
+    <h3>🔖 範例：National Discount（要多準？）</h3>
+    <p style="font-size:.83rem;color:#475569;">管理層要求 95% 信心下，抽樣誤差 ≤ $500（σ=4,500）。要抽幾人？</p>
+    <div class="fml">n = (1.96)²(4500)² / (500)² = <span class="hl">311.17 → 進位 312</span></div>
+    <div class="readguide">📖 越想要小誤差 E、或母體越分散 σ，需要的 n 就越大（n 與 E² 成反比、與 σ² 成正比）。</div>
+  </div>
+</div>
+
+<!-- ══════════ PART 3 ══════════ -->
+<div class="part-header">
+  <h2>PART 3 &nbsp;·&nbsp; 母體比率 p 的區間估計</h2>
+  <p>從「平均數」換成「比率」——支持率、知名度、不良率都是比率。做法一樣：點估計 p̂ = X/n，再用常態近似加減邊際誤差。差別只在標準誤換成 √[p̂(1−p̂)/n]。</p>
+</div>
+
+<!-- S12 比率信賴區間 -->
+<div class="sec" id="s12">
+  <div class="sec-title">比率的信賴區間<span class="page-badge">Week 4-10</span></div>
+  <div class="box">
+    <h3>點估計與抽樣分配</h3>
+    <div class="lf">p̂ = <span class="lf-frac"><span class="lf-num">X</span><span class="lf-den">n</span></span></div>
+    <p style="font-size:.82rem;color:#475569;">當 n 夠大時，p̂ ≈ 常態，中心 p、標準誤 √[p(1−p)/n]。</p>
+  </div>
+  <div class="box">
+    <h3>(1−α) 信賴區間（n 大且 p̂ ≥ 0.1）</h3>
+    <div class="lf" style="font-size:1.05rem;">p̂ ± Z<sub>α/2</sub> · √<span class="lf-frac"><span class="lf-num">p̂(1−p̂)</span><span class="lf-den">n</span></span></div>
+    <div class="tip">💡 <b>初學者說明：</b>p̂＝樣本比率（0~1）；n＝樣本數。真正的 p 未知，所以標準誤裡用 p̂ 代替 p。</div>
+  </div>
+</div>
+
+<!-- S13 民調範例 -->
+<div class="sec" id="s13">
+  <div class="sec-title">🔖 範例：Political Science（選民民調）<span class="page-badge">Week 4-11</span></div>
+  <div class="box">
+    <p style="font-size:.83rem;color:#475569;line-height:1.7;">民調公司電訪 500 位登記選民，有 220 位支持某候選人，求支持率 p 的 95% 信賴區間。</p>
+    <div class="fml">p̂ = 220/500 = <span class="hl">0.44</span></div>
+    <div class="fml">E = 1.96 × √[0.44(1−0.44)/500] = 1.96 × 0.0222 = <span class="hl">0.0435</span></div>
+    <div class="fml">0.44 ± 0.0435 → <span class="hl">P{0.3965 ≤ p ≤ 0.4835} = 0.95</span></div>
+    <div class="readguide">📖 有 95% 信心，真正的支持率介於 39.65% 到 48.35%。（媒體常說「誤差 ±4.35 個百分點」就是這個 E。）</div>
+  </div>
+</div>
+
+<!-- S14 比率樣本數 -->
+<div class="sec" id="s14">
+  <div class="sec-title">決定樣本數 n（比率）<span class="page-badge">Week 4-12</span></div>
+  <div class="box">
+    <h3>樣本數公式</h3>
+    <div class="lf" style="font-size:1.1rem;">n = <span class="lf-frac"><span class="lf-num">(Z<sub>α/2</sub>)² · p(1−p)</span><span class="lf-den">E²</span></span></div>
+    <div class="warn">⚠️ <b>p 該用什麼？</b>若有先前估計（如上例 0.44）就用它；若完全沒資訊，<b>保守用 p=0.5</b>——因為 p(1−p) 在 0.5 時最大，會給出「最大所需樣本數」，最安全。</div>
+  </div>
+  <div class="box">
+    <h3>🔖 範例：PSI（99% 信心，誤差 ≤ 0.03）</h3>
+    <table class="tbl">
+      <thead><tr><th>設定</th><th>用的 p</th><th>Z</th><th>算式</th><th>n</th></tr></thead>
+      <tbody>
+        <tr><td>99% 信心</td><td>0.44（先前）</td><td>2.576</td><td>2.576²·0.44·0.56 / 0.03²</td><td class="hl">1817</td></tr>
+        <tr><td>99% 信心</td><td>0.5（保守）</td><td>2.576</td><td>2.576²·0.25 / 0.03²</td><td class="hl">1843</td></tr>
+        <tr><td>95% 信心</td><td>0.5（保守）</td><td>1.96</td><td>1.96²·0.25 / 0.03²</td><td class="hl">1068</td></tr>
+      </tbody>
+    </table>
+    <div class="readguide">📖 用 p=0.5 得到的 n（1843）比用 0.44（1817）大 → 印證「0.5 最保守」。信心從 99% 降到 95%，n 也大幅下降（1843→1068）。</div>
+  </div>
+</div>
+
+<!-- ══════════ PART 4 ══════════ -->
+<div class="part-header">
+  <h2>PART 4 &nbsp;·&nbsp; 母體變異數 σ² 的區間估計</h2>
+  <p>前面估的都是「中心」（μ、p）；有時我們更關心「穩定度、變異程度」——這就要估 σ²。工具換成上週的<b>卡方分配 χ²</b>。因為卡方不對稱，區間的上下限用不同的臨界值。</p>
+</div>
+
+<!-- S15 卡方 σ² -->
+<div class="sec" id="s15">
+  <div class="sec-title">卡方區間估計 + 房租範例<span class="page-badge">Week 4-13</span></div>
+  <div class="box">
+    <h3>關鍵樞紐量（pivotal quantity）</h3>
+    <div class="lf">點估計 S² = <span class="lf-frac"><span class="lf-num">Σ(X<sub>i</sub> − X̄)²</span><span class="lf-den">n − 1</span></span></div>
+    <div class="lf" style="margin-left:.5rem;"><span class="lf-frac"><span class="lf-num">(n−1)S²</span><span class="lf-den">σ²</span></span> ≈ χ²<sub>n−1</sub></div>
+    <p style="font-size:.8rem;color:#64748b;">（母體常態，或 n≥30 由中央極限定理）</p>
+    <div class="tip">💡 <b>白話：</b>把「樣本變異數 S² 相對於母體 σ²」的比值放大 (n−1) 倍，會服從自由度 n−1 的卡方分配。因為卡方是右偏、非對稱，所以左右臨界值不一樣。</div>
+  </div>
+  <div class="box">
+    <h3>(1−α)·100% 信賴區間</h3>
+    <div class="lf" style="font-size:1.02rem;"><span class="lf-frac"><span class="lf-num">(n−1)S²</span><span class="lf-den">χ²<sub>α/2, n−1</sub></span></span> &lt; σ² ≤ <span class="lf-frac"><span class="lf-num">(n−1)S²</span><span class="lf-den">χ²<sub>1−α/2, n−1</sub></span></span></div>
+    <div class="warn">⚠️ <b>容易記反：</b>分母越大→整體越小。所以<b>大的臨界值 χ²<sub>α/2</sub> 放在左邊（下限），小的臨界值 χ²<sub>1−α/2</sub> 放在右邊（上限）</b>。要 σ（標準差）就把整條開根號。</div>
+  </div>
+  <div class="box">
+    <h3>🔖 範例：Apartment Rents（估母體標準差）</h3>
+    <p style="font-size:.83rem;color:#475569;">同房租樣本：n=10，S=$60，母體常態，求 σ 的 95% 信賴區間。df=9，查表得 χ²<sub>0.025,9</sub>=19.02、χ²<sub>0.975,9</sub>=2.70。</p>
+    <div class="fml">σ² 下限 = (9)(60²)/19.02 = 32400/19.02 = <span class="hl">1703.47</span></div>
+    <div class="fml">σ² 上限 = (9)(60²)/2.70 = 32400/2.70 = <span class="hl">12000</span></div>
+    <div class="fml">→ 1703.47 &lt; σ² ≤ 12000 → 開根號 → <span class="hl">41.27 ≤ σ ≤ 109.54</span></div>
+    <div class="readguide">📖 有 95% 信心，母體月租標準差介於 $41.27 到 $109.54。注意區間<b>不對稱</b>（中心 60 不在正中間），這正是卡方右偏的結果。</div>
+  </div>
+</div>
+
+<!-- ══════════ PART 5 ══════════ -->
+<div class="part-header">
+  <h2>PART 5 &nbsp;·&nbsp; 兩母體差異的估計</h2>
+  <p>商業決策常是「比較」：新舊產品、兩家供應商、活動前後。估的對象變成<b>兩母體平均差 μ₁−μ₂</b> 或<b>兩母體比率差 p₁−p₂</b>。核心觀念：兩獨立樣本的變異數會<b>相加</b>。再分獨立樣本 / 配對樣本兩種設計。</p>
+</div>
+
+<!-- S16 兩母體平均差架構 -->
+<div class="sec" id="s16">
+  <div class="sec-title">兩母體平均差 μ₁−μ₂ 架構<span class="page-badge">Week 4-14~15</span></div>
+  <div class="box">
+    <h3>點估計與抽樣分配（獨立樣本）</h3>
+    <div class="flow">
+      <div class="fb" style="border-color:#93c5fd;">母體1<br>N(μ₁,σ₁²)</div>
+      <span class="fa">→</span>
+      <div class="fb" style="border-color:#93c5fd;">樣本1<br>X̄₁, S₁²</div>
+      <span class="fa" style="color:#10b981;">μ₁−μ₂=?</span>
+      <div class="fb" style="border-color:#fcd34d;">樣本2<br>X̄₂, S₂²</div>
+      <span class="fa">←</span>
+      <div class="fb" style="border-color:#fcd34d;">母體2<br>N(μ₂,σ₂²)</div>
+    </div>
+    <div class="lf">點估計：μ₁−μ₂ 的估計 = X̄₁ − X̄₂</div>
+    <div class="two" style="margin-top:.4rem;">
+      <div class="fml">中心：E(X̄₁−X̄₂) = <span class="hl">μ₁−μ₂</span>（無偏）</div>
+      <div class="fml">變異數相加：Var = <span class="hl">σ₁²/n₁ + σ₂²/n₂</span></div>
+    </div>
+    <div class="tip">💡 <b>關鍵直覺：</b>兩獨立樣本各有各的抖動，合起來的不確定是<b>兩者變異數相加</b>（不是相減！），標準誤 = √(σ₁²/n₁ + σ₂²/n₂)。常態母體 → X̄₁−X̄₂ 也是常態。</div>
+  </div>
+</div>
+
+<!-- S17 σ 已知 -->
+<div class="sec" id="s17">
+  <div class="sec-title">σ₁, σ₂ 已知：用 Z<span class="page-badge">Week 4-15</span></div>
+  <div class="box">
+    <h3>雙尾 (1−α) 信賴區間</h3>
+    <div class="lf" style="font-size:1.02rem;">(X̄₁−X̄₂) ± Z<sub>α/2</sub> · √<span class="lf-frac"><span class="lf-num">σ₁²</span><span class="lf-den">n₁</span></span><span style="align-self:center;">+</span><span class="lf-frac"><span class="lf-num">σ₂²</span><span class="lf-den">n₂</span></span></div>
+    <p style="font-size:.8rem;color:#64748b;">若已知 σ₁=σ₂=σ，標準誤簡化成 σ·√(1/n₁ + 1/n₂)。單尾則只取上式的一邊（+ 或 −）。</p>
+  </div>
+</div>
+
+<!-- S18 σ 未知 -->
+<div class="sec" id="s18">
+  <div class="sec-title">σ 未知：用 S 與 t（含合併變異數）<span class="page-badge">Week 4-16~17</span></div>
+  <div class="bnote"><b>白話：</b>σ 未知就用 S 代替。依「兩母體變異數是否相等」分兩條路，且大樣本(n≥30)用 Z、小樣本用 t。</div>
+  <div class="two">
+    <div class="box">
+      <span class="tag t-blue">情況 A</span>
+      <h3>變異數不相等 σ₁ ≠ σ₂</h3>
+      <p style="font-size:.82rem;color:#475569;">標準誤直接用各自的 S：</p>
+      <div class="lf" style="font-size:.98rem;">√<span class="lf-frac"><span class="lf-num">S₁²</span><span class="lf-den">n₁</span></span><span style="align-self:center;">+</span><span class="lf-frac"><span class="lf-num">S₂²</span><span class="lf-den">n₂</span></span></div>
+      <p style="font-size:.78rem;color:#64748b;">自由度 v 用 Welch 公式（較複雜，計算機會處理）。大樣本：t≈Z。</p>
+    </div>
+    <div class="box">
+      <span class="tag t-green">情況 B</span>
+      <h3>變異數相等 σ₁ = σ₂ = σ</h3>
+      <p style="font-size:.82rem;color:#475569;">先算<strong>合併變異數（pooled variance）</strong>：</p>
+      <div class="lf" style="font-size:.95rem;">S<sub>p</sub>² = <span class="lf-frac"><span class="lf-num">(n₁−1)S₁² + (n₂−1)S₂²</span><span class="lf-den">n₁ + n₂ − 2</span></span></div>
+      <p style="font-size:.82rem;color:#475569;">標準誤 = S<sub>p</sub>·√(1/n₁+1/n₂)，自由度 v = n₁+n₂−2。</p>
+    </div>
+  </div>
+  <div class="tip">💡 <b>合併變異數白話：</b>兩組都在估同一個 σ，那就把兩組資訊「加權平均」成一個更可靠的估計（權重是各自的自由度 n−1）。這是情況 B（等變異）專屬。</div>
+</div>
+
+<!-- S19 高爾夫球 大樣本 -->
+<div class="sec" id="s19">
+  <div class="sec-title">🔖 範例：Par 高爾夫球（大樣本・σ 未知不等）<span class="page-badge">Week 4-18</span></div>
+  <div class="box">
+    <table class="tbl">
+      <thead><tr><th></th><th>樣本1 Par</th><th>樣本2 Rap</th></tr></thead>
+      <tbody>
+        <tr><td>樣本數 n</td><td>120</td><td>80</td></tr>
+        <tr><td>平均 X̄</td><td>235 碼</td><td>218 碼</td></tr>
+        <tr><td>標準差 S</td><td>15</td><td>20</td></tr>
+      </tbody>
+    </table>
+    <div class="fml" style="margin-top:.6rem;">點估計 μ₁−μ₂ = 235 − 218 = <span class="hl">17</span> 碼</div>
+    <div class="fml">大樣本(n≥30) → t≈Z=1.96。標準誤 = √(15²/120 + 20²/80) = √(1.875 + 5) = 2.62</div>
+    <div class="fml">17 ± 1.96 × 2.62 → <span class="hl">11.86 ≤ μ₁−μ₂ ≤ 22.14</span></div>
+    <svg viewBox="0 0 500 150" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-width:500px;display:block;margin:.5rem auto;">
+      <path d="M110,120 C200,118 235,35 260,35 C285,35 320,118 410,120" fill="#c7d2fe" fill-opacity=".5" stroke="#2563eb" stroke-width="2.2"/>
+      <line x1="130" y1="120" x2="130" y2="55" stroke="#1e3a5f" stroke-width="1.6"/>
+      <line x1="390" y1="120" x2="390" y2="55" stroke="#1e3a5f" stroke-width="1.6"/>
+      <line x1="260" y1="120" x2="260" y2="45" stroke="#334155" stroke-width="1" stroke-dasharray="3,3"/>
+      <text x="260" y="85" font-size="13" fill="#1e3a5f" text-anchor="middle" font-weight="bold">95%</text>
+      <text x="130" y="138" font-size="12" fill="#b91c1c" text-anchor="middle">11.86</text>
+      <text x="260" y="138" font-size="12" fill="#334155" text-anchor="middle">17</text>
+      <text x="390" y="138" font-size="12" fill="#b91c1c" text-anchor="middle">22.14</text>
+    </svg>
+    <div class="readguide">📖 整個區間都 &gt; 0 → 有 95% 信心 Par 球平均比 Rap 球多飛 11.86～22.14 碼，「extra distance」的宣稱站得住腳。</div>
+  </div>
+</div>
+
+<!-- S20 汽車油耗 小樣本 -->
+<div class="sec" id="s20">
+  <div class="sec-title">🔖 範例：Specific Motors 油耗（小樣本・合併變異數）<span class="page-badge">Week 4-19</span></div>
+  <div class="box">
+    <table class="tbl">
+      <thead><tr><th></th><th>樣本1 M 車</th><th>樣本2 J 車</th></tr></thead>
+      <tbody>
+        <tr><td>樣本數 n</td><td>12</td><td>8</td></tr>
+        <tr><td>平均 X̄</td><td>29.8 mpg</td><td>27.3 mpg</td></tr>
+        <tr><td>標準差 S</td><td>2.56</td><td>1.81</td></tr>
+      </tbody>
+    </table>
+    <div class="warn" style="margin-top:.5rem;">⚠️ <b>兩個假設：</b>① 兩母體油耗皆為常態；② 兩母體變異數相等（→ 用合併變異數 + t）。</div>
+    <div class="fml">S<sub>p</sub>² = [(12−1)(2.56²) + (8−1)(1.81²)] / (12+8−2) = <span class="hl">5.28</span></div>
+    <div class="fml">df = n₁+n₂−2 = 18 → t<sub>0.025,18</sub> = <span class="hl">2.101</span>；點估計 = 29.8−27.3 = 2.5</div>
+    <div class="fml">2.5 ± 2.101 × √[5.28(1/12+1/8)] → <span class="hl">0.3 ≤ μ₁−μ₂ ≤ 4.7</span></div>
+    <svg viewBox="0 0 500 150" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-width:500px;display:block;margin:.5rem auto;">
+      <path d="M110,120 C200,118 235,35 260,35 C285,35 320,118 410,120" fill="#c7d2fe" fill-opacity=".5" stroke="#2563eb" stroke-width="2.2"/>
+      <line x1="150" y1="120" x2="150" y2="58" stroke="#1e3a5f" stroke-width="1.6"/>
+      <line x1="370" y1="120" x2="370" y2="58" stroke="#1e3a5f" stroke-width="1.6"/>
+      <line x1="260" y1="120" x2="260" y2="45" stroke="#334155" stroke-width="1" stroke-dasharray="3,3"/>
+      <text x="260" y="85" font-size="13" fill="#1e3a5f" text-anchor="middle" font-weight="bold">95%</text>
+      <text x="150" y="138" font-size="12" fill="#b91c1c" text-anchor="middle">0.3</text>
+      <text x="260" y="138" font-size="12" fill="#334155" text-anchor="middle">2.5</text>
+      <text x="370" y="138" font-size="12" fill="#b91c1c" text-anchor="middle">4.7</text>
+    </svg>
+    <div class="readguide">📖 區間 (0.3, 4.7) 全大於 0 → 有 95% 信心 M 車油耗優於 J 車，差距在 0.3～4.7 mpg。小樣本用 t（2.101）而非 Z（1.96），區間較寬更保守。</div>
+  </div>
+</div>
+
+<!-- S21 配對樣本 -->
+<div class="sec" id="s21">
+  <div class="sec-title">配對樣本 Matched Samples<span class="page-badge">Week 4-20~21</span></div>
+  <div class="bnote"><b>白話：</b>配對（paired）＝每個受測對象<b>同時</b>提供一對數據（如同一批人「用藥前 vs 用藥後」）。因為每一對來自同一來源，能<b>消掉個體間的差異</b>，抽樣誤差通常比獨立樣本更小（又叫 blocking 集區）。</div>
+  <div class="box">
+    <h3>做法：先算每對的差 d，再對「差」做單母體區間估計</h3>
+    <div class="flow">
+      <div class="fb">d₁=X₁₁−X₂₁</div><span class="fa">,</span>
+      <div class="fb">d₂=X₁₂−X₂₂</div><span class="fa">…</span>
+      <div class="fb">dₙ=X₁ₙ−X₂ₙ</div>
+    </div>
+    <div class="two">
+      <div class="lf">差的平均：d̄ = <span class="lf-frac"><span class="lf-num">Σ d<sub>i</sub></span><span class="lf-den">n</span></span></div>
+      <div class="lf">差的標準差：s<sub>d</sub> = √<span class="lf-frac"><span class="lf-num">Σ(d<sub>i</sub>−d̄)²</span><span class="lf-den">n−1</span></span></div>
+    </div>
+    <div class="tip">💡 <b>如何分辨獨立 vs 配對？</b>① X₁ⱼ 與 X₂ⱼ 天生成對、彼此相依 → 配對；② 兩組各自獨立抽、互不相干 → 獨立；③ <b>n₁ ≠ n₂ 一定是獨立樣本</b>（配對要求兩邊筆數相同）。</div>
+  </div>
+</div>
+
+<!-- S22 兩母體比率差 -->
+<div class="sec" id="s22">
+  <div class="sec-title">兩母體比率差 p₁−p₂<span class="page-badge">Week 4-21~22</span></div>
+  <div class="box">
+    <h3>點估計與標準誤</h3>
+    <div class="lf">點估計：p₁−p₂ 的估計 = p̂₁ − p̂₂</div>
+    <div class="lf" style="font-size:.98rem;">σ̂<sub>p̂₁−p̂₂</sub> = √<span class="lf-frac"><span class="lf-num">p̂₁(1−p̂₁)</span><span class="lf-den">n₁</span></span><span style="align-self:center;">+</span><span class="lf-frac"><span class="lf-num">p̂₂(1−p̂₂)</span><span class="lf-den">n₂</span></span></div>
+    <p style="font-size:.8rem;color:#64748b;">大樣本條件：n₁p̂₁、n₁(1−p̂₁)、n₂p̂₂、n₂(1−p̂₂) 都 ≥ 5，可用常態近似。</p>
+  </div>
+  <div class="box">
+    <h3>(1−α) 信賴區間</h3>
+    <div class="lf" style="font-size:1.02rem;">(p̂₁−p̂₂) ± Z<sub>α/2</sub> · √<span class="lf-frac"><span class="lf-num">p̂₁(1−p̂₁)</span><span class="lf-den">n₁</span></span><span style="align-self:center;">+</span><span class="lf-frac"><span class="lf-num">p̂₂(1−p̂₂)</span><span class="lf-den">n₂</span></span></div>
+    <div class="tip">💡 跟兩母體平均差同一個精神：點估計是兩比率相減，標準誤是兩個變異數相加後開根號。</div>
+  </div>
+</div>
+
+<!-- S23 廣告成效範例 -->
+<div class="sec" id="s23">
+  <div class="sec-title">🔖 範例：MRA 廣告成效<span class="page-badge">Week 4-23</span></div>
+  <div class="box">
+    <p style="font-size:.83rem;color:#475569;line-height:1.7;">廣告活動<b>後</b>：250 戶中 120 戶知道產品（p̂₁）；活動<b>前</b>：150 戶中 60 戶知道（p̂₂）。廣告有沒有提升知名度？（95%）</p>
+    <div class="fml">p̂₁ = 120/250 = 0.48，p̂₂ = 60/150 = 0.40 → 點估計 = <span class="hl">0.08</span></div>
+    <div class="fml">標準誤 = √[0.48(0.52)/250 + 0.40(0.60)/150] = <span class="hl">0.051</span></div>
+    <div class="fml">0.08 ± 1.96 × 0.051 = 0.08 ± 0.10 → <span class="hl">−0.02 ≤ p₁−p₂ ≤ 0.18</span></div>
+    <svg viewBox="0 0 500 150" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-width:500px;display:block;margin:.5rem auto;">
+      <path d="M110,120 C200,118 235,35 260,35 C285,35 320,118 410,120" fill="#fef9c3" fill-opacity=".7" stroke="#f59e0b" stroke-width="2.2"/>
+      <line x1="150" y1="120" x2="150" y2="58" stroke="#1e3a5f" stroke-width="1.6"/>
+      <line x1="370" y1="120" x2="370" y2="58" stroke="#1e3a5f" stroke-width="1.6"/>
+      <line x1="215" y1="120" x2="215" y2="48" stroke="#dc2626" stroke-width="1.4" stroke-dasharray="4,3"/>
+      <text x="215" y="44" font-size="10" fill="#dc2626" text-anchor="middle">0</text>
+      <text x="260" y="85" font-size="13" fill="#1e3a5f" text-anchor="middle" font-weight="bold">95%</text>
+      <text x="150" y="138" font-size="12" fill="#b91c1c" text-anchor="middle">−0.02</text>
+      <text x="260" y="138" font-size="12" fill="#334155" text-anchor="middle">0.08</text>
+      <text x="370" y="138" font-size="12" fill="#b91c1c" text-anchor="middle">0.18</text>
+    </svg>
+    <div class="warn">⚠️ <b>結論的細節：</b>區間 (−0.02, 0.18) <b>包含 0</b>（紅色虛線）。雖然點估計是正的 +0.08，但因為區間跨過 0，在 95% 信心下<b>還不能斷定廣告一定有效</b>——差異有可能只是抽樣誤差。</div>
+  </div>
+</div>
+
+<!-- ══════════ PART 6 ══════════ -->
+<div class="part-header">
+  <h2>PART 6 &nbsp;·&nbsp; F 檢定：比較兩母體變異數</h2>
+  <p>前面用兩母體平均差時，我們常要先假設「σ₁=σ₂ 還是不等」。到底怎麼判斷？——比較兩個<b>樣本變異數的比值 S₁²/S₂²</b>，它服從<b>F 分配</b>。</p>
+</div>
+
+<!-- S24 F 分配 -->
+<div class="sec" id="s24">
+  <div class="sec-title">F 分配・S₁²/S₂²<span class="page-badge">Week 4-24~25</span></div>
+  <div class="bnote"><b>白話：</b>要回答「兩母體變異數相不相等」，最自然是看兩個樣本變異數的<b>比值</b>。若真的相等，比值應該接近 1。這個比值服從 F 分配（由「分子自由度 u、分母自由度 v」兩個參數決定）。假設前提：兩母體都常態。</div>
+  <div class="two">
+    <div class="box">
+      <h3>F 統計量與性質</h3>
+      <div class="lf" style="font-size:.98rem;"><span class="lf-frac"><span class="lf-num">S₁²/σ₁²</span><span class="lf-den">S₂²/σ₂²</span></span> ≈ F<sub>n₁−1, n₂−1</sub></div>
+      <p style="font-size:.82rem;color:#475569;">母體常態時：<span class="sym">S₁²/S₂² ≈ (σ₁²/σ₂²)·F<sub>n₁−1,n₂−1</sub></span></p>
+      <ul style="font-size:.8rem;color:#475569;line-height:1.8;padding-left:1.1rem;margin-top:.4rem;">
+        <li>u = 分子自由度（n₁−1）；v = 分母自由度（n₂−1）。</li>
+        <li>右偏、只取正值（比值不會為負）。</li>
+        <li>倒數性質：F<sub>α;u,v</sub> = 1 / F<sub>1−α;v,u</sub>。</li>
+        <li>與 t 的關係：[t<sub>v</sub>]² = F<sub>1,v</sub>。</li>
+      </ul>
+    </div>
+    <div class="box">
+      <h3>讀圖：F 分配（右偏）</h3>
+      <svg viewBox="0 0 460 200" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-width:460px;display:block;margin:.2rem auto;">
+        <line x1="35" y1="165" x2="450" y2="165" stroke="#334155" stroke-width="1.5"/>
+        <line x1="35" y1="165" x2="35" y2="30" stroke="#334155" stroke-width="1.5"/>
+        <text x="455" y="182" font-size="12" fill="#475569" font-style="italic">F</text>
+        <text x="18" y="42" font-size="11" fill="#475569">f(x)</text>
+        <!-- right-skewed F curve, rise then long right tail -->
+        <path d="M35,165 C60,165 78,60 110,55 C150,48 175,95 220,120 C270,145 330,158 445,163" fill="none" stroke="#2563eb" stroke-width="2.6"/>
+        <line x1="110" y1="165" x2="110" y2="58" stroke="#94a3b8" stroke-width="1" stroke-dasharray="3,3"/>
+        <text x="200" y="70" font-size="11" fill="#1d4ed8">右偏・長右尾</text>
+        <text x="102" y="182" font-size="10" fill="#475569">≈1</text>
+      </svg>
+      <div class="readguide">📖 <b>讀圖：</b>F 分配集中在 1 附近但拖著長長的右尾。若 S₁²/S₂² 落在 1 附近→兩變異數可能相等；若明顯偏離 1（落到右尾臨界值外）→可判定不相等。查 F 表需同時定「分子、分母自由度」與顯著水準（.05 / .025 / .01）。</div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════ 公式計算機 ══════════ -->
+<div class="part-header" style="background:linear-gradient(135deg,#065f46,#059669);">
+  <h2>🧮 &nbsp;公式計算機</h2>
+  <p>把課本的公式變成互動工具。藍色符號可點擊跳到對應輸入框；填入數字即時顯示計算過程。每個計算機都附「初學者說明」解釋符號意義與單位。</p>
+</div>
+
+<!-- C1 μ 區間 σ 已知 -->
+<div class="sec" id="c1">
+  <div class="sec-title">μ 區間估計（σ 已知，用 Z）<span class="page-badge">Week 4-5</span></div>
+  <div class="fc">
+    <div class="fc-head"><h3>X̄ ± Z<sub>α/2</sub>·σ/√n</h3></div>
+    <div class="fc-body">
+      <div class="lf">X̄ ± <span class="pb" data-tip="Z：信賴係數臨界值" onclick="focusParam('c1-z')">Z</span> · <span class="lf-frac"><span class="lf-num"><span class="pb" data-tip="σ：母體標準差" onclick="focusParam('c1-sig')">σ</span></span><span class="lf-den">√<span class="pb" data-tip="n：樣本數" onclick="focusParam('c1-n')">n</span></span></span></div>
+      <div class="bnote">💡 <b>初學者說明：</b><b>X̄</b>＝樣本平均；<b>σ</b>＝母體標準差（已知，&gt;0）；<b>n</b>＝樣本數（正整數）。選信賴水準會自動帶入 Z（95%→1.96、99%→2.576、90%→1.645）。</div>
+      <div class="lf-live" id="c1-live"><span class="lhint">← 填入 X̄、σ、n 後自動計算</span></div>
+      <div class="pi-grid">
+        <div><div class="pi-lbl"><span class="pi-sym" onclick="focusParam('c1-xb')">X̄</span> 樣本平均</div>
+          <input class="pi-inp" type="number" id="c1-xb" placeholder="例：21100" step="any" oninput="liveC1()"></div>
+        <div><div class="pi-lbl"><span class="pi-sym" onclick="focusParam('c1-sig')">σ</span> 母體標準差</div>
+          <input class="pi-inp" type="number" id="c1-sig" placeholder="例：4500" min="0" step="any" oninput="liveC1()"></div>
+        <div><div class="pi-lbl"><span class="pi-sym" onclick="focusParam('c1-n')">n</span> 樣本數</div>
+          <input class="pi-inp" type="number" id="c1-n" placeholder="例：36" min="1" step="1" oninput="liveC1()"></div>
+        <div><div class="pi-lbl"><span class="pi-sym" onclick="focusParam('c1-z')">信賴水準</span></div>
+          <select class="pi-inp" id="c1-z" onchange="liveC1()">
+            <option value="1.96">95%（Z=1.96）</option>
+            <option value="2.576">99%（Z=2.576）</option>
+            <option value="1.645">90%（Z=1.645）</option>
+          </select></div>
+      </div>
+      <div class="calc-err" id="c1-err">σ 需 &gt; 0，n 需為正整數。</div>
+    </div>
+  </div>
+</div>
+
+<!-- C2 μ 區間 σ 未知 t -->
+<div class="sec" id="c2">
+  <div class="sec-title">μ 區間估計（σ 未知，用 t）<span class="page-badge">Week 4-9</span></div>
+  <div class="fc">
+    <div class="fc-head"><h3>X̄ ± t<sub>α/2,n−1</sub>·S/√n</h3></div>
+    <div class="fc-body">
+      <div class="lf">X̄ ± <span class="pb" data-tip="t：自由度 n−1 的臨界值" onclick="focusParam('c2-n')">t</span> · <span class="lf-frac"><span class="lf-num"><span class="pb" data-tip="S：樣本標準差" onclick="focusParam('c2-s')">S</span></span><span class="lf-den">√<span class="pb" data-tip="n：樣本數" onclick="focusParam('c2-n')">n</span></span></span></div>
+      <div class="bnote">💡 <b>初學者說明：</b><b>X̄</b>＝樣本平均；<b>S</b>＝樣本標準差（&gt;0）；<b>n</b>＝樣本數。自由度 df=n−1，t 臨界值由內建 t 表自動查（涵蓋常用 df；超出範圍則以近似 Z 值代入並提示）。</div>
+      <div class="lf-live" id="c2-live"><span class="lhint">← 填入 X̄、S、n 後自動計算</span></div>
+      <div class="pi-grid">
+        <div><div class="pi-lbl"><span class="pi-sym" onclick="focusParam('c2-xb')">X̄</span> 樣本平均</div>
+          <input class="pi-inp" type="number" id="c2-xb" placeholder="例：550" step="any" oninput="liveC2()"></div>
+        <div><div class="pi-lbl"><span class="pi-sym" onclick="focusParam('c2-s')">S</span> 樣本標準差</div>
+          <input class="pi-inp" type="number" id="c2-s" placeholder="例：60" min="0" step="any" oninput="liveC2()"></div>
+        <div><div class="pi-lbl"><span class="pi-sym" onclick="focusParam('c2-n')">n</span> 樣本數</div>
+          <input class="pi-inp" type="number" id="c2-n" placeholder="例：10" min="2" step="1" oninput="liveC2()"></div>
+        <div><div class="pi-lbl"><span class="pi-sym" onclick="focusParam('c2-cl')">信賴水準</span></div>
+          <select class="pi-inp" id="c2-cl" onchange="liveC2()">
+            <option value="0.025">95%（雙尾 .025）</option>
+            <option value="0.005">99%（雙尾 .005）</option>
+            <option value="0.05">90%（雙尾 .05）</option>
+          </select></div>
+      </div>
+      <div class="calc-err" id="c2-err">S 需 &gt; 0，n 需為 ≥2 的整數。</div>
+    </div>
+  </div>
+</div>
+
+<!-- C3 樣本數 -->
+<div class="sec" id="c3">
+  <div class="sec-title">決定樣本數 n（平均數）<span class="page-badge">Week 4-10</span></div>
+  <div class="fc">
+    <div class="fc-head"><h3>n = (Z<sub>α/2</sub>)²σ² / E²</h3></div>
+    <div class="fc-body">
+      <div class="lf">n = <span class="lf-frac"><span class="lf-num">(<span class="pb" data-tip="Z：臨界值" onclick="focusParam('c3-z')">Z</span>)² <span class="pb" data-tip="σ：母體標準差" onclick="focusParam('c3-sig')">σ</span>²</span><span class="lf-den"><span class="pb" data-tip="E：最大容許誤差" onclick="focusParam('c3-e')">E</span>²</span></span></div>
+      <div class="bnote">💡 <b>初學者說明：</b><b>σ</b>＝母體標準差（估計值，&gt;0）；<b>E</b>＝可容忍的最大邊際誤差（&gt;0）。算出小數會自動<b>無條件進位</b>。</div>
+      <div class="lf-live" id="c3-live"><span class="lhint">← 填入 σ 與 E 後自動計算</span></div>
+      <div class="pi-grid">
+        <div><div class="pi-lbl"><span class="pi-sym" onclick="focusParam('c3-sig')">σ</span> 母體標準差</div>
+          <input class="pi-inp" type="number" id="c3-sig" placeholder="例：4500" min="0" step="any" oninput="liveC3()"></div>
+        <div><div class="pi-lbl"><span class="pi-sym" onclick="focusParam('c3-e')">E</span> 最大誤差</div>
+          <input class="pi-inp" type="number" id="c3-e" placeholder="例：500" min="0" step="any" oninput="liveC3()"></div>
+        <div><div class="pi-lbl"><span class="pi-sym" onclick="focusParam('c3-z')">信賴水準</span></div>
+          <select class="pi-inp" id="c3-z" onchange="liveC3()">
+            <option value="1.96">95%（Z=1.96）</option>
+            <option value="2.576">99%（Z=2.576）</option>
+            <option value="1.645">90%（Z=1.645）</option>
+          </select></div>
+      </div>
+      <div class="calc-err" id="c3-err">σ 與 E 需 &gt; 0。</div>
+    </div>
+  </div>
+</div>
+
+<!-- C4 p 比率 -->
+<div class="sec" id="c4">
+  <div class="sec-title">p 比率區間估計<span class="page-badge">Week 4-11</span></div>
+  <div class="fc">
+    <div class="fc-head"><h3>p̂ ± Z<sub>α/2</sub>·√[p̂(1−p̂)/n]</h3></div>
+    <div class="fc-body">
+      <div class="lf">p̂ ± <span class="pb" data-tip="Z：臨界值" onclick="focusParam('c4-z')">Z</span> · √<span class="lf-frac"><span class="lf-num"><span class="pb" data-tip="p̂：樣本比率" onclick="focusParam('c4-p')">p̂</span>(1−p̂)</span><span class="lf-den"><span class="pb" data-tip="n：樣本數" onclick="focusParam('c4-n')">n</span></span></span></div>
+      <div class="bnote">💡 <b>初學者說明：</b><b>p̂</b>＝樣本比率（0~1，可直接填或用「成功數/樣本數」自算）；<b>n</b>＝樣本數。會檢查 np̂≥5 與 n(1−p̂)≥5 是否可用常態近似。</div>
+      <div class="lf-live" id="c4-live"><span class="lhint">← 填入 p̂ 與 n 後自動計算</span></div>
+      <div class="pi-grid">
+        <div><div class="pi-lbl"><span class="pi-sym" onclick="focusParam('c4-p')">p̂</span> 樣本比率</div>
+          <input class="pi-inp" type="number" id="c4-p" placeholder="例：0.44" min="0" max="1" step="any" oninput="liveC4()"></div>
+        <div><div class="pi-lbl"><span class="pi-sym" onclick="focusParam('c4-n')">n</span> 樣本數</div>
+          <input class="pi-inp" type="number" id="c4-n" placeholder="例：500" min="1" step="1" oninput="liveC4()"></div>
+        <div><div class="pi-lbl"><span class="pi-sym" onclick="focusParam('c4-z')">信賴水準</span></div>
+          <select class="pi-inp" id="c4-z" onchange="liveC4()">
+            <option value="1.96">95%（Z=1.96）</option>
+            <option value="2.576">99%（Z=2.576）</option>
+            <option value="1.645">90%（Z=1.645）</option>
+          </select></div>
+      </div>
+      <div class="calc-err" id="c4-err">p̂ 需 0~1，n 需為正整數。</div>
+    </div>
+  </div>
+</div>
+
+<!-- C5 比率樣本數 -->
+<div class="sec" id="c5">
+  <div class="sec-title">決定樣本數 n（比率）<span class="page-badge">Week 4-12</span></div>
+  <div class="fc">
+    <div class="fc-head"><h3>n = (Z<sub>α/2</sub>)²·p(1−p) / E²</h3></div>
+    <div class="fc-body">
+      <div class="lf">n = <span class="lf-frac"><span class="lf-num">(<span class="pb" data-tip="Z：臨界值" onclick="focusParam('c5-z')">Z</span>)² <span class="pb" data-tip="p：比率估計" onclick="focusParam('c5-p')">p</span>(1−p)</span><span class="lf-den"><span class="pb" data-tip="E：最大誤差" onclick="focusParam('c5-e')">E</span>²</span></span></div>
+      <div class="bnote">💡 <b>初學者說明：</b><b>p</b>＝比率估計（有先前值就填，沒有就填 0.5 最保守）；<b>E</b>＝最大容許誤差（&gt;0）。結果無條件進位。</div>
+      <div class="lf-live" id="c5-live"><span class="lhint">← 填入 p 與 E 後自動計算</span></div>
+      <div class="pi-grid">
+        <div><div class="pi-lbl"><span class="pi-sym" onclick="focusParam('c5-p')">p</span> 比率估計</div>
+          <input class="pi-inp" type="number" id="c5-p" placeholder="例：0.5" min="0" max="1" step="any" oninput="liveC5()"></div>
+        <div><div class="pi-lbl"><span class="pi-sym" onclick="focusParam('c5-e')">E</span> 最大誤差</div>
+          <input class="pi-inp" type="number" id="c5-e" placeholder="例：0.03" min="0" step="any" oninput="liveC5()"></div>
+        <div><div class="pi-lbl"><span class="pi-sym" onclick="focusParam('c5-z')">信賴水準</span></div>
+          <select class="pi-inp" id="c5-z" onchange="liveC5()">
+            <option value="1.96">95%（Z=1.96）</option>
+            <option value="2.576">99%（Z=2.576）</option>
+            <option value="1.645">90%（Z=1.645）</option>
+          </select></div>
+      </div>
+      <div class="calc-err" id="c5-err">p 需 0~1，E 需 &gt; 0。</div>
+    </div>
+  </div>
+</div>
+
+<!-- C6 σ² 變異數 -->
+<div class="sec" id="c6">
+  <div class="sec-title">σ² 變異數區間（卡方）<span class="page-badge">Week 4-13</span></div>
+  <div class="fc">
+    <div class="fc-head"><h3>(n−1)S²/χ²<sub>α/2</sub> &lt; σ² ≤ (n−1)S²/χ²<sub>1−α/2</sub></h3></div>
+    <div class="fc-body">
+      <div class="lf" style="font-size:1rem;"><span class="lf-frac"><span class="lf-num">(<span class="pb" data-tip="n：樣本數" onclick="focusParam('c6-n')">n</span>−1)<span class="pb" data-tip="S²：樣本變異數" onclick="focusParam('c6-s2')">S²</span></span><span class="lf-den"><span class="pb" data-tip="卡方右臨界(大)" onclick="focusParam('c6-chiU')">χ²<sub>α/2</sub></span></span></span> &lt; σ² ≤ <span class="lf-frac"><span class="lf-num">(n−1)S²</span><span class="lf-den"><span class="pb" data-tip="卡方左臨界(小)" onclick="focusParam('c6-chiL')">χ²<sub>1−α/2</sub></span></span></span></div>
+      <div class="bnote">💡 <b>初學者說明：</b><b>n</b>＝樣本數；<b>S²</b>＝樣本變異數（若手上是標準差 S，先平方）。<b>兩個卡方臨界值請查卡方表（自由度 n−1）</b>後填入：χ²<sub>α/2</sub>（較大者，做分母算下限）、χ²<sub>1−α/2</sub>（較小者，做分母算上限）。例 df=9、95%：19.02 與 2.70。結果也會開根號給出 σ 區間。</div>
+      <div class="lf-live" id="c6-live"><span class="lhint">← 填入 n、S² 與兩個卡方臨界值後自動計算</span></div>
+      <div class="pi-grid">
+        <div><div class="pi-lbl"><span class="pi-sym" onclick="focusParam('c6-n')">n</span> 樣本數</div>
+          <input class="pi-inp" type="number" id="c6-n" placeholder="例：10" min="2" step="1" oninput="liveC6()"></div>
+        <div><div class="pi-lbl"><span class="pi-sym" onclick="focusParam('c6-s2')">S²</span> 樣本變異數</div>
+          <input class="pi-inp" type="number" id="c6-s2" placeholder="例：3600" min="0" step="any" oninput="liveC6()"></div>
+        <div><div class="pi-lbl"><span class="pi-sym" onclick="focusParam('c6-chiU')">χ²<sub>α/2</sub></span> 右臨界(大)</div>
+          <input class="pi-inp" type="number" id="c6-chiU" placeholder="例：19.02" min="0" step="any" oninput="liveC6()"></div>
+        <div><div class="pi-lbl"><span class="pi-sym" onclick="focusParam('c6-chiL')">χ²<sub>1−α/2</sub></span> 左臨界(小)</div>
+          <input class="pi-inp" type="number" id="c6-chiL" placeholder="例：2.70" min="0" step="any" oninput="liveC6()"></div>
+      </div>
+      <div class="calc-err" id="c6-err">n≥2，S²≥0，兩卡方臨界值需 &gt; 0 且右臨界 &gt; 左臨界。</div>
+    </div>
+  </div>
+</div>
+
+<!-- C7 兩母體平均差 -->
+<div class="sec" id="c7">
+  <div class="sec-title">兩母體平均差（大樣本 Z）<span class="page-badge">Week 4-18</span></div>
+  <div class="fc">
+    <div class="fc-head"><h3>(X̄₁−X̄₂) ± Z·√(S₁²/n₁+S₂²/n₂)</h3></div>
+    <div class="fc-body">
+      <div class="lf" style="font-size:1rem;">(X̄₁−X̄₂) ± <span class="pb" data-tip="Z：臨界值" onclick="focusParam('c7-z')">Z</span>·√(<span class="pb" data-tip="S₁²/n₁" onclick="focusParam('c7-s1')">S₁²</span>/n₁ + <span class="pb" data-tip="S₂²/n₂" onclick="focusParam('c7-s2')">S₂²</span>/n₂)</div>
+      <div class="bnote">💡 <b>初學者說明：</b>適用大樣本（n₁,n₂≥30，t≈Z）或 σ 已知情況。填兩組平均、標準差、樣本數。點估計 = X̄₁−X̄₂；標準誤 = √(S₁²/n₁+S₂²/n₂)。若區間跨 0，代表尚無法斷定兩母體平均有差異。</div>
+      <div class="lf-live" id="c7-live"><span class="lhint">← 填入兩組 X̄、S、n 後自動計算</span></div>
+      <div class="pi-grid">
+        <div><div class="pi-lbl"><span class="pi-sym" onclick="focusParam('c7-x1')">X̄₁</span></div><input class="pi-inp" type="number" id="c7-x1" placeholder="例：235" step="any" oninput="liveC7()"></div>
+        <div><div class="pi-lbl"><span class="pi-sym" onclick="focusParam('c7-s1')">S₁</span></div><input class="pi-inp" type="number" id="c7-s1" placeholder="例：15" min="0" step="any" oninput="liveC7()"></div>
+        <div><div class="pi-lbl"><span class="pi-sym" onclick="focusParam('c7-n1')">n₁</span></div><input class="pi-inp" type="number" id="c7-n1" placeholder="例：120" min="1" step="1" oninput="liveC7()"></div>
+        <div><div class="pi-lbl"><span class="pi-sym" onclick="focusParam('c7-x2')">X̄₂</span></div><input class="pi-inp" type="number" id="c7-x2" placeholder="例：218" step="any" oninput="liveC7()"></div>
+        <div><div class="pi-lbl"><span class="pi-sym" onclick="focusParam('c7-s2')">S₂</span></div><input class="pi-inp" type="number" id="c7-s2" placeholder="例：20" min="0" step="any" oninput="liveC7()"></div>
+        <div><div class="pi-lbl"><span class="pi-sym" onclick="focusParam('c7-n2')">n₂</span></div><input class="pi-inp" type="number" id="c7-n2" placeholder="例：80" min="1" step="1" oninput="liveC7()"></div>
+        <div><div class="pi-lbl"><span class="pi-sym" onclick="focusParam('c7-z')">信賴水準</span></div>
+          <select class="pi-inp" id="c7-z" onchange="liveC7()">
+            <option value="1.96">95%（Z=1.96）</option>
+            <option value="2.576">99%（Z=2.576）</option>
+            <option value="1.645">90%（Z=1.645）</option>
+          </select></div>
+      </div>
+      <div class="calc-err" id="c7-err">S 需 ≥0，n 需為正整數。</div>
+    </div>
+  </div>
+</div>
+
+<!-- C8 兩母體比率差 -->
+<div class="sec" id="c8">
+  <div class="sec-title">兩母體比率差（Z）<span class="page-badge">Week 4-23</span></div>
+  <div class="fc">
+    <div class="fc-head"><h3>(p̂₁−p̂₂) ± Z·√[p̂₁(1−p̂₁)/n₁+p̂₂(1−p̂₂)/n₂]</h3></div>
+    <div class="fc-body">
+      <div class="lf" style="font-size:.95rem;">(p̂₁−p̂₂) ± <span class="pb" data-tip="Z：臨界值" onclick="focusParam('c8-z')">Z</span>·√[<span class="pb" data-tip="p̂₁" onclick="focusParam('c8-p1')">p̂₁</span>(1−p̂₁)/n₁ + <span class="pb" data-tip="p̂₂" onclick="focusParam('c8-p2')">p̂₂</span>(1−p̂₂)/n₂]</div>
+      <div class="bnote">💡 <b>初學者說明：</b><b>p̂₁, p̂₂</b>＝兩組樣本比率（0~1）；<b>n₁, n₂</b>＝兩組樣本數。點估計 = p̂₁−p̂₂；標準誤 = √[p̂₁(1−p̂₁)/n₁ + p̂₂(1−p̂₂)/n₂]。若區間包含 0，代表兩比率差異可能只是抽樣誤差。</div>
+      <div class="lf-live" id="c8-live"><span class="lhint">← 填入兩組 p̂、n 後自動計算</span></div>
+      <div class="pi-grid">
+        <div><div class="pi-lbl"><span class="pi-sym" onclick="focusParam('c8-p1')">p̂₁</span></div><input class="pi-inp" type="number" id="c8-p1" placeholder="例：0.48" min="0" max="1" step="any" oninput="liveC8()"></div>
+        <div><div class="pi-lbl"><span class="pi-sym" onclick="focusParam('c8-n1')">n₁</span></div><input class="pi-inp" type="number" id="c8-n1" placeholder="例：250" min="1" step="1" oninput="liveC8()"></div>
+        <div><div class="pi-lbl"><span class="pi-sym" onclick="focusParam('c8-p2')">p̂₂</span></div><input class="pi-inp" type="number" id="c8-p2" placeholder="例：0.40" min="0" max="1" step="any" oninput="liveC8()"></div>
+        <div><div class="pi-lbl"><span class="pi-sym" onclick="focusParam('c8-n2')">n₂</span></div><input class="pi-inp" type="number" id="c8-n2" placeholder="例：150" min="1" step="1" oninput="liveC8()"></div>
+        <div><div class="pi-lbl"><span class="pi-sym" onclick="focusParam('c8-z')">信賴水準</span></div>
+          <select class="pi-inp" id="c8-z" onchange="liveC8()">
+            <option value="1.96">95%（Z=1.96）</option>
+            <option value="2.576">99%（Z=2.576）</option>
+            <option value="1.645">90%（Z=1.645）</option>
+          </select></div>
+      </div>
+      <div class="calc-err" id="c8-err">p̂ 需 0~1，n 需為正整數。</div>
+    </div>
+  </div>
+</div>
+
+</main>
+
+<script>
+// ════════════ 共用工具 ════════════
+function r(n,d=4){ if(!isFinite(n))return n; return Math.round(n*Math.pow(10,d))/Math.pow(10,d); }
+function setLive(id,html){ document.getElementById(id+'-live').innerHTML=html; }
+function hint(id,msg){ setLive(id,'<span class="lhint">'+(msg||'← 填入數值後自動計算')+'</span>'); }
+function liveErr(id,msg){ document.getElementById(id+'-err').classList.add('show'); document.getElementById(id+'-err').textContent=msg; setLive(id,'<span class="lhint">'+msg+'</span>'); }
+function clearErr(id){ document.getElementById(id+'-err').classList.remove('show'); }
+function focusParam(id){ const el=document.getElementById(id); if(!el)return; el.focus(); el.classList.add('lit'); setTimeout(()=>el.classList.remove('lit'),1500); }
+function val(id){ return document.getElementById(id).value; }
+
+// 內建 t 分配表（上尾面積 → df → 臨界值），涵蓋常用 df
+const T_TABLE={
+ '0.05':{1:6.314,2:2.920,3:2.353,4:2.132,5:2.015,6:1.943,7:1.895,8:1.860,9:1.833,10:1.812,11:1.796,12:1.782,13:1.771,14:1.761,15:1.753,16:1.746,17:1.740,18:1.734,19:1.729,20:1.725,21:1.721,22:1.717,23:1.714,24:1.711,25:1.708,26:1.706,27:1.703,28:1.701,29:1.699,30:1.697,40:1.684,60:1.671,120:1.658,inf:1.645},
+ '0.025':{1:12.706,2:4.303,3:3.182,4:2.776,5:2.571,6:2.447,7:2.365,8:2.306,9:2.262,10:2.228,11:2.201,12:2.179,13:2.160,14:2.145,15:2.131,16:2.120,17:2.110,18:2.101,19:2.093,20:2.086,21:2.080,22:2.074,23:2.069,24:2.064,25:2.060,26:2.056,27:2.052,28:2.048,29:2.045,30:2.042,40:2.021,60:2.000,120:1.980,inf:1.960},
+ '0.005':{1:63.657,2:9.925,3:5.841,4:4.604,5:4.032,6:3.707,7:3.499,8:3.355,9:3.250,10:3.169,11:3.106,12:3.055,13:3.012,14:2.977,15:2.947,16:2.921,17:2.898,18:2.878,19:2.861,20:2.845,21:2.831,22:2.819,23:2.807,24:2.797,25:2.787,26:2.779,27:2.771,28:2.763,29:2.756,30:2.750,40:2.704,60:2.660,120:2.617,inf:2.576}
+};
+// 查 t：給上尾面積 area、自由度 df。無精確 df 時取「不大於 df 的最近檔位」保守查表
+function tLookup(area,df){
+  const tbl=T_TABLE[area]; if(!tbl)return null;
+  if(tbl[df]!==undefined) return {t:tbl[df],approx:false,usedDf:df};
+  const keys=[1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,40,60,120];
+  let pick=null;
+  for(const k of keys){ if(k<=df) pick=k; }
+  if(pick===null) pick=1;
+  if(df>120) return {t:tbl['inf'],approx:true,usedDf:'∞'};
+  return {t:tbl[pick],approx:true,usedDf:pick};
+}
+
+// C1 μ σ已知 Z
+function liveC1(){
+  clearErr('c1');
+  const xb=val('c1-xb'),sig=val('c1-sig'),n=val('c1-n');
+  if(xb===''||sig===''||n===''){hint('c1','← 填入 X̄、σ、n 後自動計算');return;}
+  const X=+xb,s=+sig,N=+n,Z=+val('c1-z');
+  if(s<=0||!Number.isInteger(N)||N<1){liveErr('c1','σ 需 >0，n 需為正整數');return;}
+  const se=s/Math.sqrt(N), E=Z*se;
+  setLive('c1',`E = ${Z}×${s}/√${N} = ${Z}×${r(se,4)} = <span class="la">${r(E,4)}</span><br>${r(X,4)} ± ${r(E,4)} → <span class="la">[${r(X-E,4)} , ${r(X+E,4)}]</span>`);
+}
+// C2 μ σ未知 t
+function liveC2(){
+  clearErr('c2');
+  const xb=val('c2-xb'),s=val('c2-s'),n=val('c2-n');
+  if(xb===''||s===''||n===''){hint('c2','← 填入 X̄、S、n 後自動計算');return;}
+  const X=+xb,S=+s,N=+n,area=val('c2-cl');
+  if(S<=0||!Number.isInteger(N)||N<2){liveErr('c2','S 需 >0，n 需為 ≥2 的整數');return;}
+  const df=N-1, lk=tLookup(area,df);
+  const t=lk.t, se=S/Math.sqrt(N), E=t*se;
+  let out=`df=${df}，t=<span class="lv">${t}</span>`;
+  out+= lk.approx? ` <span class="lhint">(近似：以 df=${lk.usedDf} 查表)</span>`:``;
+  out+=`<br>E = ${t}×${S}/√${N} = <span class="la">${r(E,4)}</span><br>${r(X,4)} ± ${r(E,4)} → <span class="la">[${r(X-E,4)} , ${r(X+E,4)}]</span>`;
+  if(N>=30) out+=` <span class="lhint">(n≥30，t≈Z)</span>`;
+  setLive('c2',out);
+}
+// C3 樣本數（平均）
+function liveC3(){
+  clearErr('c3');
+  const sig=val('c3-sig'),e=val('c3-e');
+  if(sig===''||e===''){hint('c3','← 填入 σ 與 E 後自動計算');return;}
+  const s=+sig,E=+e,Z=+val('c3-z');
+  if(s<=0||E<=0){liveErr('c3','σ 與 E 需 >0');return;}
+  const raw=(Z*Z*s*s)/(E*E), n=Math.ceil(raw);
+  setLive('c3',`n = ${Z}²×${s}² / ${E}² = ${r(raw,2)} → 進位 <span class="la">${n}</span>`);
+}
+// C4 p 比率
+function liveC4(){
+  clearErr('c4');
+  const p=val('c4-p'),n=val('c4-n');
+  if(p===''||n===''){hint('c4','← 填入 p̂ 與 n 後自動計算');return;}
+  const P=+p,N=+n,Z=+val('c4-z');
+  if(P<0||P>1||!Number.isInteger(N)||N<1){liveErr('c4','p̂ 需 0~1，n 需為正整數');return;}
+  const se=Math.sqrt(P*(1-P)/N), E=Z*se, np=N*P, nq=N*(1-P);
+  let out=`E = ${Z}×√(${P}·${r(1-P,4)}/${N}) = ${Z}×${r(se,5)} = <span class="la">${r(E,5)}</span><br>${P} ± ${r(E,5)} → <span class="la">[${r(P-E,5)} , ${r(P+E,5)}]</span>`;
+  out+= (np>=5&&nq>=5)? ` <span class="lhint">(np̂=${r(np,1)}, n(1−p̂)=${r(nq,1)} 均≥5，常態近似OK)</span>` : ` <span class="lhint">(np̂或n(1−p̂)<5，常態近似欠佳)</span>`;
+  setLive('c4',out);
+}
+// C5 樣本數（比率）
+function liveC5(){
+  clearErr('c5');
+  const p=val('c5-p'),e=val('c5-e');
+  if(p===''||e===''){hint('c5','← 填入 p 與 E 後自動計算');return;}
+  const P=+p,E=+e,Z=+val('c5-z');
+  if(P<0||P>1||E<=0){liveErr('c5','p 需 0~1，E 需 >0');return;}
+  const raw=(Z*Z*P*(1-P))/(E*E), n=Math.ceil(raw);
+  setLive('c5',`n = ${Z}²×${P}×${r(1-P,4)} / ${E}² = ${r(raw,2)} → 進位 <span class="la">${n}</span>`);
+}
+// C6 σ² 卡方
+function liveC6(){
+  clearErr('c6');
+  const n=val('c6-n'),s2=val('c6-s2'),cu=val('c6-chiU'),cl=val('c6-chiL');
+  if(n===''||s2===''||cu===''||cl===''){hint('c6','← 填入 n、S² 與兩個卡方臨界值後自動計算');return;}
+  const N=+n,S2=+s2,U=+cu,L=+cl;
+  if(!Number.isInteger(N)||N<2||S2<0||U<=0||L<=0||U<=L){liveErr('c6','n≥2，S²≥0，兩臨界值>0 且右臨界(大)>左臨界(小)');return;}
+  const num=(N-1)*S2, lo=num/U, hi=num/L;
+  setLive('c6',`(n−1)S² = ${N-1}×${S2} = ${r(num,3)}<br>σ² ∈ [ ${r(num,1)}/${U} , ${r(num,1)}/${L} ] = <span class="la">[${r(lo,3)} , ${r(hi,3)}]</span><br>σ ∈ <span class="la">[${r(Math.sqrt(lo),4)} , ${r(Math.sqrt(hi),4)}]</span>`);
+}
+// C7 兩母體平均差
+function liveC7(){
+  clearErr('c7');
+  const x1=val('c7-x1'),s1=val('c7-s1'),n1=val('c7-n1'),x2=val('c7-x2'),s2=val('c7-s2'),n2=val('c7-n2');
+  if([x1,s1,n1,x2,s2,n2].some(v=>v==='')){hint('c7','← 填入兩組 X̄、S、n 後自動計算');return;}
+  const X1=+x1,S1=+s1,N1=+n1,X2=+x2,S2=+s2,N2=+n2,Z=+val('c7-z');
+  if(S1<0||S2<0||!Number.isInteger(N1)||N1<1||!Number.isInteger(N2)||N2<1){liveErr('c7','S 需 ≥0，n 需為正整數');return;}
+  const pe=X1-X2, se=Math.sqrt(S1*S1/N1+S2*S2/N2), E=Z*se, lo=pe-E, hi=pe+E;
+  let out=`點估計 = ${r(X1,3)}−${r(X2,3)} = <span class="lv">${r(pe,4)}</span><br>SE = √(${S1}²/${N1}+${S2}²/${N2}) = ${r(se,4)}，E = ${Z}×SE = ${r(E,4)}<br>→ <span class="la">[${r(lo,4)} , ${r(hi,4)}]</span>`;
+  out+= (lo<=0&&hi>=0)? ` <span class="lhint">(區間含 0：尚無法斷定有差異)</span>` : ` <span class="lhint">(區間不含 0：有顯著差異)</span>`;
+  setLive('c7',out);
+}
+// C8 兩母體比率差
+function liveC8(){
+  clearErr('c8');
+  const p1=val('c8-p1'),n1=val('c8-n1'),p2=val('c8-p2'),n2=val('c8-n2');
+  if([p1,n1,p2,n2].some(v=>v==='')){hint('c8','← 填入兩組 p̂、n 後自動計算');return;}
+  const P1=+p1,N1=+n1,P2=+p2,N2=+n2,Z=+val('c8-z');
+  if(P1<0||P1>1||P2<0||P2>1||!Number.isInteger(N1)||N1<1||!Number.isInteger(N2)||N2<1){liveErr('c8','p̂ 需 0~1，n 需為正整數');return;}
+  const pe=P1-P2, se=Math.sqrt(P1*(1-P1)/N1+P2*(1-P2)/N2), E=Z*se, lo=pe-E, hi=pe+E;
+  let out=`點估計 = ${r(P1,4)}−${r(P2,4)} = <span class="lv">${r(pe,4)}</span><br>SE = √[${P1}(1−${P1})/${N1}+${P2}(1−${P2})/${N2}] = ${r(se,4)}，E = ${Z}×SE = ${r(E,4)}<br>→ <span class="la">[${r(lo,4)} , ${r(hi,4)}]</span>`;
+  out+= (lo<=0&&hi>=0)? ` <span class="lhint">(區間含 0：差異可能只是抽樣誤差)</span>` : ` <span class="lhint">(區間不含 0：有顯著差異)</span>`;
+  setLive('c8',out);
+}
+
+// ── scroll spy ──
+const links=document.querySelectorAll('#sidenav a');
+const sections=[...links].map(a=>document.querySelector(a.getAttribute('href')));
+window.addEventListener('scroll',()=>{
+  let cur=0;
+  sections.forEach((s,i)=>{ if(s && window.scrollY>=s.offsetTop-130) cur=i; });
+  links.forEach(l=>l.classList.remove('active'));
+  if(links[cur]) links[cur].classList.add('active');
+},{passive:true});
+</script>
+</body>
+</html>

@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<title>統計學 A4 速查表（小考解題版）</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css">
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.js"></script>
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/contrib/auto-render.min.js"
+  onload="renderMathInElement(document.body,{delimiters:[{left:'\\(',right:'\\)',display:false}],throwOnError:false});"></script>
+<script>
+// 自動適配：從 8pt 起逐步縮小字級，直到內容剛好塞進 3 欄 × 1 頁（不會被瀏覽器整頁縮印）
+function fitPage(){
+  var c = document.getElementById('cols');
+  var fits = function(){ return c.scrollWidth <= c.clientWidth + 1; };
+  var f = 8.0;
+  c.style.fontSize = f + 'pt';
+  while (f > 5.5 && !fits()) { f = Math.round((f - 0.1) * 10) / 10; c.style.fontSize = f + 'pt'; }
+}
+window.addEventListener('load', function(){ setTimeout(fitPage, 400); setTimeout(fitPage, 1500); });
+window.addEventListener('beforeprint', fitPage);
+</script>
+<style>
+  @page { size: A4 portrait; margin: 0; }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html, body { background: #fff; }
+  body { font-family: "Noto Sans TC","Microsoft JhengHei","PingFang TC",sans-serif; }
+  #sheet { width: 210mm; height: 297mm; padding: 8mm; overflow: visible; }
+  #cols {
+    height: 281mm;
+    column-count: 3; column-gap: 3mm; column-fill: auto;
+    font-size: 8pt; line-height: 1.15; color: #111;
+  }
+  .katex { font-size: 1em; }
+  h1 { font-size: 1.25em; font-weight: 700; border-bottom: 1.5pt solid #000; margin-bottom: 1mm; }
+  h2 {
+    font-size: 1.125em; font-weight: 700; background: #e8e8e8;
+    padding: 0.3mm 1mm; margin: 1.2mm 0 0.6mm; border-left: 2.5pt solid #444;
+    break-after: avoid;
+  }
+  h3 { font-size: 1em; font-weight: 700; margin: 0.8mm 0 0.2mm; break-after: avoid; }
+  p, li { margin-bottom: 0.4mm; }
+  ul { list-style: none; }
+  li { padding-left: 2mm; text-indent: -2mm; }
+  li::before { content: "▪ "; font-size: 6pt; }
+  b { font-weight: 700; }
+  .trap { color: #8b0000; }
+  .when { color: #00427a; }
+  .qtag { display:inline-block; background:#00427a; color:#fff; font-weight:700; padding:0 1mm; border-radius:1mm; font-size:0.9em; }
+  table { border-collapse: collapse; width: 100%; margin: 0.5mm 0; break-inside: avoid; }
+  th, td { border: 0.4pt solid #888; padding: 0.2mm 0.8mm; text-align: left; vertical-align: top; }
+  th { background: #f0f0f0; font-weight: 700; }
+  .num td { text-align: center; }
+  .box { border: 0.6pt solid #444; padding: 0.8mm 1mm; margin: 0.5mm 0; break-inside: avoid; }
+  .flow { font-size: 1em; }
+  .flow .q { font-weight: 700; }
+  .flow .lv1 { padding-left: 2mm; }
+  .flow .lv2 { padding-left: 5mm; }
+  .flow .lv3 { padding-left: 8mm; }
+  .flow .ans { display:inline-block; background:#e8e8e8; border:0.4pt solid #666; padding:0 0.8mm; font-weight:700; }
+  .pair { padding-left: 2mm; text-indent: -2mm; margin-bottom: 0.4mm; }
+</style>
+</head>
+<body>
+<div id="sheet">
+<div id="cols">
+
+<h1>統計學小考速查表（題型解法＋答案驗證）</h1>
+
+<h2>0. 符號對照表</h2>
+<table>
+<tr><th>符號</th><th>意義</th><th>符號</th><th>意義</th></tr>
+<tr><td>\(\mu\) / \(\bar{x}\)</td><td>母體 / 樣本平均數</td><td>\(N\) / \(n\)</td><td>母體 / 樣本大小</td></tr>
+<tr><td>\(\sigma^2,\sigma\) / \(s^2,s\)</td><td>母體 / 樣本變異數、標準差</td><td>\(\alpha\)</td><td>顯著水準＝P(型一錯誤)</td></tr>
+<tr><td>\(p\) / \(\hat{p}=X/n\)</td><td>母體 / 樣本比例</td><td>\(E\)</td><td>抽樣誤差(邊際誤差)</td></tr>
+<tr><td>\(\sigma_{\bar{x}},\sigma_{\hat{p}}\)</td><td>\(\bar{x}\)、\(\hat{p}\) 的標準誤</td><td>\(\nu\)(df)</td><td>自由度</td></tr>
+<tr><td>\(z_\alpha\), \(t_{\alpha,\nu}\)</td><td>右尾面積 \(\alpha\) 之臨界值</td><td>\(\lambda\)</td><td>布阿松平均發生率</td></tr>
+<tr><td>\(\chi^2_\nu\), \(F_{u,v}\)</td><td>卡方、F 分配</td><td>\(H_0/H_a\)</td><td>虛無(含=)/對立假設</td></tr>
+</table>
+<p class="trap">★ 題目說「抽樣誤差不超過…」＝邊際誤差 E＝臨界值×標準誤</p>
+
+<h2>1. 敘述統計計算 <span class="qtag">Quiz1</span></h2>
+<p>概念題：學統計目的＝<b>描述、預測、控制</b>；資料三特徵＝<b>中心點、散佈、形狀</b></p>
+<ul>
+<li><b>平均數</b> \(\bar{x}=\frac{\sum x_i}{n}\)；<b>中位數</b>：排序後取中間，n 偶數→中間兩數平均</li>
+<li><b>全距</b>＝max−min；<b>四分位數</b>用百分位規則：\(i=\frac{p}{100}n\)，i 整數→第 i 與 i+1 個平均；非整數→進位取第 \(\lceil i\rceil\) 個<br>（n=12：Q1 i=3→第3,4平均；Q3 i=9→第9,10平均）</li>
+<li><b>變異數</b>：<span class="trap">看清題目問母體或樣本！</span>母體 \(\sigma^2=\frac{\sum(x_i-\mu)^2}{N}\)（除 N）；樣本/點估計 \(s^2=\frac{\sum(x_i-\bar{x})^2}{n-1}\)（除 n−1）。標準差＝開根號</li>
+<li><b>盒鬚圖</b>步驟：①五數 Min,Q1,Med,Q3,Max ②IQR=Q3−Q1 ③內籬 Q1−1.5IQR、Q3+1.5IQR（外籬 3IQR）④籬外＝離群值(*) ⑤鬚畫到籬內最遠資料點</li>
+<li><b>次數分配表</b>：組數 5–20（≈√n）；組寬≈(max−min)/組數；各組互斥不重疊；相對次數＝次數/n；累積次數逐組加總</li>
+<li><b>長條圖</b>（定性/分組類別，長條分開）vs <b>直方圖</b>（定量連續，相連）</li>
+<li><b>枝葉圖</b>：十位當枝、個位當葉，葉由小到大排序，兼顧排序與形狀</li>
+<li>偏態：右偏 Mode&lt;Med&lt;Mean；左偏 Mean&lt;Med&lt;Mode；對稱三者相等</li>
+<li>z 分數 \(z_i=\frac{x_i-\bar{x}}{s}\)；變異係數 \(CV=\frac{s}{\bar{x}}100\%\)<span class="when">比較不同單位/量級的離散度</span></li>
+</ul>
+
+<h2>2. 計數與機率 <span class="qtag">Quiz2</span></h2>
+<ul>
+<li><b>乘法原理</b>：k 步驟共 \(n_1n_2\cdots n_k\)。可重複的 k 位數＝\(n^k\)；不可重複＝\(n(n-1)\cdots\)
+<br><span class="trap">「必須為偶數」→先固定個位（偶數字選法），再排其餘位</span></li>
+<li><b>排列</b> \(P^N_n=\frac{N!}{(N-n)!}\)（順序有關）；<b>組合</b> \(C^N_n=\frac{N!}{n!(N-n)!}\)（順序無關）</li>
+<li><b>抽球不放回（不計順序）</b>：樣本空間＝\(C^{12}_2\)；同色機率＝\(\frac{C^5_2}{C^{12}_2}\)；一紅一藍＝\(\frac{C^5_1C^4_1}{C^{12}_2}\)（超幾何型）</li>
+<li><b>條件機率</b> \(P(A|B)=\frac{P(A\cap B)}{P(B)}\)；抽球「已知第1顆紅」→直接想縮小後的袋子：第2顆紅＝\(\frac{4}{11}\)</li>
+<li>加法 \(P(A\cup B)=P(A)+P(B)-P(A\cap B)\)；獨立 ⇔ \(P(A\cap B)=P(A)P(B)\)；<span class="trap">互斥≠獨立</span></li>
+</ul>
+
+<h2>3. 二項分配題型 <span class="qtag">Quiz2</span></h2>
+<p class="when">認題：n 次獨立試驗、成功率 p 固定（不良率、命中率），問「其中 x 件」的機率</p>
+<ul>
+<li>\(f(x)=C^n_x\,p^x(1-p)^{n-x}\)；\(E(X)=np\)；\(\mathrm{Var}(X)=np(1-p)\)</li>
+<li>「<b>最多</b> k 件」＝\(f(0)+\cdots+f(k)\)；「<b>至少</b> 1 件」＝\(1-f(0)\)</li>
+<li>例 n=5, p=0.1：\(f(1)=5(0.1)(0.9)^4=0.328\)；\(f(0)=0.9^5=0.590\)</li>
+</ul>
+
+<h2>4. 布阿松分配題型 <span class="qtag">Quiz2</span></h2>
+<p class="when">認題：單位時間/區域的「到達數、發生數」（客戶到達、來電）</p>
+<ul>
+<li>\(f(x)=\frac{\lambda^x e^{-\lambda}}{x!}\)；\(E(X)=\mathrm{Var}(X)=\lambda\)；\(\sigma=\sqrt{\lambda}\)</li>
+<li><span class="trap">★ λ 要先換到題目的時間單位：每半小時 3 位 → 一小時 λ=6</span></li>
+<li>「最多 2 位」＝\(e^{-\lambda}(1+\lambda+\frac{\lambda^2}{2})\)；e≈2.71828、\(e^{-6}\approx0.00248\)</li>
+</ul>
+
+<h2>5. 常態機率題型 <span class="qtag">Quiz3</span></h2>
+<p class="when">認題：X 服從常態、給 μ 與 σ，求某範圍機率或反求 x</p>
+<ul>
+<li>四步驟：①標準化 \(z=\frac{x-\mu}{\sigma}\) ②畫圖定方向 ③查 Φ 表 ④組合面積</li>
+<li>\(P(X\le x)=\Phi(z)\)；\(P(X>x)=1-\Phi(z)\)；\(P(x_1<X<x_2)=\Phi(z_2)-\Phi(z_1)\)；\(\Phi(-z)=1-\Phi(z)\)</li>
+<li><b>反查型</b>「95% 的產品不超過 x」：\(P(X\le x)=0.95\Rightarrow z=1.645\Rightarrow x=\mu+1.645\sigma\)</li>
+<li>經驗法則：μ±1σ:68.3%、μ±2σ:95.4%、μ±3σ:99.7%</li>
+</ul>
+<table class="num">
+<tr><th>z</th><td>0.5</td><td>0.88</td><td>1.0</td><td>1.22</td><td>1.5</td><td>1.63</td></tr>
+<tr><th>Φ(z)</th><td>.6915</td><td>.8106</td><td>.8413</td><td>.8888</td><td>.9332</td><td>.9484</td></tr>
+<tr><th>z</th><td>1.645</td><td>1.96</td><td>2.0</td><td>2.33</td><td>2.576</td><td>3.0</td></tr>
+<tr><th>Φ(z)</th><td>.9500</td><td>.9750</td><td>.9772</td><td>.9901</td><td>.9950</td><td>.9987</td></tr>
+</table>
+
+<h2>6. x̄ 抽樣分配題型 <span class="qtag">Quiz3</span></h2>
+<p class="when">認題：抽 n 筆，問「樣本<b>平均</b>」的機率</p>
+<ul>
+<li>\(\mu_{\bar{x}}=\mu\)；\(\sigma_{\bar{x}}=\frac{\sigma}{\sqrt{n}}\)；<span class="trap">題目給「變異數 144」→ σ=12 再除 √n</span></li>
+<li>n≥30（CLT）或母體常態：\(\bar{X}\sim N(\mu,\frac{\sigma^2}{n})\)，標準化 \(z=\frac{\bar{x}-\mu}{\sigma/\sqrt{n}}\)，之後同第 5 節流程</li>
+<li>有限母體 n/N≥0.05：標準誤乘 \(\sqrt{\frac{N-n}{N-1}}\)</li>
+</ul>
+
+<h2>7. p̂ 抽樣分配題型 <span class="qtag">Quiz3</span></h2>
+<p class="when">認題：抽 n 位，問「樣本<b>比例</b>」的機率或反求 n</p>
+<ul>
+<li>\(\mu_{\hat{p}}=p\)；\(\sigma_{\hat{p}}=\sqrt{\frac{p(1-p)}{n}}\)（近似常態需 np≥5 且 n(1−p)≥5）</li>
+<li>機率：\(z=\frac{\hat{p}-p}{\sigma_{\hat{p}}}\) 後同第 5 節</li>
+<li><b>反求 n</b>：由 \(\sigma_{\hat{p}}=c\Rightarrow n=\frac{p(1-p)}{c^2}\)（例 0.6×0.4/0.03²=266.7→267，<span class="trap">無條件進位</span>）</li>
+</ul>
+
+<h2>8. 點估計與卡方統計量 <span class="qtag">Quiz4</span></h2>
+<ul>
+<li>μ 的點估計＝\(\bar{x}\)；σ² 的點估計＝\(s^2=\frac{\sum(x_i-\bar{x})^2}{n-1}\)<span class="trap">（除 n−1，勿除 n）</span></li>
+<li><b>卡方統計量</b>：\(\chi^2=\frac{(n-1)s^2}{\sigma^2}\)，df＝n−1（前提：常態母體）</li>
+<li>好估計量：不偏 E(θ̂)=θ、有效（變異最小）、一致（n→∞ 收斂）</li>
+</ul>
+
+<h2>9. 信賴區間題型 <span class="qtag">Quiz4</span></h2>
+<p>模板：<b>點估計 ± E</b>，E＝臨界值×標準誤（題目的「抽樣誤差」就是 E）</p>
+<h3>比例 p（np̂,n(1−p̂)≥5）</h3>
+<ul>
+<li>\(E=z_{\alpha/2}\sqrt{\frac{\hat{p}(1-\hat{p})}{n}}\)；CI＝\(\hat{p}\pm E\)</li>
+<li>反求樣本數 \(n=\frac{z_{\alpha/2}^2\,\hat{p}(1-\hat{p})}{E^2}\)，<span class="trap">進位</span>；無 p̂ 資訊用 0.5（最保守）</li>
+</ul>
+<h3>單一 μ</h3>
+<ul>
+<li>σ 已知（或 n≥30）：\(\bar{x}\pm z_{\alpha/2}\frac{\sigma}{\sqrt{n}}\)；σ 未知且 n&lt;30（常態）：\(\bar{x}\pm t_{\alpha/2,n-1}\frac{s}{\sqrt{n}}\)</li>
+<li>樣本數 \(n=\frac{z_{\alpha/2}^2\sigma^2}{E^2}\)</li>
+</ul>
+<h3>兩平均差 μ₁−μ₂（獨立、σ 已知）</h3>
+<ul>
+<li>點估計＝\(\bar{x}_1-\bar{x}_2\)；\(E=z_{\alpha/2}\sqrt{\frac{\sigma_1^2}{n_1}+\frac{\sigma_2^2}{n_2}}\)；CI＝點估計±E</li>
+<li>σ 未知大樣本：以 s₁²,s₂² 代、用 z；小樣本等變異：\(s_p^2=\frac{(n_1-1)s_1^2+(n_2-1)s_2^2}{n_1+n_2-2}\)，t 臨界 df=n₁+n₂−2，誤差 \(t\,s_p\sqrt{\frac{1}{n_1}+\frac{1}{n_2}}\)</li>
+</ul>
+<h3>成對樣本（同一人前後量）</h3>
+<ul>
+<li>①每人算差 \(d_i\)（<span class="trap">依題目定義方向，如前−後</span>）②\(\bar{d}=\frac{\sum d_i}{n}\)、\(s_d=\sqrt{\frac{\sum(d_i-\bar{d})^2}{n-1}}\) ③CI＝\(\bar{d}\pm t_{\alpha/2,n-1}\frac{s_d}{\sqrt{n}}\)</li>
+<li>CI 全＞0 ⇒ 有顯著差異（前＞後，訓練有效）</li>
+</ul>
+<h3>單一 σ²（常態母體）</h3>
+<ul>
+<li>\(\frac{(n-1)s^2}{\chi^2_{\alpha/2,n-1}}\le\sigma^2\le\frac{(n-1)s^2}{\chi^2_{1-\alpha/2,n-1}}\)（大卡方值放分母得下界）</li>
+</ul>
+
+<h2>10. 假設檢定精簡版（下次範圍）</h2>
+<ul>
+<li>H₀ 含「=」；想證明的放 Hₐ。型一 α＝拒真(冤枉)、型二 β＝留假(放縱)、檢定力=1−β</li>
+<li>p-value&lt;α → 拒絕 H₀；雙尾 p=2P(Z≥|z*|)；結論說「不拒絕」非「接受」</li>
+<li>單一 μ：\(Z=\frac{\bar{x}-\mu_0}{\sigma/\sqrt{n}}\)（σ已知或n≥30）；\(t=\frac{\bar{x}-\mu_0}{s/\sqrt{n}}\)，df=n−1（σ未知小樣本）。右尾 Z&gt;z_α、雙尾 |Z|&gt;z_{α/2} 拒絕</li>
+<li>比例：\(Z=\frac{\hat{p}-p_0}{\sqrt{p_0(1-p_0)/n}}\)<span class="trap">（用 p₀ 非 p̂）</span>；σ²：\(\chi^2=\frac{(n-1)s^2}{\sigma_0^2}\)</li>
+<li>兩均差：統計量＝(差−0)/標準誤（同第 9 節選法）；成對：\(t=\frac{\bar{d}}{s_d/\sqrt{n}}\)；兩比例：合併 \(\bar{p}=\frac{X_1+X_2}{n_1+n_2}\)、\(Z=\frac{\hat{p}_1-\hat{p}_2}{\sqrt{\bar{p}(1-\bar{p})(\frac{1}{n_1}+\frac{1}{n_2})}}\)；兩變異數：\(F=\frac{s_1^2}{s_2^2}\)，df=(n₁−1,n₂−1)，左尾 \(F_{1-\alpha;u,v}=\frac{1}{F_{\alpha;v,u}}\)</li>
+</ul>
+
+<h2>11. 方法選擇流程圖</h2>
+<div class="box flow">
+<div class="q">① 推論對象？</div>
+<div class="lv1"><b>μ 平均數</b> → ② 幾組？</div>
+<div class="lv2">1 組 → σ 已知？已知→<span class="ans">z</span>；未知→ n≥30？是<span class="ans">z(s代σ)</span>；否<span class="ans">t, df=n−1</span>（需常態）</div>
+<div class="lv2">2 組成對（同個體前後）→ 取差 d → <span class="ans">成對 t, df=n−1</span></div>
+<div class="lv2">2 組獨立 → σ 已知或皆 n≥30 <span class="ans">z</span>；小樣本→σ₁=σ₂？（F 檢定）相等<span class="ans">pooled t, df=n₁+n₂−2</span>；不等<span class="ans">Welch t</span></div>
+<div class="lv1"><b>p 比例</b>（np≥5, n(1−p)≥5）→ 1 組 <span class="ans">z（用 p₀）</span>；2 組 <span class="ans">z（用合併 p̄）</span></div>
+<div class="lv1"><b>σ² 變異數</b>（需常態）→ 1 組 <span class="ans">χ², df=n−1</span>；2 組 <span class="ans">F</span></div>
+</div>
+
+<h2>12. 臨界值表</h2>
+<p><b>z</b>：單尾5%→<b>1.645</b>｜雙尾5%(95%CI)→<b>1.96</b>｜單尾1%→2.326｜雙尾1%(99%CI)→2.576｜單尾10%→1.282</p>
+<table class="num">
+<tr><th>t 臨界值</th><th>df=4</th><th>5</th><th>9</th><th>15</th><th>18</th><th>20</th><th>29</th><th>∞</th></tr>
+<tr><td>\(t_{0.05}\)（單尾5%）</td><td>2.132</td><td>2.015</td><td>1.833</td><td>1.753</td><td>1.734</td><td>1.725</td><td>1.699</td><td>1.645</td></tr>
+<tr><td>\(t_{0.025}\)（雙尾5%）</td><td>2.776</td><td>2.571</td><td>2.262</td><td>2.131</td><td>2.101</td><td>2.086</td><td>2.045</td><td>1.960</td></tr>
+</table>
+<table class="num">
+<tr><th>χ² 臨界值</th><th>df=4</th><th>5</th><th>9</th><th>15</th><th>19</th><th>29</th></tr>
+<tr><td>\(\chi^2_{0.975}\)（左尾2.5%）</td><td>0.484</td><td>0.831</td><td>2.700</td><td>6.262</td><td>8.907</td><td>16.047</td></tr>
+<tr><td>\(\chi^2_{0.95}\)（左尾5%）</td><td>0.711</td><td>1.145</td><td>3.325</td><td>7.261</td><td>10.117</td><td>17.708</td></tr>
+<tr><td>\(\chi^2_{0.05}\)（右尾5%）</td><td>9.488</td><td>11.070</td><td>16.919</td><td>24.996</td><td>30.144</td><td>42.557</td></tr>
+<tr><td>\(\chi^2_{0.025}\)（右尾2.5%）</td><td>11.143</td><td>12.833</td><td>19.023</td><td>27.488</td><td>32.852</td><td>45.722</td></tr>
+</table>
+
+<h2>13. 問題集答案速查（驗算用）</h2>
+<table>
+<tr><th colspan="2">Quiz 1</th></tr>
+<tr><td>Q3</td><td>x̄=80、Med=80.5、R=31、Q=(72.5, 80.5, 88.5)、σ²=91.83、σ=9.58；IQR=16、籬 48.5/112.5 無離群值</td></tr>
+<tr><td>Q4</td><td>50–59:2、60–69:5、70–79:5、80–89:5、90–99:3（共20）</td></tr>
+<tr><td>Q5</td><td>枝2:葉7個(4,7,7,8,8,9,9)、枝3:10個、枝4:6個、枝5:2個(0,6)</td></tr>
+<tr><th colspan="2">Quiz 2</th></tr>
+<tr><td>Q1</td><td>a.6⁴=1296　b.6·5·4·3=360　c.3×6³=648　d.3×(5·4·3)=180</td></tr>
+<tr><td>Q2</td><td>a.C(12,2)=66　b.C(5,2)/66=5/33≈0.152　c.(5×4)/66=10/33≈0.303　d.4/11≈0.364</td></tr>
+<tr><td>Q3</td><td>a.0.328　b.0.590+0.328=0.919　c.E=0.5　d.Var=0.45</td></tr>
+<tr><td>Q4</td><td>λ=6　a.54e⁻⁶≈0.134　b.25e⁻⁶≈0.062　c.6　d.√6≈2.449</td></tr>
+<tr><th colspan="2">Quiz 3</th></tr>
+<tr><td>Q1</td><td>a.Φ(1)=0.8413　b.1−Φ(0.5)=0.3085　c.0.6826　d.x=80+1.645(10)=96.45</td></tr>
+<tr><td>Q2</td><td>a.40　b.12/√36=2　c.1−Φ(2)=0.0228　d.Φ(2)−Φ(−0.5)=0.6687</td></tr>
+<tr><td>Q3</td><td>a.0.6　b.√(0.24/100)=0.049　c.Φ(1.63)−Φ(−1.22)≈0.838　d.0.24/0.03²=266.7→267</td></tr>
+<tr><th colspan="2">Quiz 4</th></tr>
+<tr><td>一</td><td>a.x̄=80　b.s²=100/4=25　c.χ²=4×25/20=5，df=4</td></tr>
+<tr><td>二</td><td>a.E=1.96×0.049=0.096　b.(0.504, 0.696)　c.n=1.96²×0.24/0.05²=368.8→369</td></tr>
+<tr><td>三</td><td>a.42−39=3　b.E=1.96√(64/64+36/36)=1.96√2=2.772　c.(0.228, 5.772)</td></tr>
+<tr><td>四</td><td>a.d=4,3,5,2,4,6　b.d̄=4、s_d=√2≈1.414　c.4±2.571×1.414/√6=4±1.484→(2.52, 5.48)</td></tr>
+</table>
+
+<h2>14. 高頻陷阱</h2>
+<div class="pair"><b>母體 vs 樣本變異數</b>：題目說「母體」→除 N；「點估計/樣本」→除 n−1（Quiz1 vs Quiz4 都考）</div>
+<div class="pair"><b>λ 時間單位</b>：先把發生率換成題目問的區間長度再代公式</div>
+<div class="pair"><b>變異數 vs 標準差</b>：給 σ²=144 要先開根號；求 σ_X 是標準差不是變異數</div>
+<div class="pair"><b>樣本數 n 反求</b>：答案一律無條件進位（266.7→267、368.8→369）</div>
+<div class="pair"><b>z vs t</b>：σ 已知或 n≥30→z；σ 未知且 n&lt;30（常態母體）→t（成對樣本 n=6 用 t）</div>
+<div class="pair"><b>放回 vs 不放回</b>：放回/獨立→二項；不放回→組合數算（超幾何）</div>
+<div class="pair"><b>排列 vs 組合</b>：順序有關 vs 無關；抽球不計順序用 C</div>
+<div class="pair"><b>「最多/至少」</b>：最多 k＝累加到 k；至少 1＝1−f(0)</div>
+<div class="pair"><b>長條圖 vs 直方圖</b>：分開 vs 相連；Quiz1-4 指定 Bar Chart 要畫分開</div>
+<div class="pair"><b>反查常態</b>：由機率找 z 再還原 x=μ+zσ，勿把機率當 z 用</div>
+
+</div>
+</div>
+</body>
+</html>
